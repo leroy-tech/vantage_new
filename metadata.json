@@ -1,0 +1,8 @@
+{
+  "name": "Vantage Shopping Assistant",
+  "description": "An agentic AI research & shopping assistant with multi-source product comparison, live web search, preference memory, and price tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
