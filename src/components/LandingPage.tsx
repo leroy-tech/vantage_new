@@ -131,12 +131,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           className="absolute -inset-10 bg-cover bg-center transition-opacity duration-700 ease-in-out animate-ocean-tides"
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop')`,
-            opacity: 0.28,
-            filter: 'saturate(1.3) contrast(1.12) brightness(1.02)'
+            opacity: 0.40,
+            filter: 'saturate(1.38) contrast(1.15) brightness(1.05)'
           }}
         />
-        {/* Flowing Water Shimmer Layer */}
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/8 via-violet-500/6 to-indigo-950/12 animate-wave-ripple pointer-events-none" />
+        {/* Oceanic Water Flow & Wave Shimmer Layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/12 via-violet-500/8 to-indigo-950/16 animate-wave-ripple pointer-events-none" />
+
+        {/* Animated Moving SVG Wave Tides Stream 1 */}
+        <div className="absolute -bottom-8 left-0 right-0 h-44 opacity-35 pointer-events-none animate-tide-stream-1 overflow-hidden">
+          <svg className="w-[200%] h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,120 L0,120 Z" fill="rgba(139, 92, 246, 0.20)" />
+          </svg>
+        </div>
+
+        {/* Animated Moving SVG Wave Tides Stream 2 (Counter Tide Current) */}
+        <div className="absolute -bottom-4 left-0 right-0 h-36 opacity-30 pointer-events-none animate-tide-stream-2 overflow-hidden">
+          <svg className="w-[200%] h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,30 C200,80 400,0 600,50 C800,100 1000,20 1200,50 L1200,120 L0,120 Z" fill="rgba(6, 182, 212, 0.18)" />
+          </svg>
+        </div>
       </div>
 
       {/* Hero Section */}
@@ -221,17 +235,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Levitating Floating Product Card Showcase */}
           <div className="relative mt-8">
             <div className="text-center mb-6">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-violet-100 text-[#6D28D9] border border-violet-200">
-                <Flame className="w-3.5 h-3.5 text-[#7C3AED] fill-[#7C3AED]" />
-                Live Verified Product Radar
-              </span>
+              <div className="flex items-center justify-center gap-2 flex-wrap mb-2">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-cyan-50 text-[#0E7490] border border-cyan-300 shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-[#06B6D4] animate-ping" />
+                  <Radio className="w-3.5 h-3.5 text-[#06B6D4] animate-pulse" />
+                  Cyber Cyan Radar: Real-Time Market Launches
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-violet-100 text-[#6D28D9] border border-violet-200">
+                  <Flame className="w-3.5 h-3.5 text-[#7C3AED] fill-[#7C3AED]" />
+                  Objects in Air Mode
+                </span>
+              </div>
               <p className="text-xs mt-1.5 text-[#7C6898]">
                 Hover any card to inspect verified retail CDNs, instant deals, and 1-click buy links in INR (₹)
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {floatingProducts.slice(0, 4).map((fp) => (
+              {floatingProducts.slice(0, 8).map((fp) => (
                 <div
                   key={fp.id}
                   className="glass-panel-white group relative rounded-2xl p-4 border border-violet-200/70 transition-all duration-300 hover:-translate-y-2 hover:border-violet-400"
@@ -312,10 +333,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="text-center mt-6">
               <button
                 onClick={() => onLaunchApp({ tab: 'arena' })}
-                className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border transition-all bg-white hover:bg-violet-50 border-violet-200 text-[#6D28D9] shadow-sm"
+                className="inline-flex items-center gap-2 text-xs font-semibold px-5 py-2.5 rounded-full border transition-all bg-white hover:bg-violet-50 border-violet-200 text-[#6D28D9] shadow-sm hover:border-violet-400 group cursor-pointer"
               >
-                <span>View all 8 interactive levitating products in the Arena</span>
-                <ChevronRight className="w-3.5 h-3.5 text-[#7C3AED]" />
+                <span>Explore all {floatingProducts.length} levitating products in the 3D Zero-Gravity Arena</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#7C3AED] group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
           </div>

@@ -999,6 +999,14 @@ export function getProductDetailData(product: any): DetailedProductData {
     else if (nameLower.includes('bravia') || (nameLower.includes('sony') && nameLower.includes('tv'))) matchedId = 'sony-oled';
     else if (nameLower.includes('alpha') || nameLower.includes('camera') || nameLower.includes('ilce')) matchedId = 'sony-camera';
     else if (nameLower.includes('keychron') || nameLower.includes('keyboard')) matchedId = 'mech-keyboard';
+    else if (nameLower.includes('iphone 16') || nameLower.includes('16 pro')) matchedId = 'iphone-16-pro';
+    else if (nameLower.includes('oneplus 12')) matchedId = 'oneplus-12';
+    else if (nameLower.includes('bose') && (nameLower.includes('ultra') || nameLower.includes('quietcomfort'))) matchedId = 'bose-qc-ultra';
+    else if (nameLower.includes('dyson') || nameLower.includes('v15')) matchedId = 'dyson-v15';
+    else if (nameLower.includes('ipad air')) matchedId = 'ipad-air-m2';
+    else if (nameLower.includes('zephyrus') || nameLower.includes('rog')) matchedId = 'rog-zephyrus-g16';
+    else if (nameLower.includes('fujifilm') || nameLower.includes('x100vi')) matchedId = 'fujifilm-x100vi';
+    else if (nameLower.includes('marshall') || nameLower.includes('stanmore')) matchedId = 'marshall-stanmore';
   }
 
   if (matchedId && PRODUCT_DETAILS_DATABASE[matchedId]) {

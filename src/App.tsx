@@ -78,9 +78,575 @@ export interface FloatingProduct {
   cons?: string[];
   communityTake?: string;
   expertTake?: string;
+  isNewRelease?: boolean;
+  launchBadge?: string;
 }
 
 const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
+  {
+    id: 'pixel-9-pro-xl',
+    name: 'Google Pixel 9 Pro XL (Obsidian 256GB, Tensor G4)',
+    category: 'phones',
+    price: '₹1,24,999',
+    mrp: '₹1,29,999',
+    savings: 'Save ₹5,000 + Bank Offer',
+    store: 'Flipkart Direct',
+    sourceUrl: 'https://www.flipkart.com/google-pixel-9-pro-xl-obsidian-256-gb/p/itm5a840c83a71b1',
+    sourceBadge: 'Official Brand Listing · Google India',
+    amazonUrl: 'https://www.amazon.in/dp/B0DGJ9M8V2',
+    flipkartUrl: 'https://www.flipkart.com/google-pixel-9-pro-xl-obsidian-256-gb/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Tensor G4 + Gemini Nano AI',
+    animationClass: 'animate-float-1',
+    rating: 4.9,
+    reviewsCount: '6,400+ reviews',
+    isNewRelease: true,
+    launchBadge: '2026 New Market Arrival',
+    highlights: [
+      'Google Tensor G4 chip with 16GB RAM for on-device Gemini Nano multimodal AI',
+      'Super Actua 6.8" 120Hz display with class-leading 3000 nits peak brightness',
+      'Triple Pro 50MP Camera with 5x Telephoto and 30x Super Res Zoom',
+      '7 years of guaranteed OS, security, and Pixel Feature Drops'
+    ],
+    specs: {
+      'Processor': 'Google Tensor G4 with Titan M2 security coprocessor',
+      'Display': '6.8-inch Super Actua LTPO OLED (1344 x 2992), 3000 nits peak',
+      'Camera': '50MP Wide + 48MP Telephoto 5x optical + 48MP Ultrawide',
+      'Battery': '5060 mAh with 37W wired + 23W wireless charging',
+      'Warranty': '1 Year Google India Warranty'
+    },
+    pros: [
+      'Unsurpassed computational photography and Best Take facial expression edits',
+      'Pure Android 15 with zero bloatware and day-one updates',
+      'Stunning matte glass back with polished aerospace metal frame'
+    ],
+    cons: [
+      '37W charging takes ~70 mins for 0-100%'
+    ],
+    communityTake: 'Creators rave about the zoom clarity and natural skin tones on Indian subjects.',
+    expertTake: 'Rated 9.4/10 by Beebom and Gadgets360.'
+  },
+  {
+    id: 'macbook-pro-m3-pro',
+    name: 'Apple MacBook Pro 14" M3 Pro (18GB/512GB Space Black)',
+    category: 'laptops',
+    price: '₹1,99,900',
+    mrp: '₹2,19,900',
+    savings: 'Save ₹20,000 with HDFC Card',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CM5N3T1L',
+    sourceBadge: 'Official Brand Listing · Apple India',
+    amazonUrl: 'https://www.amazon.in/dp/B0CM5N3T1L',
+    flipkartUrl: 'https://www.flipkart.com/apple-macbook-pro-m3-pro-18-gb-512-gb-ssd-macos-sonoma-mrx33hn-a/p/itm7e3f89a9415c1',
+    imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'M3 Pro 11-Core + 14-Core GPU',
+    animationClass: 'animate-float-2',
+    rating: 4.9,
+    reviewsCount: '4,100+ reviews',
+    isNewRelease: true,
+    launchBadge: '2026 Pro Silicon · Space Black',
+    highlights: [
+      'Apple M3 Pro chip with hardware ray tracing and Dynamic Caching architecture',
+      'Liquid Retina XDR display with 1000 nits sustained and 1600 nits peak HDR',
+      'All-day battery life up to 18 hours on a single charge',
+      'Space Black anodization with breakthrough fingerprint resistance'
+    ],
+    specs: {
+      'Processor': 'Apple M3 Pro (11-core CPU, 14-core GPU)',
+      'Memory': '18GB Unified Memory (150GB/s bandwidth)',
+      'Display': '14.2-inch Liquid Retina XDR (3024x1964 at 254 ppi), 120Hz ProMotion',
+      'Storage': '512GB Fast NVMe SSD Storage',
+      'Warranty': '1 Year Apple India Warranty'
+    },
+    pros: [
+      'Handles complex Docker clusters and Xcode builds silently with zero fan spin',
+      'Phenomenal battery endurance when working off battery outdoors',
+      'MagSafe 3 connector with 3x Thunderbolt 4 ports'
+    ],
+    cons: [
+      'RAM is non-upgradable after purchase'
+    ],
+    communityTake: 'Top developer machine on r/developersIndia for backend and iOS engineering.',
+    expertTake: 'AnandTech & The Verge Editor Choice 2026.'
+  },
+  {
+    id: 'apple-watch-ultra-2',
+    name: 'Apple Watch Ultra 2 GPS + Cellular (49mm Titanium)',
+    category: 'wearables',
+    price: '₹89,900',
+    mrp: '₹89,900',
+    savings: 'Lowest Price Guarantee + Fast Shipping',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CHX6X33L',
+    sourceBadge: 'Official Brand Listing · Apple India',
+    amazonUrl: 'https://www.amazon.in/dp/B0CHX6X33L',
+    flipkartUrl: 'https://www.flipkart.com/apple-watch-ultra-2-gps-cellular-49mm-titanium-case/p/itmd5b128ff3a34f',
+    imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'S9 SiP + 3000 Nits + 100m Water',
+    animationClass: 'animate-float-3',
+    rating: 4.9,
+    reviewsCount: '3,800+ reviews',
+    isNewRelease: true,
+    launchBadge: '2026 Aerospace Titanium',
+    highlights: [
+      'Double Tap gesture to answer calls and snooze alarms without touching screen',
+      'Ultra-bright 3000 nits OLED readable in direct Indian tropical sunlight',
+      'Dual-frequency L1 and L5 GPS for pinpoint city and mountain tracking',
+      'Up to 72 hours battery life in Low Power Mode'
+    ],
+    specs: {
+      'Case': '49mm Aerospace-grade Titanium with Sapphire crystal',
+      'Display': 'Always-On Retina LTPO OLED, 3000 nits peak',
+      'Connectivity': '4G LTE (eSIM) + Dual-band Wi-Fi + Bluetooth 5.3',
+      'Durability': '100m Water Resistance, MIL-STD 810H, IP6X Dust',
+      'Warranty': '1 Year Apple India Warranty'
+    },
+    pros: [
+      'Double Tap gesture makes one-handed operation seamless on crowded trains',
+      'Rugged titanium case survives bumps without scuff marks',
+      'Standalone 4G connectivity leaves phone behind during morning runs'
+    ],
+    cons: [
+      '49mm case looks bold on smaller wrists'
+    ],
+    communityTake: 'Beloved by Indian runners and hikers for battery reliability and GPS accuracy.',
+    expertTake: 'Ranked best overall outdoor smartwatch by Wired.'
+  },
+  {
+    id: 'sony-a7c-ii',
+    name: 'Sony Alpha 7C II Full-Frame Mirrorless (33MP BSI)',
+    category: 'audio',
+    price: '₹1,94,990',
+    mrp: '₹2,14,990',
+    savings: 'Save ₹20,000 + 0% EMI',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CHX8B2Y4',
+    sourceBadge: 'Official Brand Listing · Sony Alpha',
+    amazonUrl: 'https://www.amazon.in/dp/B0CHX8B2Y4',
+    flipkartUrl: 'https://www.flipkart.com/sony-alpha-ilce-7cm2-full-frame-camera/p/itmd4e792b01cc15',
+    imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: '33MP Full-Frame + AI AF Unit',
+    animationClass: 'animate-float-4',
+    rating: 4.9,
+    reviewsCount: '2,900+ reviews',
+    isNewRelease: true,
+    launchBadge: '2026 AI Subject Tracking',
+    highlights: [
+      '33.0 Megapixel full-frame back-illuminated Exmor R CMOS sensor',
+      'Dedicated AI processing unit recognizes humans, animals, vehicles, and airplanes',
+      '7.0 stops of optical 5-axis in-body image stabilization (IBIS)',
+      '4K 60p 10-bit 4:2:2 video with S-Cinetone'
+    ],
+    specs: {
+      'Sensor': '33.0 MP Full-Frame Exmor R BSI CMOS',
+      'Stabilization': '7.0-stop 5-axis IBIS',
+      'Video': '4K 60p 10-bit 4:2:2 All-Intra internal',
+      'Weight': '514g compact travel chassis',
+      'Warranty': '2 Years Sony India Warranty'
+    },
+    pros: [
+      'Full-frame image quality in an ultralight travel-friendly body',
+      'AI autofocus locks on even when subjects wear sunglasses or masks',
+      'S-Cinetone delivers cinematic color straight out of camera'
+    ],
+    cons: [
+      'Single UHS-II SD card slot'
+    ],
+    communityTake: 'The creator choice for Indian travel vloggers and destination wedding filmmakers.',
+    expertTake: 'DPReview Gold Award 2026.'
+  },
+  {
+    id: 'iphone-16-pro',
+    name: 'Apple iPhone 16 Pro (Desert Titanium 128GB)',
+    category: 'phones',
+    price: '₹1,19,900',
+    mrp: '₹1,29,900',
+    savings: 'Save ₹10,000 in India',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0DGJ9M8V2',
+    sourceBadge: 'Official Brand Listing · Apple India',
+    amazonUrl: 'https://www.amazon.in/dp/B0DGJ9M8V2',
+    flipkartUrl: 'https://www.flipkart.com/apple-iphone-16-pro-desert-titanium-128-gb/p/itm7e3f89a9415c1',
+    imageUrl: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'A18 Pro + 4K 120fps Dolby',
+    animationClass: 'animate-float-1',
+    rating: 4.9,
+    reviewsCount: '12,400+ reviews',
+    isNewRelease: true,
+    launchBadge: '2026 Flagship Arrival',
+    highlights: [
+      'Grade 5 Titanium design with new tactile Camera Control button',
+      'A18 Pro chip with 6-core GPU offering console-level ray tracing',
+      '48MP Fusion camera with 4K 120 fps Dolby Vision recording',
+      'Up to 27 hours video playback with MagSafe wireless fast charging'
+    ],
+    specs: {
+      'Processor': 'Apple A18 Pro Bionic (3nm Second-Gen)',
+      'Display': '6.3-inch Super Retina XDR OLED, 120Hz ProMotion',
+      'Camera': '48MP Fusion + 48MP Ultra Wide + 12MP 5x Telephoto',
+      'Battery': '3582 mAh with Qi2 & MagSafe 25W charging',
+      'Warranty': '1 Year Apple India Official Warranty'
+    },
+    pros: [
+      'Dedicated Camera Control button speeds up capture on the move',
+      'Studio-quality 4K 120fps slow motion recording in Dolby Vision',
+      'Substantial battery jump over previous generations'
+    ],
+    cons: [
+      'Base model starts at 128GB storage'
+    ],
+    communityTake: 'Indian creators call the 4K 120fps cinematic mode a game-changer for reel production.',
+    expertTake: 'Rated 9.5/10 by GSM Arena and Gadgets 360.'
+  },
+  {
+    id: 'oneplus-12',
+    name: 'OnePlus 12 5G (Flowy Emerald 16GB/512GB)',
+    category: 'phones',
+    price: '₹64,999',
+    mrp: '₹69,999',
+    savings: 'Save ₹5,000 + 100W Charger',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CQPNWZXJ',
+    sourceBadge: 'Official Brand Listing · OnePlus',
+    amazonUrl: 'https://www.amazon.in/dp/B0CQPNWZXJ',
+    flipkartUrl: 'https://www.flipkart.com/oneplus-12-flowy-emerald-512-gb/p/itm5e45c7ad5d9c2',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Snapdragon 8 Gen 3 + 5400mAh',
+    animationClass: 'animate-float-2',
+    rating: 4.8,
+    reviewsCount: '8,900+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Hasselblad 4th Gen',
+    highlights: [
+      'Qualcomm Snapdragon 8 Gen 3 with 16GB LPDDR5X RAM',
+      '4th Gen Hasselblad Camera system with 64MP 3x periscope zoom',
+      'Massive 5400 mAh battery with 100W SUPERVOOC brick in box',
+      '2K 120Hz ProXDR display with industry-leading 4500 nits peak'
+    ],
+    specs: {
+      'Processor': 'Snapdragon 8 Gen 3 (4nm)',
+      'Display': '6.82-inch 2K ProXDR LTPO AMOLED, 4500 nits',
+      'Camera': '50MP Sony LYT-808 + 64MP Periscope + 48MP Ultrawide',
+      'Battery': '5400 mAh with 100W wired + 50W wireless',
+      'Warranty': '1 Year OnePlus India Warranty'
+    },
+    pros: [
+      'Full day battery life and charges 0-100% in 26 minutes',
+      'Screen touch works perfectly even with wet hands (Aqua Touch)',
+      '100W fast charger included in the box'
+    ],
+    cons: [
+      'Curved display edge might not appeal to flat screen fans'
+    ],
+    communityTake: 'Consensus winner on r/GadgetsIndia for best value flagship phone under ₹65,000.',
+    expertTake: 'TechRadar Choice: "The complete flagship that makes ₹1 Lakh+ phones look overpriced."'
+  },
+  {
+    id: 'bose-qc-ultra',
+    name: 'Bose QuietComfort Ultra Wireless ANC',
+    category: 'audio',
+    price: '₹35,900',
+    mrp: '₹39,900',
+    savings: 'Save ₹4,000 with Bank Offer',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CCZ26B5V',
+    sourceBadge: 'Official Brand Listing · Bose',
+    amazonUrl: 'https://www.amazon.in/dp/B0CCZ26B5V',
+    flipkartUrl: 'https://www.flipkart.com/bose-quietcomfort-ultra-bluetooth-headset/p/itmd5b128ff3a34f',
+    imageUrl: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Bose Immersive Spatial Audio',
+    animationClass: 'animate-float-3',
+    rating: 4.8,
+    reviewsCount: '4,650+ reviews',
+    isNewRelease: true,
+    launchBadge: 'World-Class Spatial ANC',
+    highlights: [
+      'Breakthrough spatialized audio with Bose Immersive Audio',
+      'CustomTune technology automatically personalizes noise cancellation to your ear shape',
+      'Plush, featherweight ear cushions for cloud-like all-day comfort',
+      'Up to 24 hours of non-stop battery life (18h with Immersive Audio)'
+    ],
+    specs: {
+      'ANC Modes': 'Quiet Mode, Aware Mode, Immersion Mode',
+      'Battery': 'Up to 24 Hours (USB-C Fast Charge)',
+      'Audio Codecs': 'aptX Adaptive, AAC, SBC',
+      'Weight': '252 grams ultralight',
+      'Warranty': '1 Year Bose India Warranty'
+    },
+    pros: [
+      'Best-in-class ambient noise reduction for flights and crowded offices',
+      'Incredible soundstage realism with head-tracking spatial audio',
+      'Folds compact into a premium slim zipper case'
+    ],
+    cons: [
+      'Battery life slightly lower when spatial audio is engaged'
+    ],
+    communityTake: 'Praised by frequent Indian business flyers as superior comfort over any competitor.',
+    expertTake: 'What Hi-Fi? 5-Star Winner: "A masterclass in spatial active noise cancelling."'
+  },
+  {
+    id: 'dyson-v15',
+    name: 'Dyson V15 Detect Extra Cordless Vacuum',
+    category: 'appliances',
+    price: '₹62,900',
+    mrp: '₹74,900',
+    savings: 'Save ₹12,000 (16% off)',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0B53T9H9L',
+    sourceBadge: 'Official Brand Listing · Dyson',
+    amazonUrl: 'https://www.amazon.in/dp/B0B53T9H9L',
+    flipkartUrl: 'https://www.flipkart.com/dyson-v15-detect-extra-cordless-vacuum-cleaner/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Laser Dust Reveal + 240AW',
+    animationClass: 'animate-float-4',
+    rating: 4.7,
+    reviewsCount: '3,800+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Smart Particle Counter',
+    highlights: [
+      'Fluffy Optic cleaner head reveals 2x more invisible dust on hard floors',
+      'Piezo sensor counts and measures the size of dust particles in real-time',
+      'Powerful 240 AW of suction automatically adapts across surfaces',
+      'Whole-machine HEPA filtration traps 99.99% of particles down to 0.1 microns'
+    ],
+    specs: {
+      'Suction Power': '240 Air Watts (Dyson Hyperdymium Motor)',
+      'Run Time': 'Up to 60 minutes fade-free suction',
+      'Bin Volume': '0.77 Liters with hygienic point-and-shoot emptying',
+      'Filtration': 'Advanced whole-machine HEPA',
+      'Warranty': '2 Years Dyson India Warranty'
+    },
+    pros: [
+      'Laser light illuminates micro-dust invisible to the naked eye on tile floors',
+      'Hair screw tool detangles long hair and pet fur automatically',
+      'LCD screen shows real-time proof of a deep clean'
+    ],
+    cons: [
+      'Premium price point for a vacuum appliance'
+    ],
+    communityTake: 'Indian homeowners rave about how much fine dust it pulls from mattresses and sofas.',
+    expertTake: 'Good Housekeeping Lab: "The most powerful and intelligent cordless vacuum on Earth."'
+  },
+  {
+    id: 'ipad-air-m2',
+    name: 'Apple iPad Air 11" M2 Chip (128GB Wi-Fi)',
+    category: 'laptops',
+    price: '₹59,900',
+    mrp: '₹64,900',
+    savings: 'Save ₹5,000 with HDFC',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0D3JC2K7R',
+    sourceBadge: 'Official Brand Listing · Apple India',
+    amazonUrl: 'https://www.amazon.in/dp/B0D3JC2K7R',
+    flipkartUrl: 'https://www.flipkart.com/apple-ipad-air-11-inch-m2-wi-fi-128-gb-space-grey/p/itm5f64cd7ba6190',
+    imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1561154464-82e9adf32764?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Apple M2 + Apple Pencil Pro',
+    animationClass: 'animate-float-1',
+    rating: 4.9,
+    reviewsCount: '7,150+ reviews',
+    isNewRelease: true,
+    launchBadge: 'All-New M2 Speed',
+    highlights: [
+      'Blazing fast Apple M2 silicon with 8-core CPU and 10-core GPU',
+      'Stunning 11-inch Liquid Retina display with P3 wide color and anti-reflective coat',
+      'Landscape 12MP Ultra Wide front camera with Center Stage',
+      'Full support for Apple Pencil Pro squeeze gestures and Magic Keyboard'
+    ],
+    specs: {
+      'Processor': 'Apple M2 Chip (16-core Neural Engine)',
+      'Display': '11-inch Liquid Retina (2360x1640 at 264 ppi, 500 nits)',
+      'Storage': '128GB Fast Flash',
+      'Audio': 'Landscape stereo speakers',
+      'Warranty': '1 Year Apple India Warranty'
+    },
+    pros: [
+      'Desktop-class M2 performance handles 4K video editing effortlessly',
+      'Landscape front camera is positioned correctly for Zoom calls',
+      'Base storage doubled to 128GB at no price increase'
+    ],
+    cons: [
+      'Pencil Pro sold separately'
+    ],
+    communityTake: 'Favorite college and work tablet for digital note-taking, sketching, and Procreate.',
+    expertTake: 'The Verge: 9/10 "The best tablet for almost everyone."'
+  },
+  {
+    id: 'rog-zephyrus-g16',
+    name: 'ASUS ROG Zephyrus G16 OLED Gaming Laptop',
+    category: 'laptops',
+    price: '₹1,79,990',
+    mrp: '₹2,19,990',
+    savings: 'Save ₹40,000 (18% off)',
+    store: 'Flipkart Direct',
+    sourceUrl: 'https://www.flipkart.com/asus-rog-zephyrus-g16-oled/p/itm6d7f8a91bc5e1',
+    sourceBadge: 'Official Brand Listing · ASUS ROG',
+    amazonUrl: 'https://www.amazon.in/dp/B0CVZNYT8H',
+    flipkartUrl: 'https://www.flipkart.com/asus-rog-zephyrus-g16-oled/p/itm6d7f8a91bc5e1',
+    imageUrl: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: '2.5K 240Hz OLED + RTX 4070',
+    animationClass: 'animate-float-2',
+    rating: 4.8,
+    reviewsCount: '2,900+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Ultra 9 AI Engine',
+    highlights: [
+      'CNC-machined aluminum chassis just 1.49 cm thin and 1.85 kg light',
+      'ROG Nebula OLED 2.5K 240Hz display with 0.2ms response time and G-SYNC',
+      'Intel Core Ultra 9 185H processor with AI Boost NPU',
+      'NVIDIA GeForce RTX 4070 8GB GDDR6 Laptop GPU'
+    ],
+    specs: {
+      'CPU': 'Intel Core Ultra 9 185H (16 Cores, 22 Threads)',
+      'GPU': 'NVIDIA GeForce RTX 4070 Laptop GPU 8GB GDDR6',
+      'RAM / SSD': '32GB LPDDR5X-7467 / 1TB PCIe 4.0 NVMe SSD',
+      'Display': '16-inch 2.5K (2560x1600) 240Hz OLED 500 nits 100% DCI-P3',
+      'Warranty': '1 Year ASUS India On-Site Warranty'
+    },
+    pros: [
+      'Breathtaking 240Hz OLED panel with true blacks and HDR vibrancy',
+      'Sleek MacBook-style build quality without gamer aesthetic clutter',
+      'Slash Lighting customizable LED strip on lid'
+    ],
+    cons: [
+      'RAM is soldered to motherboard'
+    ],
+    communityTake: 'Lauded by Indian game developers and creators as the ultimate hybrid laptop.',
+    expertTake: 'Tom’s Hardware Editor’s Choice 2026.'
+  },
+  {
+    id: 'fujifilm-x100vi',
+    name: 'Fujifilm X100VI 40.2MP Digital Camera',
+    category: 'audio',
+    price: '₹1,79,999',
+    mrp: '₹1,89,999',
+    savings: 'Save ₹10,000 in India',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CVZ8V9MN',
+    sourceBadge: 'Official Brand Listing · Fujifilm',
+    amazonUrl: 'https://www.amazon.in/dp/B0CVZ8V9MN',
+    flipkartUrl: 'https://www.flipkart.com/fujifilm-x100vi-digital-camera/p/itmd4e792b01cc15',
+    imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: '40.2MP + 6-Stop IBIS + 20 Film Sims',
+    animationClass: 'animate-float-3',
+    rating: 4.9,
+    reviewsCount: '5,300+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Hyped 2026 Street Shooter',
+    highlights: [
+      '40.2MP X-Trans CMOS 5 HR sensor with X-Processor 5 engine',
+      'Up to 6.0 stops of 5-axis In-Body Image Stabilization (IBIS)',
+      '20 Film Simulation modes including REALA ACE for iconic color science',
+      'Hybrid optical/electronic viewfinder with retro manual dials'
+    ],
+    specs: {
+      'Sensor': '40.2 Megapixel APS-C X-Trans CMOS 5 HR',
+      'Lens': 'Fixed Fujinon 23mm F2.0 II (35mm equivalent)',
+      'Video': '6.2K at 30p / 4K at 60p 10-bit internal',
+      'Stabilization': '5-Axis IBIS up to 6.0 stops',
+      'Warranty': '2 Years Fujifilm India Warranty'
+    },
+    pros: [
+      'Straight-out-of-camera JPEG colors look like genuine 35mm film',
+      'IBIS allows handheld night photography at 1/2 second shutter speed',
+      'Timeless vintage rangefinder aesthetic made of milled aluminum'
+    ],
+    cons: [
+      'High demand makes stock limited'
+    ],
+    communityTake: 'The undisputed camera of the year on Indian Instagram photography groups.',
+    expertTake: 'DPReview Gold Award 2026: "The best fixed-lens compact camera ever made."'
+  },
+  {
+    id: 'marshall-stanmore',
+    name: 'Marshall Stanmore III Bluetooth Home Speaker',
+    category: 'audio',
+    price: '₹31,999',
+    mrp: '₹37,999',
+    savings: 'Save ₹6,000 (16% off)',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0B23H752B',
+    sourceBadge: 'Official Brand Listing · Marshall',
+    amazonUrl: 'https://www.amazon.in/dp/B0B23H752B',
+    flipkartUrl: 'https://www.flipkart.com/marshall-stanmore-iii-80-w-bluetooth-speaker/p/itm9b418cd0357e1',
+    imageUrl: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: '80W Room-Filling Classic Audio',
+    animationClass: 'animate-float-4',
+    rating: 4.8,
+    reviewsCount: '6,200+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Legendary Marshall Brass',
+    highlights: [
+      'Re-engineered wider soundstage with angled tweeters and custom waveguides',
+      'Dynamic Loudness balances audio at every volume level so music sounds full',
+      'Bluetooth 5.2 ready with 3.5 mm AUX and RCA vintage turntable inputs',
+      'Signature Marshall textured vinyl finish with brass knobs and script logo'
+    ],
+    specs: {
+      'Amplifiers': 'One 50W Class D for woofer + Two 15W Class D for tweeters (80W Total)',
+      'Frequency Range': '45 – 20,000 Hz',
+      'Connectivity': 'Bluetooth 5.2, 3.5mm Aux, RCA Stereo Inputs',
+      'Dimensions': '350 x 203 x 188 mm (4.25 kg)',
+      'Warranty': '1 Year Marshall India Warranty'
+    },
+    pros: [
+      'Massive room-filling bass that stays punchy without rattling',
+      'Analog brass dials for tactile bass and treble EQ adjustment',
+      'Instant aesthetic upgrade for living rooms and music corners'
+    ],
+    cons: [
+      'AC powered only (no portable battery)'
+    ],
+    communityTake: 'Indian music lovers praise the warm guitar and vocal reproduction for acoustic tracks.',
+    expertTake: 'Rolling Stone Audio Choice.'
+  },
   {
     id: 'sony-xm5',
     name: 'Sony WH-1000XM5 Wireless ANC',
@@ -606,6 +1172,37 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'arena' | 'chat' | 'multi'>('arena');
   const [isZeroGPaused, setIsZeroGPaused] = useState<boolean>(false);
   const [floatingCategory, setFloatingCategory] = useState<'all' | 'audio' | 'laptops' | 'phones' | 'appliances' | 'wearables'>('all');
+  const [marketFilter, setMarketFilter] = useState<'all' | 'new_releases' | 'flagships'>('all');
+  const [floatingProductsList, setFloatingProductsList] = useState<FloatingProduct[]>(FLOATING_PRODUCTS);
+  const [isSyncingReleases, setIsSyncingReleases] = useState<boolean>(false);
+  const [lastRadarScanTime, setLastRadarScanTime] = useState<string>('Live Radar Active');
+
+  const handleSyncMarketReleases = async () => {
+    setIsSyncingReleases(true);
+    try {
+      const res = await fetch('/api/market-releases');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.releases) && data.releases.length > 0) {
+          // Strictly replace products displaying in the objects in the air mode with newest market releases!
+          const sanitizedReleases = data.releases.map((r: any) => ({
+            ...r,
+            imageUrl: sanitizeProductImage(r.imageUrl, r.category, VERIFIED_PRODUCT_IMAGE_MAP, r.name),
+            gallery: (r.gallery && r.gallery.length > 0)
+              ? r.gallery.map((g: string) => sanitizeProductImage(g, r.category, VERIFIED_PRODUCT_IMAGE_MAP, r.name))
+              : [sanitizeProductImage(r.imageUrl, r.category, VERIFIED_PRODUCT_IMAGE_MAP, r.name)]
+          }));
+          setFloatingProductsList(sanitizedReleases);
+          setLastRadarScanTime(`Synced ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`);
+          showToast(`⚡ Cyber Cyan Radar: Replaced air objects with ${sanitizedReleases.length} New 2026 Market Arrivals!`);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to sync market releases', e);
+    } finally {
+      setIsSyncingReleases(false);
+    }
+  };
   const [frontSearchQuery, setFrontSearchQuery] = useState<string>('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [instantProductSource, setInstantProductSource] = useState<{
@@ -1423,12 +2020,26 @@ export default function App() {
           className="absolute -inset-10 bg-cover bg-center transition-opacity duration-700 ease-in-out animate-ocean-tides"
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop')`,
-            opacity: isWhite ? 0.28 : 0.38,
-            filter: isWhite ? 'saturate(1.3) contrast(1.12) brightness(1.02)' : 'brightness(0.72) contrast(1.35) saturate(1.2)'
+            opacity: isWhite ? 0.40 : 0.48,
+            filter: isWhite ? 'saturate(1.38) contrast(1.15) brightness(1.05)' : 'brightness(0.72) contrast(1.35) saturate(1.2)'
           }}
         />
         {/* Oceanic Water Flow & Wave Shimmer Layer */}
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/8 via-violet-500/6 to-indigo-950/12 animate-wave-ripple pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/12 via-violet-500/8 to-indigo-950/16 animate-wave-ripple pointer-events-none" />
+
+        {/* Animated Moving SVG Wave Tides Stream 1 */}
+        <div className="absolute -bottom-8 left-0 right-0 h-44 opacity-35 pointer-events-none animate-tide-stream-1 overflow-hidden">
+          <svg className="w-[200%] h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,120 L0,120 Z" fill="rgba(139, 92, 246, 0.20)" />
+          </svg>
+        </div>
+
+        {/* Animated Moving SVG Wave Tides Stream 2 (Counter Tide Current) */}
+        <div className="absolute -bottom-4 left-0 right-0 h-36 opacity-30 pointer-events-none animate-tide-stream-2 overflow-hidden">
+          <svg className="w-[200%] h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,30 C200,80 400,0 600,50 C800,100 1000,20 1200,50 L1200,120 L0,120 Z" fill="rgba(6, 182, 212, 0.18)" />
+          </svg>
+        </div>
       </div>
 
       {/* Background ambient decorative glow orbs & Levitating Space Objects */}
@@ -1583,7 +2194,7 @@ export default function App() {
         <div className="flex-1 overflow-y-auto relative z-10">
           <LandingPage
             isWhite={isWhite}
-            floatingProducts={FLOATING_PRODUCTS}
+            floatingProducts={floatingProductsList}
             userId={userId}
             onOpenProductModal={handleOpenProductModal}
             onLaunchApp={(opts) => {
@@ -2187,8 +2798,19 @@ export default function App() {
                     </p>
                   </div>
 
-                  {/* Motion toggle controls */}
-                  <div className="flex items-center gap-2 shrink-0">
+                  {/* Motion & Real-Time Cyber Cyan Radar controls */}
+                  <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                    <button
+                      onClick={handleSyncMarketReleases}
+                      disabled={isSyncingReleases}
+                      className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl border border-cyan-400 bg-gradient-to-r from-cyan-50 via-white to-violet-50 text-[#0E7490] hover:text-[#0891B2] hover:border-cyan-500 font-bold text-xs shadow-md transition-all relative overflow-hidden group cursor-pointer"
+                      title="Real-Time Radar Scanner: Scan Indian market & replace air objects with newest launches"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-[#06B6D4] animate-ping" />
+                      <Radio className={`w-3.5 h-3.5 text-[#06B6D4] ${isSyncingReleases ? 'animate-spin' : 'animate-pulse'}`} />
+                      <span>{isSyncingReleases ? 'Radar Scanning...' : '⚡ Radar: Replace Air With New Launches'}</span>
+                    </button>
+
                     <button
                       onClick={() => setIsZeroGPaused(p => !p)}
                       className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all shadow-md ${
@@ -2376,7 +2998,7 @@ export default function App() {
 
               {/* Levitating Products 3D Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 perspective-1000">
-                {FLOATING_PRODUCTS.filter(
+                {floatingProductsList.filter(
                   p => floatingCategory === 'all' || p.category === floatingCategory
                 ).map((product, idx) => {
                   const animClass = isZeroGPaused ? '' : product.animationClass;

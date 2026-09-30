@@ -212,35 +212,106 @@
 /* Animated Ocean Tides & Flowing Water Currents ("Sala behta hi jayega") */
 @keyframes ocean-tide-flow {
   0% {
-    transform: scale(1.05) translate(0px, 0px) rotate(0deg);
+    transform: scale(1.06) translate(0px, 0px) rotate(0deg);
   }
   25% {
-    transform: scale(1.10) translate(-14px, 12px) rotate(0.6deg);
+    transform: scale(1.12) translate(-16px, 14px) rotate(0.8deg);
   }
   50% {
-    transform: scale(1.13) translate(12px, -15px) rotate(-0.5deg);
+    transform: scale(1.16) translate(14px, -18px) rotate(-0.6deg);
   }
   75% {
-    transform: scale(1.08) translate(-10px, -8px) rotate(0.3deg);
+    transform: scale(1.10) translate(-12px, -10px) rotate(0.4deg);
   }
   100% {
-    transform: scale(1.05) translate(0px, 0px) rotate(0deg);
+    transform: scale(1.06) translate(0px, 0px) rotate(0deg);
   }
 }
 
 @keyframes ocean-wave-ripple {
   0% {
-    opacity: 0.20;
+    opacity: 0.30;
     transform: translateY(0px) scaleY(1);
   }
   50% {
-    opacity: 0.40;
-    transform: translateY(-10px) scaleY(1.06);
+    opacity: 0.55;
+    transform: translateY(-12px) scaleY(1.08);
   }
   100% {
-    opacity: 0.20;
+    opacity: 0.30;
     transform: translateY(0px) scaleY(1);
   }
+}
+
+@keyframes tide-stream-left {
+  0% {
+    transform: translateX(0) translateZ(0);
+  }
+  50% {
+    transform: translateX(-25%) translateZ(0);
+  }
+  100% {
+    transform: translateX(0) translateZ(0);
+  }
+}
+
+@keyframes tide-stream-right {
+  0% {
+    transform: translateX(0) translateZ(0);
+  }
+  50% {
+    transform: translateX(20%) translateZ(0);
+  }
+  100% {
+    transform: translateX(0) translateZ(0);
+  }
+}
+
+.animate-tide-stream-1 {
+  animation: tide-stream-left 22s ease-in-out infinite;
+}
+
+.animate-tide-stream-2 {
+  animation: tide-stream-right 28s ease-in-out infinite;
+}
+
+/* Cyber Cyan (#06B6D4) Real-Time Radar Scanner */
+@keyframes cyber-radar-sweep {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(1000%);
+    opacity: 0;
+  }
+}
+
+@keyframes cyber-radar-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.8), inset 0 0 30px rgba(6, 182, 212, 0.4);
+  }
+}
+
+.animate-cyber-sweep {
+  animation: cyber-radar-sweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-cyber-pulse {
+  animation: cyber-radar-pulse 2.5s ease-in-out infinite;
+}
+
+.cyber-cyan-glow {
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.45), 0 0 10px rgba(6, 182, 212, 0.7);
 }
 
 .animate-ocean-tides {
