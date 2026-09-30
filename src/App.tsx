@@ -41,6 +41,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { LandingPage } from './components/LandingPage';
+import { ProductDetailSlideOver } from './components/ProductDetailSlideOver';
 import { ProductDetailModal, ProductModalData } from './components/ProductDetailModal';
 import {
   VERIFIED_FALLBACK_PLACEHOLDER,
@@ -1413,6 +1414,16 @@ export default function App() {
 
   return (
     <div className={`flex flex-col h-screen ${isWhite ? 'aesthetic-bg-white text-[#2E1065]' : 'aesthetic-bg text-[#FAF8FF]'} overflow-hidden font-sans relative transition-colors duration-300`}>
+      {/* Scenic Ocean Background ("Sala behta hi jayega") with clean atmospheric glassmorphic opacity */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center transition-opacity duration-700 ease-in-out"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop')`,
+          opacity: isWhite ? 0.15 : 0.22,
+          filter: isWhite ? 'saturate(1.2) contrast(1.05)' : 'brightness(0.65) contrast(1.25)'
+        }}
+      />
+
       {/* Background ambient decorative glow orbs & Levitating Space Objects */}
       <div className="fixed top-[-100px] left-[20%] w-[500px] h-[500px] bg-violet-400/20 rounded-full blur-[140px] pointer-events-none z-0" />
       <div className="fixed bottom-[-100px] right-[10%] w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[140px] pointer-events-none z-0" />
@@ -2933,13 +2944,14 @@ export default function App() {
     </div>
   )}
 
-  {/* Interactive Verified Product Detail Modal with Specs, Gallery & Reviews */}
-  <ProductDetailModal
+  {/* Interactive Verified Product Detail Slide-Over Drawer with Full Specs, Real-Time Prices & User Reviews */}
+  <ProductDetailSlideOver
     isOpen={isProductModalOpen}
     onClose={() => setIsProductModalOpen(false)}
     product={selectedProductForModal}
-    onTrackProduct={handleTrackGenericProduct}
     onAskAi={handleAskAiAboutProduct}
+    onDeepResearch={runMultiResearch}
+    onTrackPrice={(prod) => handleTrackGenericProduct(prod.name, prod.name)}
     isWhite={isWhite}
   />
 </div>

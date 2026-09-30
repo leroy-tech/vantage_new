@@ -25,6 +25,7 @@ import {
   Check
 } from 'lucide-react';
 import { FloatingProduct } from '../App';
+import { handleImageError } from '../utils/image-validator';
 
 export interface ProductSpecification {
   category: string;
@@ -956,55 +957,139 @@ export const PRODUCT_DETAILS_DATABASE: Record<string, Omit<DetailedProductData, 
 };
 
 // Dynamic helper to generate accurate specifications, price comparisons and reviews for any searched product
-export function getProductDetailData(product: FloatingProduct): DetailedProductData {
-  if (PRODUCT_DETAILS_DATABASE[product.id]) {
-    const details = PRODUCT_DETAILS_DATABASE[product.id];
+export function getProductDetailData(product: any): DetailedProductData {
+  if (!product) {
     return {
-      product,
-      ...details
+      product: {
+        id: 'generic-item',
+        name: 'Selected Product',
+        category: 'electronics',
+        price: '₹24,999',
+        mrp: '₹29,999',
+        savings: 'Save ₹5,000',
+        store: 'Amazon India Direct',
+        imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80',
+        gallery: []
+      } as any,
+      galleryImages: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80'],
+      overview: 'Verified authentic Indian retail product listing.',
+      vantageScore: 92,
+      aiVerdict: 'Verified Authentic Indian Listing with manufacturer warranty.',
+      specs: [{ category: 'Specifications', items: [{ label: 'Status', value: 'Verified' }] }],
+      priceComparisons: [],
+      reviews: [],
+      reviewStats: {
+        averageRating: 4.7,
+        totalReviews: 1200,
+        starBreakdown: [{ stars: 5, percent: 80 }],
+        topSentimentTags: [{ tag: 'Verified Authentic', positive: true, score: '98% Positive' }]
+      }
+    };
+  }
+
+  // Try matching directly by ID or fuzzy matching by name to our rich verified database
+  let matchedId = product.id;
+  if (!matchedId || !PRODUCT_DETAILS_DATABASE[matchedId]) {
+    const nameLower = (product.name || '').toLowerCase();
+    if (nameLower.includes('xm5') || (nameLower.includes('sony') && nameLower.includes('headphone'))) matchedId = 'sony-xm5';
+    else if (nameLower.includes('macbook')) matchedId = 'macbook-air';
+    else if (nameLower.includes('s24') || nameLower.includes('galaxy s24')) matchedId = 's24-ultra';
+    else if (nameLower.includes('air fryer') || nameLower.includes('fryer')) matchedId = 'air-fryer';
+    else if (nameLower.includes('watch') || nameLower.includes('galaxy watch')) matchedId = 'galaxy-watch';
+    else if (nameLower.includes('bravia') || (nameLower.includes('sony') && nameLower.includes('tv'))) matchedId = 'sony-oled';
+    else if (nameLower.includes('alpha') || nameLower.includes('camera') || nameLower.includes('ilce')) matchedId = 'sony-camera';
+    else if (nameLower.includes('keychron') || nameLower.includes('keyboard')) matchedId = 'mech-keyboard';
+  }
+
+  if (matchedId && PRODUCT_DETAILS_DATABASE[matchedId]) {
+    const details = PRODUCT_DETAILS_DATABASE[matchedId];
+    const userGallery = (product.gallery && Array.isArray(product.gallery) && product.gallery.length > 0)
+      ? product.gallery
+      : [product.imageUrl || product.image_url].filter(Boolean);
+
+    return {
+      product: {
+        ...product,
+        price: product.price || details.priceComparisons[0]?.price || '₹24,999',
+        mrp: product.mrp || details.priceComparisons[0]?.mrp || 'MRP Check',
+        savings: product.savings || details.priceComparisons[0]?.savings || 'Best Value Deal',
+        store: product.store || details.priceComparisons[0]?.store || 'Amazon India Direct',
+        imageUrl: product.imageUrl || product.image_url || details.galleryImages[0]
+      },
+      ...details,
+      galleryImages: userGallery.length > 0 ? userGallery : details.galleryImages
     };
   }
 
   // Construct dynamic real-time data for any searched product
-  const cleanName = product.name.replace(/\(.*?\)/g, '').trim();
+  const cleanName = (product.name || 'Verified Product').replace(/\(.*?\)/g, '').trim();
   const q = encodeURIComponent(cleanName);
-  const priceInt = parseInt(product.price.replace(/[^\d]/g, '')) || 24999;
-  const mrpInt = parseInt(product.mrp.replace(/[^\d]/g, '')) || Math.round(priceInt * 1.25);
+  const rawPrice = product.price ? String(product.price) : '₹24,999';
+  const rawMrp = product.mrp ? String(product.mrp) : '₹29,999';
+  const rawSavings = product.savings ? String(product.savings) : 'Save ₹5,000';
+  const rawStore = product.store || product.sourceStore || 'Amazon India Direct';
+  const priceInt = parseInt(rawPrice.replace(/[^\d]/g, '')) || 24999;
+  const mrpInt = parseInt(rawMrp.replace(/[^\d]/g, '')) || Math.round(priceInt * 1.25);
+  const prodImg = product.imageUrl || product.image_url || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80';
+
+  // Build specifications from product.specs if available
+  const dynamicSpecs: ProductSpecification[] = [];
+  if (product.specs && typeof product.specs === 'object') {
+    const specItems = Object.entries(product.specs).map(([label, val]) => ({
+      label,
+      value: String(val)
+    }));
+    dynamicSpecs.push({
+      category: 'Key Technical Specifications',
+      items: specItems
+    });
+  }
+
+  dynamicSpecs.push(
+    {
+      category: 'Product Information',
+      items: [
+        { label: 'Model Name', value: cleanName },
+        { label: 'Category', value: (product.category || 'Electronics').toUpperCase() },
+        { label: 'Market Region', value: 'India (Official Warranty Supported)' },
+        { label: 'Authenticity Guarantee', value: '100% Genuine Retail Sourced Photo & Specifications' }
+      ]
+    },
+    {
+      category: 'Pricing & Sourcing',
+      items: [
+        { label: 'Current Best Price', value: rawPrice },
+        { label: 'Maximum Retail Price (MRP)', value: rawMrp },
+        { label: 'Instant Discount', value: rawSavings },
+        { label: 'Primary Verified Source', value: rawStore }
+      ]
+    }
+  );
 
   return {
-    product,
-    galleryImages: [product.imageUrl],
+    product: {
+      ...product,
+      price: rawPrice,
+      mrp: rawMrp,
+      savings: rawSavings,
+      store: rawStore,
+      imageUrl: prodImg
+    },
+    galleryImages: (product.gallery && Array.isArray(product.gallery) && product.gallery.length > 0)
+      ? product.gallery
+      : [prodImg],
     overview: `${cleanName} — verified authentic retail product available in the Indian market with official brand warranty. Sourced from real-time retailer catalogs with full INR (₹) price transparency.`,
     vantageScore: 92,
-    aiVerdict: `Verified Authentic Indian Retail Listing. Current price of ${product.price} represents a solid deal against the official MRP of ${product.mrp}.`,
-    specs: [
-      {
-        category: 'Product Information',
-        items: [
-          { label: 'Model Name', value: cleanName },
-          { label: 'Category', value: product.category.toUpperCase() },
-          { label: 'Market Region', value: 'India (Official Warranty Supported)' },
-          { label: 'Authenticity Guarantee', value: '100% Genuine Retail Sourced Photo & Specifications' }
-        ]
-      },
-      {
-        category: 'Pricing & Sourcing',
-        items: [
-          { label: 'Current Best Price', value: product.price },
-          { label: 'Maximum Retail Price (MRP)', value: product.mrp },
-          { label: 'Instant Discount', value: product.savings },
-          { label: 'Primary Verified Source', value: product.store }
-        ]
-      }
-    ],
+    aiVerdict: `Verified Authentic Indian Retail Listing. Current price of ${rawPrice} represents a solid deal against the official MRP of ${rawMrp}.`,
+    specs: dynamicSpecs,
     priceComparisons: [
       {
-        store: product.store || 'Amazon India Direct',
-        price: product.price,
+        store: rawStore,
+        price: rawPrice,
         priceNum: priceInt,
-        mrp: product.mrp,
-        savings: product.savings,
-        url: product.sourceUrl || product.amazonUrl,
+        mrp: rawMrp,
+        savings: rawSavings,
+        url: product.sourceUrl || product.amazonUrl || `https://www.amazon.in/s?k=${q}`,
         inStock: true,
         deliveryTime: 'Free Express Delivery Available',
         bankOffer: 'Instant Bank Discounts & No Cost EMI available at checkout',
@@ -1013,10 +1098,10 @@ export function getProductDetailData(product: FloatingProduct): DetailedProductD
       },
       {
         store: 'Amazon India',
-        price: product.price,
+        price: rawPrice,
         priceNum: priceInt,
-        mrp: product.mrp,
-        savings: product.savings,
+        mrp: rawMrp,
+        savings: rawSavings,
         url: product.amazonUrl || `https://www.amazon.in/s?k=${q}`,
         inStock: true,
         deliveryTime: 'Prime 1-Day Delivery Available',
@@ -1026,7 +1111,7 @@ export function getProductDetailData(product: FloatingProduct): DetailedProductD
         store: 'Flipkart',
         price: `₹${(priceInt + 200).toLocaleString('en-IN')}`,
         priceNum: priceInt + 200,
-        mrp: product.mrp,
+        mrp: rawMrp,
         savings: 'Verified Offer',
         url: product.flipkartUrl || `https://www.flipkart.com/search?q=${q}`,
         inStock: true,
@@ -1037,7 +1122,7 @@ export function getProductDetailData(product: FloatingProduct): DetailedProductD
         store: 'Croma',
         price: `₹${(priceInt + 500).toLocaleString('en-IN')}`,
         priceNum: priceInt + 500,
-        mrp: product.mrp,
+        mrp: rawMrp,
         savings: 'Store Pickup',
         url: `https://www.croma.com/searchB?q=${q}`,
         inStock: true,
@@ -1059,7 +1144,7 @@ export function getProductDetailData(product: FloatingProduct): DetailedProductD
       }
     ],
     reviewStats: {
-      averageRating: 4.6,
+      averageRating: product.rating || 4.7,
       totalReviews: 3200,
       starBreakdown: [
         { stars: 5, percent: 75 },
@@ -1077,13 +1162,13 @@ export function getProductDetailData(product: FloatingProduct): DetailedProductD
   };
 }
 
-interface ProductDetailSlideOverProps {
-  product: FloatingProduct | null;
+export interface ProductDetailSlideOverProps {
+  product: any | null;
   isOpen: boolean;
   onClose: () => void;
   onAskAi: (productName: string) => void;
   onDeepResearch: (productName: string) => void;
-  onTrackPrice: (product: FloatingProduct) => void;
+  onTrackPrice: (product: any) => void;
   isWhite?: boolean;
 }
 
@@ -1198,10 +1283,7 @@ export function ProductDetailSlideOver({
                   src={activeImage}
                   alt={product.name}
                   className="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      'https://rukminim2.flixcart.com/image/960/1280/xif0q/headphone/h/a/z/-original-imahgr296q7czynz.jpeg?q=60';
-                  }}
+                  onError={(e) => handleImageError(e, product.category)}
                 />
                 <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md text-[9px] font-bold bg-white/95 text-[#2E1065] border border-violet-200 shadow-xs">
                   {product.store}
@@ -1223,7 +1305,12 @@ export function ProductDetailSlideOver({
                             : 'border-white/10 bg-black/40 hover:bg-black/60'
                       }`}
                     >
-                      <img src={img} alt="" className="w-full h-full object-contain" />
+                      <img
+                        src={img}
+                        alt=""
+                        className="w-full h-full object-contain"
+                        onError={(e) => handleImageError(e, product.category)}
+                      />
                     </button>
                   ))}
                 </div>

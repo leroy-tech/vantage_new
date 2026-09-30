@@ -124,7 +124,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   ];
 
   return (
-    <div className="w-full font-sans bg-[#FAF8FF] text-[#2E1065] transition-colors duration-300">
+    <div className="w-full font-sans bg-[#FAF8FF] text-[#2E1065] transition-colors duration-300 relative min-h-screen">
+      {/* Scenic Ocean Background ("Sala behta hi jayega") with clean atmospheric glassmorphic opacity */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center transition-opacity duration-700 ease-in-out"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop')`,
+          opacity: 0.12,
+          filter: 'saturate(1.2) contrast(1.05)'
+        }}
+      />
+
       {/* Hero Section */}
       <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
         {/* Ambient White & Violet Glowing Orbs */}
