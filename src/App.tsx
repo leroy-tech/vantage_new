@@ -38,7 +38,9 @@ import {
   Layers,
   Sun,
   Moon,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  Eye
 } from 'lucide-react';
 import { LandingPage } from './components/LandingPage';
 import { ProductDetailSlideOver } from './components/ProductDetailSlideOver';
@@ -681,6 +683,7 @@ export default function App() {
   // Product Details Modal State
   const [selectedProductForModal, setSelectedProductForModal] = useState<ProductModalData | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState<boolean>(false);
+  const [isConstitutionOpen, setIsConstitutionOpen] = useState<boolean>(false);
 
   const handleOpenProductModal = async (productData: any) => {
     if (!productData) return;
@@ -1414,15 +1417,19 @@ export default function App() {
 
   return (
     <div className={`flex flex-col h-screen ${isWhite ? 'aesthetic-bg-white text-[#2E1065]' : 'aesthetic-bg text-[#FAF8FF]'} overflow-hidden font-sans relative transition-colors duration-300`}>
-      {/* Scenic Ocean Background ("Sala behta hi jayega") with clean atmospheric glassmorphic opacity */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center transition-opacity duration-700 ease-in-out"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop')`,
-          opacity: isWhite ? 0.15 : 0.22,
-          filter: isWhite ? 'saturate(1.2) contrast(1.05)' : 'brightness(0.65) contrast(1.25)'
-        }}
-      />
+      {/* Scenic Ocean Background ("Sala behta hi jayega") with flowing tides & elevated attraction */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div 
+          className="absolute -inset-10 bg-cover bg-center transition-opacity duration-700 ease-in-out animate-ocean-tides"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop')`,
+            opacity: isWhite ? 0.28 : 0.38,
+            filter: isWhite ? 'saturate(1.3) contrast(1.12) brightness(1.02)' : 'brightness(0.72) contrast(1.35) saturate(1.2)'
+          }}
+        />
+        {/* Oceanic Water Flow & Wave Shimmer Layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/8 via-violet-500/6 to-indigo-950/12 animate-wave-ripple pointer-events-none" />
+      </div>
 
       {/* Background ambient decorative glow orbs & Levitating Space Objects */}
       <div className="fixed top-[-100px] left-[20%] w-[500px] h-[500px] bg-violet-400/20 rounded-full blur-[140px] pointer-events-none z-0" />
@@ -1544,6 +1551,20 @@ export default function App() {
                 <span>Brand & UI Tour</span>
               </button>
             )}
+
+            {/* Design Constitution Trigger Button */}
+            <button
+              onClick={() => setIsConstitutionOpen(true)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                isWhite
+                  ? 'bg-white hover:bg-violet-50 text-[#6D28D9] border-violet-200 shadow-sm'
+                  : 'bg-white/10 hover:bg-white/20 text-violet-200 border-white/10'
+              }`}
+              title="Vantage Design Constitution: 3 Inviolable Pillars"
+            >
+              <Shield className="w-3.5 h-3.5 text-[#7C3AED]" />
+              <span className="hidden md:inline">Constitution</span>
+            </button>
 
             {/* Theme Badge: Pure White & Violet */}
             <div
@@ -2367,9 +2388,9 @@ export default function App() {
                       style={{ animationDelay: `${(idx % 4) * 0.4}s` }}
                     >
                       {/* Levitating Card */}
-                      <div className={`${isWhite ? 'glass-panel-white border-violet-100 hover:border-violet-400 shadow-xl' : 'glass-panel border-white/15 hover:border-[#F0B429] shadow-2xl'} border rounded-3xl p-4 flex flex-col justify-between h-full floating-obj-card relative overflow-hidden backdrop-blur-2xl group transition-all`}>
-                        {/* Glowing ambient backdrop on hover */}
-                        <div className={`absolute top-0 right-0 w-32 h-32 ${isWhite ? 'bg-amber-300/15 group-hover:bg-amber-400/25' : 'bg-[#7C3AED]/10 group-hover:bg-[#7C3AED]/20'} rounded-full blur-2xl pointer-events-none transition-colors`} />
+                      <div className="glass-panel-white border border-violet-200/70 hover:border-violet-400 rounded-3xl p-4 flex flex-col justify-between h-full floating-obj-card relative overflow-hidden backdrop-blur-2xl group transition-all duration-300 hover:-translate-y-1.5">
+                        {/* Glowing ambient backdrop on hover with soft violet sheen */}
+                        <div className="absolute top-0 right-0 w-36 h-36 bg-violet-400/15 group-hover:bg-violet-400/25 rounded-full blur-2xl pointer-events-none transition-colors" />
 
                         {/* Top Tag & Store Pill */}
                         <div className="flex items-center justify-between gap-1 mb-3">
@@ -2544,7 +2565,7 @@ export default function App() {
                   <button
                     key={fp.id}
                     onClick={() => handleAskAiAboutProduct(fp.name)}
-                    className={`flex items-center gap-2 ${isWhite ? 'bg-[#FAF8FF] hover:bg-violet-50 border-violet-100 hover:border-violet-300' : 'bg-black/40 hover:bg-black/70 border-white/10 hover:border-[#F0B429]'} border p-1.5 pr-3 rounded-xl shrink-0 transition-all text-left group`}
+                    className="glass-panel-white flex items-center gap-2 hover:bg-violet-50/80 border border-violet-200/70 hover:border-violet-300 p-1.5 pr-3 rounded-xl shrink-0 transition-all text-left group"
                   >
                     <img
                       src={fp.imageUrl}
@@ -2954,6 +2975,123 @@ export default function App() {
     onTrackPrice={(prod) => handleTrackGenericProduct(prod.name, prod.name)}
     isWhite={isWhite}
   />
+
+  {/* Design Constitution Modal */}
+  {isConstitutionOpen && (
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+      <div
+        className="fixed inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity"
+        onClick={() => setIsConstitutionOpen(false)}
+      />
+      <div className="relative z-10 w-full max-w-4xl glass-panel-white border border-violet-200/80 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden text-[#2E1065]">
+        <div className="flex items-center justify-between gap-3 border-b border-violet-100 pb-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white flex items-center justify-center font-bold shadow-md">
+              <Shield className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7C3AED] bg-violet-100 px-2.5 py-0.5 rounded-full border border-violet-200">
+                Core Engineering Standard
+              </span>
+              <h3 className="font-heading font-black text-xl sm:text-2xl text-[#2E1065]">
+                The Vantage Design Constitution
+              </h3>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsConstitutionOpen(false)}
+            className="p-2 rounded-xl border border-violet-100 bg-violet-50 hover:bg-violet-100 text-[#2E1065] transition-colors cursor-pointer"
+            title="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Pillar 1: Visual Integrity */}
+          <div className="p-6 rounded-2xl border border-violet-200/80 bg-white/90 shadow-md flex flex-col justify-between group hover:border-violet-400 transition-all">
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7C3AED] bg-violet-100 px-2.5 py-1 rounded-full border border-violet-200">
+                  Visual Integrity
+                </span>
+                <div className="w-7 h-7 rounded-lg bg-violet-100 text-[#7C3AED] flex items-center justify-center">
+                  <Eye className="w-4 h-4" />
+                </div>
+              </div>
+              <h4 className="font-heading font-black text-base text-[#2E1065] mb-2 group-hover:text-[#7C3AED] transition-colors">
+                1. Strict Zero Fake Stock Policy
+              </h4>
+              <p className="text-xs text-[#4C1D95] leading-relaxed font-medium">
+                No generic smiling people or stock laptop illustrations. Every product photo displayed in Vantage MUST originate from the verified official retailer or manufacturer CDN with canonical 200 HTTP headers.
+              </p>
+            </div>
+            <div className="mt-5 pt-3 border-t border-violet-100 flex items-center gap-1.5 text-[10px] font-bold text-emerald-700">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>100% Verified Retailer CDN Headers</span>
+            </div>
+          </div>
+
+          {/* Pillar 2: Radical Transparency */}
+          <div className="p-6 rounded-2xl border border-violet-200/80 bg-white/90 shadow-md flex flex-col justify-between group hover:border-violet-400 transition-all">
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  Radical Transparency
+                </span>
+                <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                  <Shield className="w-4 h-4" />
+                </div>
+              </div>
+              <h4 className="font-heading font-black text-base text-[#2E1065] mb-2 group-hover:text-[#7C3AED] transition-colors">
+                2. Zero Affiliate Promotion Bias
+              </h4>
+              <p className="text-xs text-[#4C1D95] leading-relaxed font-medium">
+                Traditional comparison engines rank items based on who pays the highest affiliate referral commission. Vantage has zero sponsored rankings—recommendations are strictly scored on technical performance and price history.
+              </p>
+            </div>
+            <div className="mt-5 pt-3 border-t border-violet-100 flex items-center gap-1.5 text-[10px] font-bold text-emerald-700">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>0% Sponsored Pay-for-Rank Influence</span>
+            </div>
+          </div>
+
+          {/* Pillar 3: Zero Cost Sovereignty */}
+          <div className="p-6 rounded-2xl border border-violet-200/80 bg-white/90 shadow-md flex flex-col justify-between group hover:border-violet-400 transition-all">
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-900 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+                  Zero Cost Sovereignty
+                </span>
+                <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+                  <Zap className="w-4 h-4" />
+                </div>
+              </div>
+              <h4 className="font-heading font-black text-base text-[#2E1065] mb-2 group-hover:text-[#7C3AED] transition-colors">
+                3. 100% Free-Tier Architecture
+              </h4>
+              <p className="text-xs text-[#4C1D95] leading-relaxed font-medium">
+                Runs on Google Gemini 2.5 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
+              </p>
+            </div>
+            <div className="mt-5 pt-3 border-t border-violet-100 flex items-center gap-1.5 text-[10px] font-bold text-emerald-700">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Google Gemini 2.5 Flash Free Quota Engine</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-violet-100 flex items-center justify-end">
+          <button
+            onClick={() => setIsConstitutionOpen(false)}
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white font-bold text-xs shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer font-heading"
+          >
+            Acknowledge & Close
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
 </div>
   );
 }

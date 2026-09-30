@@ -57,10 +57,10 @@
 
 .glass-panel-white {
   background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.15);
-  box-shadow: 0 12px 32px -6px rgba(109, 40, 217, 0.06), 0 4px 12px -2px rgba(109, 40, 217, 0.03);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  box-shadow: 0 16px 32px -4px rgba(109, 40, 217, 0.10), 0 6px 16px -2px rgba(124, 58, 237, 0.05), inset 0 0 24px rgba(245, 243, 255, 0.75);
 }
 
 .glass-panel-amber,
@@ -207,6 +207,50 @@
 
 .animate-pulse-ring {
   animation: pulse-ring 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Animated Ocean Tides & Flowing Water Currents ("Sala behta hi jayega") */
+@keyframes ocean-tide-flow {
+  0% {
+    transform: scale(1.05) translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.10) translate(-14px, 12px) rotate(0.6deg);
+  }
+  50% {
+    transform: scale(1.13) translate(12px, -15px) rotate(-0.5deg);
+  }
+  75% {
+    transform: scale(1.08) translate(-10px, -8px) rotate(0.3deg);
+  }
+  100% {
+    transform: scale(1.05) translate(0px, 0px) rotate(0deg);
+  }
+}
+
+@keyframes ocean-wave-ripple {
+  0% {
+    opacity: 0.20;
+    transform: translateY(0px) scaleY(1);
+  }
+  50% {
+    opacity: 0.40;
+    transform: translateY(-10px) scaleY(1.06);
+  }
+  100% {
+    opacity: 0.20;
+    transform: translateY(0px) scaleY(1);
+  }
+}
+
+.animate-ocean-tides {
+  animation: ocean-tide-flow 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.animate-wave-ripple {
+  animation: ocean-wave-ripple 10s ease-in-out infinite alternate;
+  will-change: opacity, transform;
 }
 
 /* 3D Floating in air interactive perspective */

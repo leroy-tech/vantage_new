@@ -125,15 +125,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   return (
     <div className="w-full font-sans bg-[#FAF8FF] text-[#2E1065] transition-colors duration-300 relative min-h-screen">
-      {/* Scenic Ocean Background ("Sala behta hi jayega") with clean atmospheric glassmorphic opacity */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center transition-opacity duration-700 ease-in-out"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop')`,
-          opacity: 0.12,
-          filter: 'saturate(1.2) contrast(1.05)'
-        }}
-      />
+      {/* Scenic Ocean Background ("Sala behta hi jayega") with flowing tides & elevated attraction */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div 
+          className="absolute -inset-10 bg-cover bg-center transition-opacity duration-700 ease-in-out animate-ocean-tides"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop')`,
+            opacity: 0.28,
+            filter: 'saturate(1.3) contrast(1.12) brightness(1.02)'
+          }}
+        />
+        {/* Flowing Water Shimmer Layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/8 via-violet-500/6 to-indigo-950/12 animate-wave-ripple pointer-events-none" />
+      </div>
 
       {/* Hero Section */}
       <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
@@ -230,7 +234,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               {floatingProducts.slice(0, 4).map((fp) => (
                 <div
                   key={fp.id}
-                  className="group relative rounded-2xl p-4 border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl bg-white border-violet-100 shadow-lg shadow-violet-500/5 hover:border-violet-400 hover:shadow-violet-500/15"
+                  className="glass-panel-white group relative rounded-2xl p-4 border border-violet-200/70 transition-all duration-300 hover:-translate-y-2 hover:border-violet-400"
                 >
                   {/* Top Tag & Store */}
                   <div className="flex items-center justify-between gap-2 mb-3">
@@ -772,6 +776,107 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
+      {/* The Vantage Design Constitution Section */}
+      <section id="design-constitution" className="py-20 border-t border-violet-100/80 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-violet-100 text-[#6D28D9] border border-violet-200 mb-3 shadow-xs">
+              <Shield className="w-3.5 h-3.5 text-[#7C3AED]" />
+              THREE INVIOLABLE PILLARS
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3 font-heading text-[#2E1065]">
+              The Vantage Design Constitution
+            </h2>
+            <p className="text-[#5B21B6] max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+              Engineered with uncompromising visual integrity, total freedom from affiliate bias, and perpetual free-tier access for everyone.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* 1. Visual Integrity / Strict Zero Fake Stock Policy */}
+            <div className="glass-panel-white border border-violet-200/70 hover:border-violet-400 rounded-3xl p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-36 h-36 bg-violet-400/10 group-hover:bg-violet-400/20 rounded-full blur-2xl pointer-events-none transition-colors" />
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7C3AED] bg-violet-100 px-3 py-1 rounded-full border border-violet-200 shadow-xs">
+                    Visual Integrity
+                  </span>
+                  <div className="w-9 h-9 rounded-xl bg-violet-100 border border-violet-200 text-[#7C3AED] flex items-center justify-center">
+                    <Eye className="w-4 h-4" />
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-black font-heading mb-3 text-[#2E1065] group-hover:text-[#7C3AED] transition-colors">
+                  1. Strict Zero Fake Stock Policy
+                </h3>
+                <p className="text-xs leading-relaxed text-[#4C1D95] font-medium">
+                  No generic smiling people or stock laptop illustrations. Every product photo displayed in Vantage MUST originate from the verified official retailer or manufacturer CDN with canonical 200 HTTP headers.
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-violet-100 flex items-center gap-2 text-[11px] font-bold text-emerald-700">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>100% Verified Retailer CDN Headers</span>
+              </div>
+            </div>
+
+            {/* 2. Radical Transparency / Zero Affiliate Promotion Bias */}
+            <div className="glass-panel-white border border-violet-200/70 hover:border-violet-400 rounded-3xl p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-400/10 group-hover:bg-emerald-400/20 rounded-full blur-2xl pointer-events-none transition-colors" />
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-xs">
+                    Radical Transparency
+                  </span>
+                  <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center">
+                    <Shield className="w-4 h-4" />
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-black font-heading mb-3 text-[#2E1065] group-hover:text-[#7C3AED] transition-colors">
+                  2. Zero Affiliate Promotion Bias
+                </h3>
+                <p className="text-xs leading-relaxed text-[#4C1D95] font-medium">
+                  Traditional comparison engines rank items based on who pays the highest affiliate referral commission. Vantage has zero sponsored rankings—recommendations are strictly scored on technical performance and price history.
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-violet-100 flex items-center gap-2 text-[11px] font-bold text-emerald-700">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>0% Sponsored Pay-for-Rank Influence</span>
+              </div>
+            </div>
+
+            {/* 3. Zero Cost Sovereignty / 100% Free-Tier Architecture */}
+            <div className="glass-panel-white border border-violet-200/70 hover:border-violet-400 rounded-3xl p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-36 h-36 bg-amber-400/10 group-hover:bg-amber-400/20 rounded-full blur-2xl pointer-events-none transition-colors" />
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-900 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 shadow-xs">
+                    Zero Cost Sovereignty
+                  </span>
+                  <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
+                    <Zap className="w-4 h-4" />
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-black font-heading mb-3 text-[#2E1065] group-hover:text-[#7C3AED] transition-colors">
+                  3. 100% Free-Tier Architecture
+                </h3>
+                <p className="text-xs leading-relaxed text-[#4C1D95] font-medium">
+                  Runs on Google Gemini 2.5 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-violet-100 flex items-center gap-2 text-[11px] font-bold text-emerald-700">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Google Gemini 2.5 Flash Free Quota Engine</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Vantage AI Brand & UI Guide Section */}
       <section id="brand-guide" className="py-20 border-t bg-gradient-to-b from-white to-[#FAF8FF] border-violet-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -975,40 +1080,99 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* TAB 4: Design Constitution */}
           {activeGuideTab === 'principles' && (
             <div className="space-y-6 animate-in fade-in duration-300">
+              <div className="text-center max-w-2xl mx-auto mb-6">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#7C3AED] bg-violet-100 px-3 py-1 rounded-full border border-violet-200">
+                  CORE ENGINEERING PILLARS
+                </span>
+                <h3 className="text-2xl font-black font-heading text-[#2E1065] mt-2">
+                  The Vantage Design Constitution
+                </h3>
+                <p className="text-xs text-[#5B21B6] mt-1">
+                  Three inviolable principles ensuring uncompromised visual honesty, unbiased recommendations, and free access.
+                </p>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[
-                  {
-                    title: '1. Strict Zero Fake Stock Policy',
-                    desc: 'No generic smiling people or stock laptop illustrations. Every product photo displayed in Vantage MUST originate from the verified official retailer or manufacturer CDN with canonical 200 HTTP headers.',
-                    icon: Eye,
-                    tag: 'Visual Integrity'
-                  },
-                  {
-                    title: '2. Zero Affiliate Promotion Bias',
-                    desc: 'Traditional comparison engines rank items based on who pays the highest affiliate referral commission. Vantage has zero sponsored rankings—recommendations are strictly scored on technical performance and price history.',
-                    icon: Shield,
-                    tag: 'Radical Transparency'
-                  },
-                  {
-                    title: '3. 100% Free-Tier Architecture',
-                    desc: 'Runs on Google Gemini 2.5 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.',
-                    icon: Zap,
-                    tag: 'Zero Cost Sovereignty'
-                  }
-                ].map((principle, idx) => (
-                  <div
-                    key={idx}
-                    className="p-6 rounded-2xl border bg-white border-violet-100 shadow-md shadow-violet-500/5 hover:border-violet-300"
-                  >
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#7C3AED] bg-violet-100 px-2.5 py-1 rounded-full border border-violet-200">
-                      {principle.tag}
-                    </span>
-                    <h3 className="text-lg font-bold mt-4 mb-2 text-[#2E1065]">{principle.title}</h3>
-                    <p className="text-xs leading-relaxed text-[#7C6898]">
-                      {principle.desc}
+                {/* 1. Strict Zero Fake Stock Policy */}
+                <div className="glass-panel-white border border-violet-200/70 hover:border-violet-400 rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-violet-400/10 group-hover:bg-violet-400/20 rounded-full blur-2xl pointer-events-none transition-colors" />
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7C3AED] bg-violet-100 px-3 py-1 rounded-full border border-violet-200 shadow-xs">
+                        Visual Integrity
+                      </span>
+                      <div className="w-8 h-8 rounded-xl bg-violet-100 border border-violet-200 text-[#7C3AED] flex items-center justify-center">
+                        <Eye className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    <h3 className="text-lg font-black font-heading mb-3 text-[#2E1065] group-hover:text-[#7C3AED] transition-colors">
+                      1. Strict Zero Fake Stock Policy
+                    </h3>
+                    <p className="text-xs leading-relaxed text-[#4C1D95] font-medium">
+                      No generic smiling people or stock laptop illustrations. Every product photo displayed in Vantage MUST originate from the verified official retailer or manufacturer CDN with canonical 200 HTTP headers.
                     </p>
                   </div>
-                ))}
+
+                  <div className="mt-6 pt-4 border-t border-violet-100 flex items-center gap-2 text-[11px] font-bold text-emerald-700">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>100% Verified Retailer CDN Headers</span>
+                  </div>
+                </div>
+
+                {/* 2. Zero Affiliate Promotion Bias */}
+                <div className="glass-panel-white border border-violet-200/70 hover:border-violet-400 rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/10 group-hover:bg-emerald-400/20 rounded-full blur-2xl pointer-events-none transition-colors" />
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-xs">
+                        Radical Transparency
+                      </span>
+                      <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center">
+                        <Shield className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    <h3 className="text-lg font-black font-heading mb-3 text-[#2E1065] group-hover:text-[#7C3AED] transition-colors">
+                      2. Zero Affiliate Promotion Bias
+                    </h3>
+                    <p className="text-xs leading-relaxed text-[#4C1D95] font-medium">
+                      Traditional comparison engines rank items based on who pays the highest affiliate referral commission. Vantage has zero sponsored rankings—recommendations are strictly scored on technical performance and price history.
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-violet-100 flex items-center gap-2 text-[11px] font-bold text-emerald-700">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>0% Sponsored Pay-for-Rank Influence</span>
+                  </div>
+                </div>
+
+                {/* 3. 100% Free-Tier Architecture */}
+                <div className="glass-panel-white border border-violet-200/70 hover:border-violet-400 rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 group-hover:bg-amber-400/20 rounded-full blur-2xl pointer-events-none transition-colors" />
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-900 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 shadow-xs">
+                        Zero Cost Sovereignty
+                      </span>
+                      <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
+                        <Zap className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    <h3 className="text-lg font-black font-heading mb-3 text-[#2E1065] group-hover:text-[#7C3AED] transition-colors">
+                      3. 100% Free-Tier Architecture
+                    </h3>
+                    <p className="text-xs leading-relaxed text-[#4C1D95] font-medium">
+                      Runs on Google Gemini 2.5 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-violet-100 flex items-center gap-2 text-[11px] font-bold text-emerald-700">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Google Gemini 2.5 Flash Free Quota Engine</span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
