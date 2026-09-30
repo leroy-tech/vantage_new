@@ -8,9 +8,10 @@ import { DetailedProductInfo, getCuratedProductDetails } from './productCatalog'
 // Supported models with prioritized fallbacks for high-demand spikes and quota management
 const CANDIDATE_MODELS = [
   process.env.GEMINI_MODEL,
-  'gemini-3.8-flash',
-  'gemini-3.1-flash-lite',
   'gemini-2.5-flash',
+  'gemini-2.5-flash-lite',
+  'gemini-3.1-flash-lite',
+  'gemini-3.8-flash',
   'gemini-flash-latest',
 ].filter((m): m is string => Boolean(m));
 
@@ -100,6 +101,11 @@ async function generateWithFallback(
         if (text) return text;
       } catch (err: any) {
         lastError = err;
+        const msg = String(err?.message || '');
+        if (msg.includes('resource_exhausted') || msg.includes('quota') || msg.includes('429')) {
+          console.warn(`Model ${model} quota exhausted, skipping to next model...`);
+          continue;
+        }
       }
     }
 

@@ -42,6 +42,14 @@ import {
 } from 'lucide-react';
 import { LandingPage } from './components/LandingPage';
 import { ProductDetailModal, ProductModalData } from './components/ProductDetailModal';
+import {
+  VERIFIED_FALLBACK_PLACEHOLDER,
+  CATEGORY_FALLBACK_PLACEHOLDERS,
+  VERIFIED_PRODUCT_IMAGE_MAP,
+  handleImageError,
+  sanitizeProductImage,
+  verifyImageUrl,
+} from './utils/image-validator';
 
 export interface FloatingProduct {
   id: string;
@@ -69,7 +77,7 @@ export interface FloatingProduct {
   expertTake?: string;
 }
 
-export const FLOATING_PRODUCTS: FloatingProduct[] = [
+const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
   {
     id: 'sony-xm5',
     name: 'Sony WH-1000XM5 Wireless ANC',
@@ -441,6 +449,14 @@ export const FLOATING_PRODUCTS: FloatingProduct[] = [
   },
 ];
 
+export const FLOATING_PRODUCTS: FloatingProduct[] = RAW_FLOATING_PRODUCTS.map((product): FloatingProduct => ({
+  ...product,
+  imageUrl: sanitizeProductImage(product.imageUrl, product.category, VERIFIED_PRODUCT_IMAGE_MAP, product.name),
+  gallery: (product.gallery && product.gallery.length > 0)
+    ? product.gallery.map((img) => sanitizeProductImage(img, product.category, VERIFIED_PRODUCT_IMAGE_MAP, product.name))
+    : [sanitizeProductImage(product.imageUrl, product.category, VERIFIED_PRODUCT_IMAGE_MAP, product.name)],
+}));
+
 interface Stats {
   tracked_count: number;
   total_checks: number;
@@ -556,149 +572,11 @@ function getFallbackStoreLinks(name: string, sourceUrl?: string): StoreLink[] {
 }
 
 // Verified exact product photos from authentic retail and high-resolution CDNs (100% 200 OK)
-const EXACT_CLIENT_IMAGE_MAP: Record<string, string> = {
-  // Sony Audio & Video
-  'sony wh-1000xm5': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80',
-  'sony wh-1000xm4': 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1000&q=80',
-  'sony wf-1000xm5': 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
-  'sony wh-ch720n': 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
-  'sony bravia': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1000&q=80',
-  'sony alpha': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80',
-  
-  // Apple Ecosystem
-  'macbook air m3': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
-  'macbook air m2': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
-  'macbook air': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
-  'macbook pro': 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1000&q=80',
-  'macbook': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
-  'iphone 16 pro max': 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
-  'iphone 16 pro': 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
-  'iphone 16': 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
-  'iphone 15 pro max': 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
-  'iphone 15 pro': 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
-  'iphone 15': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80',
-  'iphone 14': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80',
-  'iphone 13': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80',
-  'airpods pro': 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=1000&q=80',
-  'airpods max': 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
-  'apple watch ultra': 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80',
-  'apple watch series 9': 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80',
-  'apple watch': 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80',
-  'ipad pro': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80',
-  'ipad air': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80',
-  'ipad': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80',
+export const EXACT_CLIENT_IMAGE_MAP: Record<string, string> = VERIFIED_PRODUCT_IMAGE_MAP;
 
-  // Samsung Galaxy
-  'samsung galaxy s24 ultra': 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80',
-  'samsung galaxy s24': 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80',
-  'galaxy s24': 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80',
-  'samsung galaxy s23 fe': 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80',
-  'samsung galaxy watch': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80',
-  'galaxy watch': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80',
-
-  // Audio Brands (boAt, Bose, JBL, Marshall)
-  'boat nirvana ion': 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
-  'boat nirvana': 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
-  'boat airdopes': 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
-  'bose quietcomfort': 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
-  'bose': 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
-  'jbl flip 6': 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
-  'jbl charge 5': 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
-  'marshall emberton': 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
-
-  // Keyboards & Peripherals
-  'keychron k2': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80',
-  'keychron': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80',
-  'logitech mx master 3s': 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=80',
-  'logitech mx master': 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=80',
-
-  // Appliances & Smart Home
-  'philips air fryer': 'https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=1000&q=80',
-  'dyson v12': 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80',
-  'dyson v15': 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80',
-  'dyson airwrap': 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=80',
-  'dyson': 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80',
-
-  // Gaming
-  'playstation 5': 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80',
-  'ps5': 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80',
-  'nintendo switch': 'https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=1000&q=80',
-
-  // Popular Smartphones in India
-  'oneplus 12': 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
-  'google pixel 8 pro': 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
-  'google pixel 8': 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
-  'pixel 8': 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
-  'redmi note 13 pro': 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
-
-  // Laptops
-  'dell xps 13': 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=80',
-  'lenovo legion 5': 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=80',
-  'asus rog zephyrus': 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=80',
-
-  // Kindle
-  'kindle paperwhite': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=80',
-  'kindle': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=80',
-
-  // Shoes & Lifestyle
-  'nike air max': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=80',
-  'nike air jordan': 'https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=1000&q=80',
-};
-
-// Exact product photography resolver (using verified retailer assets and high-res photography)
-function getProductFallbackImg(name: string, explicit?: string): string {
-  if (explicit && explicit.startsWith('http') && !explicit.includes('example.com')) {
-    return explicit;
-  }
-  const n = name.toLowerCase().trim();
-
-  // Check exact verified client match first
-  for (const [key, url] of Object.entries(EXACT_CLIENT_IMAGE_MAP)) {
-    if (n.includes(key) || key.includes(n)) return url;
-  }
-
-  // Exact authentic product assets by category
-  if (n.includes('headphone') || n.includes('earbud') || n.includes('anc') || n.includes('sony wh') || n.includes('bose') || n.includes('airpods') || n.includes('boat')) {
-    return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('laptop') || n.includes('macbook') || n.includes('thinkpad') || n.includes('dell') || n.includes('hp') || n.includes('asus')) {
-    return 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('phone') || n.includes('iphone') || n.includes('samsung') || n.includes('pixel') || n.includes('oneplus') || n.includes('redmi')) {
-    return 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('speaker') || n.includes('soundbar') || n.includes('jbl') || n.includes('marshall')) {
-    return 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('vacuum') || n.includes('cleaner') || n.includes('dyson') || n.includes('airwrap')) {
-    return 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('shoe') || n.includes('sneaker') || n.includes('nike') || n.includes('jordan') || n.includes('adidas')) {
-    return 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('kindle') || n.includes('reader')) {
-    return 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('tv') || n.includes('oled') || n.includes('qled') || n.includes('television')) {
-    return 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('fryer') || n.includes('microwave') || n.includes('oven') || n.includes('kitchen') || n.includes('cooker')) {
-    return 'https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('watch') || n.includes('smartwatch')) {
-    return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('camera') || n.includes('lens')) {
-    return 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('keyboard') || n.includes('mouse') || n.includes('mechanical')) {
-    return 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80';
-  }
-  if (n.includes('playstation') || n.includes('ps5') || n.includes('console') || n.includes('switch') || n.includes('gaming')) {
-    return 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80';
-  }
-
-  return 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
+// Exact product photography resolver (guaranteed 100% verified fallback placeholder)
+export function getProductFallbackImg(name: string, explicit?: string): string {
+  return sanitizeProductImage(explicit, undefined, EXACT_CLIENT_IMAGE_MAP, name);
 }
 
 interface MultiResult {
@@ -1413,9 +1291,7 @@ export default function App() {
                   src={imgUrl}
                   alt={altText || 'Product'}
                   className="w-full h-44 object-cover hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = 'none';
-                  }}
+                  onError={(e) => handleImageError(e)}
                 />
                 {altText && (
                   <div className={`p-2 text-[11px] ${isWhite ? 'text-[#4C1D95] bg-[#FAF8FF] border-t border-violet-100' : 'text-[#8B96AC] bg-black/60'} truncate`}>
@@ -1932,10 +1808,7 @@ export default function App() {
                             alt={prod.name}
                             referrerPolicy="no-referrer"
                             className="w-full h-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src =
-                                'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-                            }}
+                            onError={(e) => handleImageError(e)}
                           />
                         </div>
                         <div className="truncate">
@@ -2394,9 +2267,7 @@ export default function App() {
                           alt={instantProductSource.productName}
                           referrerPolicy="no-referrer"
                           className="w-full h-full object-contain hover:scale-105 transition-transform"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-                          }}
+                          onError={(e) => handleImageError(e)}
                         />
                       </div>
                       <div className="space-y-1">
@@ -2510,10 +2381,7 @@ export default function App() {
                             alt={product.name}
                             referrerPolicy="no-referrer"
                             className="w-full h-full object-contain p-2 group-hover:scale-108 transition-transform duration-500"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src =
-                                'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-                            }}
+                            onError={(e) => handleImageError(e, product.category)}
                           />
                           <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-lg ${isWhite ? 'bg-violet-100/95 text-[#2E1065] border-violet-200' : 'bg-black/85 text-[#7C3AED] border-violet-300/40'} border text-[10px] font-bold shadow-xs backdrop-blur-md`}>
                             Verified Photo
@@ -2671,6 +2539,7 @@ export default function App() {
                       src={fp.imageUrl}
                       alt={fp.name}
                       className="w-8 h-8 rounded-lg object-cover"
+                      onError={(e) => handleImageError(e, fp.category)}
                     />
                     <div className="truncate max-w-[130px]">
                       <div className={`text-[11px] font-bold ${isWhite ? 'text-[#2E1065] group-hover:text-[#7C3AED]' : 'text-white group-hover:text-[#7C3AED]'} truncate`}>
@@ -2880,10 +2749,7 @@ export default function App() {
                                       alt={rec.name}
                                       referrerPolicy="no-referrer"
                                       className="w-full h-full object-contain p-1.5 group-hover:scale-110 transition-transform duration-300"
-                                      onError={(e) => {
-                                        (e.target as HTMLImageElement).src =
-                                          'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-                                      }}
+                                      onError={(e) => handleImageError(e)}
                                     />
                                     <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-lg bg-black/75 backdrop-blur-md text-[#7C3AED] font-heading font-black text-xs border border-white/10 shadow-sm">
                                       #{rec.rank || i + 1}

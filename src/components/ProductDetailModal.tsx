@@ -18,6 +18,7 @@ import {
   Radio,
   ArrowRight
 } from 'lucide-react';
+import { handleImageError } from '../utils/image-validator';
 
 export interface ProductModalData {
   id?: string;
@@ -233,10 +234,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   alt={product.name}
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-                  }}
+                  onError={(e) => handleImageError(e, product.category)}
                 />
                 <div className="absolute top-3 left-3 px-2.5 py-1 rounded-xl bg-black/75 backdrop-blur-md text-emerald-400 font-bold text-[10px] flex items-center gap-1 border border-white/10">
                   <ShieldCheck className="w-3 h-3 text-emerald-400" />
@@ -269,10 +267,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                         alt={`${product.name} angle ${idx + 1}`}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-contain"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-                        }}
+                        onError={(e) => handleImageError(e, product.category)}
                       />
                     </button>
                   ))}

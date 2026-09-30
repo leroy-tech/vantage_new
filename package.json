@@ -6,7 +6,8 @@
     "dev": "tsx server.ts",
     "build": "vite build",
     "start": "tsx server.ts",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "validate-images": "tsx scripts/image-validator.ts"
   },
   "dependencies": {
     "@google/genai": "*",

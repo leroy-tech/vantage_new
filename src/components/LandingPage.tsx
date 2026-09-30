@@ -30,6 +30,7 @@ import {
   Compass
 } from 'lucide-react';
 import { FloatingProduct } from '../App';
+import { handleImageError } from '../utils/image-validator';
 
 interface LandingPageProps {
   isWhite: boolean;
@@ -243,9 +244,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       alt={fp.name}
                       referrerPolicy="no-referrer"
                       className="max-h-full max-w-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-                      }}
+                      onError={(e) => handleImageError(e, fp.category)}
                     />
                     <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[9px] font-mono bg-white/90 backdrop-blur-md text-[#2E1065] border border-violet-200 flex items-center gap-1 shadow-sm">
                       <Check className="w-2.5 h-2.5 text-emerald-600" />
@@ -411,9 +410,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     alt={demoResult.productName}
                     referrerPolicy="no-referrer"
                     className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
-                    }}
+                    onError={(e) => handleImageError(e)}
                   />
                 </div>
 

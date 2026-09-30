@@ -56,6 +56,34 @@ app.get('/api/product-image', async (req, res) => {
   res.json({ url });
 });
 
+// Image Validator endpoint to check and verify product image URLs
+app.post('/api/validate-images', async (req, res) => {
+  try {
+    const urls: string[] = Array.isArray(req.body?.urls) ? req.body.urls : [];
+    const results = await Promise.all(
+      urls.slice(0, 30).map(async (url) => {
+        try {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 4000);
+          const response = await fetch(url, { method: 'HEAD', signal: controller.signal });
+          clearTimeout(timer);
+          return { url, ok: response.ok, status: response.status };
+        } catch (err: any) {
+          return { url, ok: false, status: 0, error: err.message };
+        }
+      })
+    );
+    res.json({
+      total: results.length,
+      reachable: results.filter(r => r.ok).length,
+      unreachable: results.filter(r => !r.ok).length,
+      details: results
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Validation failed' });
+  }
+});
+
 // Stats
 app.get('/api/stats', (req, res) => {
   const userId = (req.query.user_id as string) || 'default';

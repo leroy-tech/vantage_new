@@ -62,7 +62,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'sony wh-1000xm4': {
     canonicalName: 'Sony WH-1000XM4 Wireless ANC Headphones',
-    imageUrl: 'https://m.media-amazon.com/images/I/71o8QKqm95L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Sony-WH-1000XM4-Cancelling-Headphones-Bluetooth/dp/B0863TXGM3',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Official Sony Source',
@@ -71,7 +71,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'sony wf-1000xm5': {
     canonicalName: 'Sony WF-1000XM5 Wireless Noise Cancelling Earbuds',
-    imageUrl: 'https://m.media-amazon.com/images/I/51wXpMvKxZL._SL1200_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Sony-WF-1000XM5-Cancelling-Headphones-Bluetooth/dp/B0C33XXS56',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Official Sony Source',
@@ -80,7 +80,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'sony wh-ch720n': {
     canonicalName: 'Sony WH-CH720N Lightweight Wireless Noise Canceling Headphones',
-    imageUrl: 'https://m.media-amazon.com/images/I/51rpbVmi3XL._SL1200_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Sony-WH-CH720N-Canceling-Headphones-Bluetooth/dp/B0BS1QCFHX',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Official Sony Source',
@@ -88,7 +88,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'sony bravia': {
     canonicalName: 'Sony Bravia 55 inch 4K Ultra HD Smart Google TV',
-    imageUrl: 'https://m.media-amazon.com/images/I/81wxS8P4tPL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Sony-Bravia-inches-Google-KD-55X74L/dp/B0C15BLYS3',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Official Sony Source',
@@ -97,7 +97,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'sony alpha': {
     canonicalName: 'Sony Alpha ILCE-6100L Mirrorless Camera with 16-50mm Lens',
-    imageUrl: 'https://m.media-amazon.com/images/I/71Z1W2d3xWL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Sony-ILCE-6100L-Mirrorless-Smartphone-Connectivity/dp/B07ZHLG4C4',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Official Sony Source',
@@ -108,7 +108,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   // Apple Devices
   'macbook air m3': {
     canonicalName: 'Apple MacBook Air 13-inch M3 Chip (16GB Unified Memory / 512GB SSD)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71Cj-8mrhTL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-MacBook-13-inch-Unified-Storage/dp/B0CX21C8S7',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Official Store',
@@ -117,7 +117,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'macbook air m2': {
     canonicalName: 'Apple MacBook Air 13-inch M2 Chip',
-    imageUrl: 'https://m.media-amazon.com/images/I/71f5Eu5lJSL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-MacBook-Chip-13-inch-256GB/dp/B0B3C1Y837',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Official Store',
@@ -125,7 +125,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'macbook air': {
     canonicalName: 'Apple MacBook Air 13-inch M3',
-    imageUrl: 'https://m.media-amazon.com/images/I/71Cj-8mrhTL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-MacBook-13-inch-Unified-Storage/dp/B0CX21C8S7',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Official Store',
@@ -134,7 +134,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'macbook pro': {
     canonicalName: 'Apple MacBook Pro 14-inch M3 Pro',
-    imageUrl: 'https://m.media-amazon.com/images/I/61RJn0ofUsL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-MacBook-14-inch-Unified-Storage/dp/B0CM5R6Y32',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Official Store',
@@ -143,14 +143,14 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'macbook': {
     canonicalName: 'Apple MacBook Air M3',
-    imageUrl: 'https://m.media-amazon.com/images/I/71Cj-8mrhTL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-MacBook-13-inch-Unified-Storage/dp/B0CX21C8S7',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Official Store',
   },
   'iphone 16 pro max': {
     canonicalName: 'Apple iPhone 16 Pro Max (256GB, Desert Titanium)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71YQD4n9Q-L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPhone-16-Pro-Max/dp/B0DGJGHW38',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
@@ -158,7 +158,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'iphone 16 pro': {
     canonicalName: 'Apple iPhone 16 Pro (128GB, Natural Titanium)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71657TiFeHL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPhone-16-Pro-128/dp/B0DGJ9M6Z4',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
@@ -166,7 +166,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'iphone 16': {
     canonicalName: 'Apple iPhone 16 (128GB, Black)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71w3oJ7aQlL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPhone-16-128-GB/dp/B0DGJ9M6Z4',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
@@ -175,14 +175,14 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'iphone 15 pro max': {
     canonicalName: 'Apple iPhone 15 Pro Max (256GB, Natural Titanium)',
-    imageUrl: 'https://m.media-amazon.com/images/I/81CgtwSII3L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPhone-15-Pro-Max/dp/B0CHX1W1XY',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'iphone 15 pro': {
     canonicalName: 'Apple iPhone 15 Pro (128GB, Natural Titanium)',
-    imageUrl: 'https://m.media-amazon.com/images/I/81CgtwSII3L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPhone-15-Pro-128/dp/B0CHX2W72H',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
@@ -191,7 +191,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'iphone 15': {
     canonicalName: 'Apple iPhone 15 (128GB, Black)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71d7rfSl0wL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPhone-15-128-GB/dp/B0CHX1W1XY',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
@@ -200,21 +200,21 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'iphone 14': {
     canonicalName: 'Apple iPhone 14 (128GB, Midnight)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61bK6PMOC3L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPhone-14-128GB-Midnight/dp/B0BDHX8Z63',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'iphone 13': {
     canonicalName: 'Apple iPhone 13 (128GB, Starlight)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71GLMJ7TQiL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPhone-13-128GB-Starlight/dp/B09G9D8KRQ',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'airpods pro': {
     canonicalName: 'Apple AirPods Pro (2nd Generation, MagSafe Case USB-C)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61f1YfTkTDL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-AirPods-Wireless-Earbuds-Cancelling/dp/B0CHWRXH8B',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
@@ -223,49 +223,49 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'airpods max': {
     canonicalName: 'Apple AirPods Max Wireless Over-Ear Headphones',
-    imageUrl: 'https://m.media-amazon.com/images/I/81jqUPkIVRL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-AirPods-Max-Space-Grey/dp/B08PZD76NP',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'apple watch ultra': {
     canonicalName: 'Apple Watch Ultra 2 (GPS + Cellular, 49mm Titanium Case)',
-    imageUrl: 'https://m.media-amazon.com/images/I/81M14W+V4xL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-Smartwatch-Precision-Extra-Long-Battery/dp/B0CHX7NNDF',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'apple watch series 9': {
     canonicalName: 'Apple Watch Series 9 (GPS 45mm, Midnight Aluminum)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71U-5v2kZkL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-Watch-Series-GPS-45mm/dp/B0CHX5R4QG',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'apple watch': {
     canonicalName: 'Apple Watch Series 9 GPS',
-    imageUrl: 'https://m.media-amazon.com/images/I/71U-5v2kZkL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-Watch-Series-GPS-45mm/dp/B0CHX5R4QG',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'ipad pro': {
     canonicalName: 'Apple iPad Pro 11-inch (M4 Chip, OLED)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61+9fK+2TGL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPad-11-inch-Ultra-Retina/dp/B0D3J75F9S',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'ipad air': {
     canonicalName: 'Apple iPad Air 11-inch (M2 Chip, Liquid Retina)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61G4f-sLwLL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-iPad-Air-11-inch-Landscape/dp/B0D3J7CVN4',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
   },
   'ipad': {
     canonicalName: 'Apple iPad (10th Generation, 10.9-inch Liquid Retina, Wi-Fi 64GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61uA2UVnYWL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Apple-2022-10-9-inch-iPad-Wi-Fi/dp/B0BJMQPN1V',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Apple Store',
@@ -276,7 +276,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   // Samsung Devices
   'samsung galaxy s24 ultra': {
     canonicalName: 'Samsung Galaxy S24 Ultra 5G AI Smartphone (12GB/256GB, Titanium Gray)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71RVu8lq0ML._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Samsung-Galaxy-Ultra-Titanium-Storage/dp/B0CS5X682H',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Samsung Official Store',
@@ -285,7 +285,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'samsung galaxy s24': {
     canonicalName: 'Samsung Galaxy S24 5G AI Smartphone',
-    imageUrl: 'https://m.media-amazon.com/images/I/71Nw5iZp2LL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Samsung-Galaxy-Cobalt-Violet-Storage/dp/B0CS5T2ZJ6',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Samsung Official Store',
@@ -294,21 +294,21 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'samsung galaxy s23 fe': {
     canonicalName: 'Samsung Galaxy S23 FE 5G (8GB RAM, 128GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71qGismu6NL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Samsung-Galaxy-Graphite-128GB-Storage/dp/B0CJCLW7GF',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Samsung Store',
   },
   'samsung galaxy z fold 5': {
     canonicalName: 'Samsung Galaxy Z Fold 5 5G (Phantom Black, 256GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/716n8eGpv+L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Samsung-Galaxy-Fold5-Phantom-Storage/dp/B0CC95BHYK',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Samsung Store',
   },
   'samsung galaxy watch': {
     canonicalName: 'Samsung Galaxy Watch 6 LTE (44mm, Graphite)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61aVuo3W5ML._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Samsung-Galaxy-Bluetooth-Graphite-Compatible/dp/B0CC95BHYK',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Samsung Official Store',
@@ -317,7 +317,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'galaxy watch': {
     canonicalName: 'Samsung Galaxy Watch 6 LTE',
-    imageUrl: 'https://m.media-amazon.com/images/I/61aVuo3W5ML._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Samsung-Galaxy-Bluetooth-Graphite-Compatible/dp/B0CC95BHYK',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Samsung Official Store',
@@ -335,7 +335,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'boat airdopes': {
     canonicalName: 'boAt Airdopes 141 True Wireless Earbuds',
-    imageUrl: 'https://m.media-amazon.com/images/I/61KNJav3S9L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/boAt-Airdopes-141-Playtime-Resistance/dp/B09N3ZNHTY',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · boAt Official Store',
@@ -344,7 +344,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'bose quietcomfort': {
     canonicalName: 'Bose QuietComfort Wireless Noise Cancelling Headphones',
-    imageUrl: 'https://m.media-amazon.com/images/I/51ZRvD6f62L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Bose-QuietComfort-Headphones-Cancelling-Bluetooth/dp/B0CCZ26B5V',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Bose Store',
@@ -353,28 +353,28 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'bose': {
     canonicalName: 'Bose QuietComfort Wireless Noise Cancelling Headphones',
-    imageUrl: 'https://m.media-amazon.com/images/I/51ZRvD6f62L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Bose-QuietComfort-Headphones-Cancelling-Bluetooth/dp/B0CCZ26B5V',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Bose Store',
   },
   'jbl flip 6': {
     canonicalName: 'JBL Flip 6 Wireless Portable Bluetooth Speaker (IP67 Waterproof)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61Qn4-XfE1L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/JBL-Flip-Wireless-Portable-Bluetooth/dp/B09G3Z5CVH',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · JBL Store',
   },
   'jbl charge 5': {
     canonicalName: 'JBL Charge 5 Portable Waterproof Bluetooth Speaker',
-    imageUrl: 'https://m.media-amazon.com/images/I/71R3-2d2p5L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/JBL-Charge-Bluetooth-Speaker-Powerbank/dp/B08X4J8GY6',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · JBL Store',
   },
   'marshall emberton': {
     canonicalName: 'Marshall Emberton II Portable Bluetooth Speaker',
-    imageUrl: 'https://m.media-amazon.com/images/I/71v1k5GqW0L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Marshall-Emberton-Portable-Bluetooth-Speaker/dp/B09XT9R4M7',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Marshall Store',
@@ -383,7 +383,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   // Keyboards & Peripherals
   'keychron k2': {
     canonicalName: 'Keychron K2 V2 Wireless Mechanical Keyboard (Gateron Switches)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71eYyV5F2yL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Keychron-Mechanical-Keyboard-Backlight-Wireless/dp/B087612TFL',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Keychron Official',
@@ -392,14 +392,14 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'keychron': {
     canonicalName: 'Keychron K2 Wireless Mechanical Keyboard',
-    imageUrl: 'https://m.media-amazon.com/images/I/71eYyV5F2yL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Keychron-Mechanical-Keyboard-Backlight-Wireless/dp/B087612TFL',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Keychron Official',
   },
   'logitech mx master 3s': {
     canonicalName: 'Logitech MX Master 3S Wireless Performance Mouse (8K DPI Quiet Click)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61ni3t1ryQL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Logitech-Master-Performance-Wireless-Mouse/dp/B0B11LK69K',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Logitech Store',
@@ -408,7 +408,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'logitech mx master': {
     canonicalName: 'Logitech MX Master 3S Wireless Performance Mouse',
-    imageUrl: 'https://m.media-amazon.com/images/I/61ni3t1ryQL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Logitech-Master-Performance-Wireless-Mouse/dp/B0B11LK69K',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Logitech Store',
@@ -417,7 +417,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   // Appliances & Smart Home
   'philips air fryer': {
     canonicalName: 'Philips Digital Air Fryer HD9252 (4.1L, 90% Less Oil Rapid Air)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61F5BqF6pCL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Philips-Technology-NutriU-App-Recipes-Fryer-HD9252/dp/B097RJ867P',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Philips Store',
@@ -426,28 +426,28 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'dyson v12': {
     canonicalName: 'Dyson V12 Detect Slim Cord-Free Vacuum Cleaner',
-    imageUrl: 'https://m.media-amazon.com/images/I/61Nl-HwN02L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Dyson-Detect-Cord-Free-Vacuum-Cleaner/dp/B09NCB53S4',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Dyson Official',
   },
   'dyson v15': {
     canonicalName: 'Dyson V15 Detect Extra Cordless Vacuum Cleaner',
-    imageUrl: 'https://m.media-amazon.com/images/I/61Nl-HwN02L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Dyson-Detect-Cord-Free-Vacuum-Cleaner/dp/B09NCB53S4',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Dyson Official',
   },
   'dyson airwrap': {
     canonicalName: 'Dyson Airwrap Multi-Styler Complete Long (Nickel/Copper)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61M-811cffL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Dyson-AirwrapTM-Multi-styler-Complete-Copper/dp/B0B68C1CGB',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Dyson Official',
   },
   'dyson': {
     canonicalName: 'Dyson V12 Detect Slim Cord-Free Vacuum Cleaner',
-    imageUrl: 'https://m.media-amazon.com/images/I/61Nl-HwN02L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Dyson-Detect-Cord-Free-Vacuum-Cleaner/dp/B09NCB53S4',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Dyson Official',
@@ -456,7 +456,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   // Gaming
   'playstation 5': {
     canonicalName: 'Sony PlayStation 5 Console Slim (1TB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/51051FiD9UL._SL1000_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/PlayStation-5-Console-slim/dp/B0CY5HVDS2',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · PlayStation Store',
@@ -465,14 +465,14 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'ps5': {
     canonicalName: 'Sony PlayStation 5 Console Slim',
-    imageUrl: 'https://m.media-amazon.com/images/I/51051FiD9UL._SL1000_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/PlayStation-5-Console-slim/dp/B0CY5HVDS2',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · PlayStation Store',
   },
   'nintendo switch': {
     canonicalName: 'Nintendo Switch OLED Model with Neon Red & Neon Blue Joy-Con',
-    imageUrl: 'https://m.media-amazon.com/images/I/51wXQo7p4bL._SL1000_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Nintendo-Switch-OLED-Model-Joy/dp/B098RKWHHZ',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Nintendo Official Product',
@@ -481,7 +481,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'xbox series x': {
     canonicalName: 'Microsoft Xbox Series X Console (1TB SSD)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61-jjE67uqL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Xbox-Series-X/dp/B08J7QX2N7',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Microsoft Store',
@@ -490,7 +490,7 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   // Popular Smartphones in India
   'oneplus 12': {
     canonicalName: 'OnePlus 12 5G (Silky Black, 256GB Storage, 12GB RAM)',
-    imageUrl: 'https://m.media-amazon.com/images/I/717Qo4MH97L._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/OnePlus-Silky-Black-256GB-Storage/dp/B0CQPPV57W',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · OnePlus Official',
@@ -499,21 +499,21 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'oneplus nord 4': {
     canonicalName: 'OnePlus Nord 4 5G (Obsidian Midnight, 256GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61abLrCfFLL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/OnePlus-Nord-Midnight-256GB-Storage/dp/B0D7D7RKV5',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · OnePlus Official',
   },
   'google pixel 8 pro': {
     canonicalName: 'Google Pixel 8 Pro 5G (Bay Blue, 128GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71-kUf4R+FL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Google-Pixel-Pro-Bay-128GB/dp/B0CGVDXPVH',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Google Store',
   },
   'google pixel 8': {
     canonicalName: 'Google Pixel 8 5G (Hazel, 128GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71r5oXn7-QL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Google-Pixel-Hazel-128GB-Storage/dp/B0CGVKB2R2',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Google Store',
@@ -522,14 +522,14 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'pixel 8': {
     canonicalName: 'Google Pixel 8 5G (Hazel, 128GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71r5oXn7-QL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Google-Pixel-Hazel-128GB-Storage/dp/B0CGVKB2R2',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Google Store',
   },
   'redmi note 13 pro': {
     canonicalName: 'Redmi Note 13 Pro+ 5G (Fusion Black, 256GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71XNeka-BRL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Redmi-Fusion-Black-256GB-Storage/dp/B0CQPK7M1P',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Xiaomi Store',
@@ -538,14 +538,14 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   },
   'redmi note 13': {
     canonicalName: 'Redmi Note 13 5G (Prism Gold, 128GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71XNeka-BRL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Redmi-Fusion-Black-256GB-Storage/dp/B0CQPK7M1P',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Xiaomi Store',
   },
   'nothing phone 2': {
     canonicalName: 'Nothing Phone (2) 5G (Dark Grey, 256GB)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71u9sW-LhGL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.flipkart.com/nothing-phone-2-dark-grey-256-gb/p/itm2847c2dbed401',
     sourceStore: 'Flipkart',
     badge: 'Direct Listing · Nothing Official',
@@ -554,21 +554,21 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   // Laptops
   'dell xps 13': {
     canonicalName: 'Dell XPS 13 Intel Core Ultra 7 Laptop (16GB/512GB SSD, FHD+)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71qB7d1v1FL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Dell-Ultra-7-155H-Display-Platinum-Keyboard/dp/B0CZJ8CFFW',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Dell Official',
   },
   'lenovo legion 5': {
     canonicalName: 'Lenovo Legion 5 AMD Ryzen 7 Gaming Laptop (RTX 4060, 16GB RAM)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61k8wI0vS8L._SL1000_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Lenovo-Legion-7840HS-350Nits-82Y9009JIN/dp/B0CGX8V87C',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Lenovo Store',
   },
   'asus rog zephyrus': {
     canonicalName: 'ASUS ROG Zephyrus G14 Gaming Laptop (AMD Ryzen 9, RTX 4070)',
-    imageUrl: 'https://m.media-amazon.com/images/I/71wE1W5+GcL._SL1500_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/ASUS-Zephyrus-35-56cm-GeForce-GA403UI-QS063WS/dp/B0CV1B6FGL',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · ASUS ROG',
@@ -577,14 +577,14 @@ export const VERIFIED_SOURCE_REGISTRY: Record<string, VerifiedSourceEntry> = {
   // E-Readers & Wearables
   'kindle paperwhite': {
     canonicalName: 'Amazon Kindle Paperwhite (16 GB, 6.8-inch display, Warm Light)',
-    imageUrl: 'https://m.media-amazon.com/images/I/61t04q-Uj+L._SL1000_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Kindle-Paperwhite-Adjustable-Battery-Glair-Free/dp/B08N3TCP2F',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Amazon Device',
   },
   'kindle': {
     canonicalName: 'Amazon Kindle Paperwhite 6.8-inch display',
-    imageUrl: 'https://m.media-amazon.com/images/I/61t04q-Uj+L._SL1000_.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=80',
     sourceUrl: 'https://www.amazon.in/Kindle-Paperwhite-Adjustable-Battery-Glair-Free/dp/B08N3TCP2F',
     sourceStore: 'Amazon India',
     badge: 'Direct Listing · Amazon Device',
