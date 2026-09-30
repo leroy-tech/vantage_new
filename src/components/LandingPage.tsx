@@ -36,13 +36,15 @@ interface LandingPageProps {
   onLaunchApp: (options?: { tab?: 'arena' | 'chat' | 'multi'; initialQuery?: string }) => void;
   floatingProducts: FloatingProduct[];
   userId: string;
+  onOpenProductModal?: (product: any) => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   isWhite,
   onLaunchApp,
   floatingProducts,
-  userId
+  userId,
+  onOpenProductModal
 }) => {
   // Demo Instant Search State
   const [demoQuery, setDemoQuery] = useState('');
@@ -230,12 +232,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     </span>
                   </div>
 
-                  {/* Image container */}
-                  <div className="relative h-44 rounded-xl overflow-hidden mb-4 flex items-center justify-center p-3 transition-transform group-hover:scale-[1.02] bg-[#FAF8FF] border border-violet-50">
+                  {/* Image container - Clickable to open modal */}
+                  <div
+                    onClick={() => onOpenProductModal && onOpenProductModal(fp)}
+                    className="relative h-44 rounded-xl overflow-hidden mb-4 flex items-center justify-center p-3 transition-transform group-hover:scale-[1.02] bg-[#FAF8FF] border border-violet-50 cursor-pointer"
+                    title="Click to view full pictures and verified specs"
+                  >
                     <img
                       src={fp.imageUrl}
                       alt={fp.name}
+                      referrerPolicy="no-referrer"
                       className="max-h-full max-w-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
+                      }}
                     />
                     <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[9px] font-mono bg-white/90 backdrop-blur-md text-[#2E1065] border border-violet-200 flex items-center gap-1 shadow-sm">
                       <Check className="w-2.5 h-2.5 text-emerald-600" />
@@ -243,8 +253,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     </div>
                   </div>
 
-                  {/* Title & Pricing */}
-                  <h3 className="font-bold text-sm line-clamp-1 mb-1 group-hover:text-[#7C3AED] transition-colors text-[#2E1065]">
+                  {/* Title & Pricing - Clickable */}
+                  <h3
+                    onClick={() => onOpenProductModal && onOpenProductModal(fp)}
+                    className="font-bold text-sm line-clamp-1 mb-1 group-hover:text-[#7C3AED] transition-colors text-[#2E1065] cursor-pointer"
+                    title="Click to open full product report"
+                  >
                     {fp.name}
                   </h3>
 
@@ -261,11 +275,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   {/* Action buttons */}
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-violet-100">
                     <button
-                      onClick={() => onLaunchApp({ tab: 'multi', initialQuery: `${fp.name} deals price review India` })}
-                      className="text-xs font-semibold py-2 px-2 rounded-lg flex items-center justify-center gap-1 border transition-all bg-violet-50 hover:bg-violet-100 hover:border-violet-300 text-[#6D28D9] border-violet-200"
+                      onClick={() => onOpenProductModal ? onOpenProductModal(fp) : onLaunchApp({ tab: 'multi', initialQuery: `${fp.name} deals price review India` })}
+                      className="text-xs font-semibold py-2 px-2 rounded-lg flex items-center justify-center gap-1 border transition-all bg-violet-50 hover:bg-violet-100 hover:border-violet-300 text-[#6D28D9] border-violet-200 cursor-pointer"
                     >
                       <Sparkles className="w-3 h-3 text-[#7C3AED]" />
-                      Research
+                      Specs & Pics
                     </button>
 
                     <a
@@ -387,16 +401,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
 
               <div className="flex flex-col sm:flex-row gap-6 items-center">
-                <div className="w-36 h-36 rounded-xl p-2 flex items-center justify-center shrink-0 border bg-[#FAF8FF] border-violet-100">
+                <div
+                  onClick={() => onOpenProductModal && onOpenProductModal(demoResult.productName)}
+                  className="w-36 h-36 rounded-xl p-2 flex items-center justify-center shrink-0 border bg-[#FAF8FF] border-violet-100 cursor-pointer hover:border-violet-300 transition-colors"
+                  title="Click to view full product pictures and specifications"
+                >
                   <img
                     src={demoResult.imageUrl}
                     alt={demoResult.productName}
-                    className="max-h-full max-w-full object-contain"
+                    referrerPolicy="no-referrer"
+                    className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
+                    }}
                   />
                 </div>
 
                 <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-lg font-bold mb-1 text-[#2E1065]">
+                  <h3
+                    onClick={() => onOpenProductModal && onOpenProductModal(demoResult.productName)}
+                    className="text-lg font-bold mb-1 text-[#2E1065] hover:text-[#7C3AED] cursor-pointer transition-colors"
+                    title="Click to open full product details"
+                  >
                     {demoResult.productName}
                   </h3>
                   <p className="text-xs font-mono mb-4 text-[#7C6898]">
@@ -404,11 +430,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </p>
 
                   <div className="flex flex-wrap gap-2.5 justify-center sm:justify-start">
+                    <button
+                      type="button"
+                      onClick={() => onOpenProductModal && onOpenProductModal(demoResult.productName)}
+                      className="px-4 py-2 rounded-lg font-black text-xs bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white flex items-center gap-1.5 shadow-md hover:shadow-violet-500/25 transition-all cursor-pointer font-heading"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>View Full Product Report & Photos</span>
+                    </button>
+
                     <a
                       href={demoResult.sourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-2 rounded-lg font-bold text-xs bg-[#7C3AED] hover:bg-[#6D28D9] text-white flex items-center gap-1.5 shadow-sm font-heading"
+                      className="px-4 py-2 rounded-lg font-bold text-xs bg-violet-100 hover:bg-violet-200 text-[#4C1D95] border border-violet-200 flex items-center gap-1.5 shadow-sm font-heading"
                     >
                       <span>Buy Direct on {demoResult.sourceStore}</span>
                       <ExternalLink className="w-3.5 h-3.5" />

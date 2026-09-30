@@ -11,7 +11,7 @@ import { resolveExactProductImage, getProductImageUrl, resolveExactProductSource
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const HOST = '0.0.0.0';
 
 app.use(cors());
@@ -30,6 +30,20 @@ app.get('/api/product-source', async (req, res) => {
   }
   const source = await resolveExactProductSource(q);
   res.json(source);
+});
+
+// Comprehensive Product Details & Specifications Lookup
+app.get('/api/product-details', async (req, res) => {
+  const q = String(req.query.q || '');
+  if (!q) {
+    return res.status(400).json({ error: 'q is required' });
+  }
+  try {
+    const details = await agent.getProductDetails(q);
+    res.json(details);
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Failed to fetch product details' });
+  }
 });
 
 // Exact Product Image Lookup
@@ -254,7 +268,7 @@ async function startServer() {
 
   if (!isProd) {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { middlewareMode: true, allowedHosts: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
