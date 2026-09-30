@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build",
-    "start": "node server.ts"
+    "start": "tsx server.ts",
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@google/genai": "^0.1.2",
+    "@google/genai": "*",
     "@tailwindcss/vite": "^4.0.9",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
