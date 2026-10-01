@@ -55,6 +55,7 @@ import { ProductDetailModal, ProductModalData } from './components/ProductDetail
 import { FloatingActionSearchBar } from './components/FloatingActionSearchBar';
 import { CompareDrawer } from './components/CompareDrawer';
 import { ShoppingAssistantSidebar } from './components/ShoppingAssistantSidebar';
+import { VantageShoppingApp } from './components/VantageShoppingApp';
 import { VerifiedProductImage } from './components/VerifiedProductImage';
 import { VerifiedBuyCardActions } from './components/VerifiedBuyCardActions';
 import {
@@ -1740,7 +1741,7 @@ export default function App() {
   const [userId, setUserId] = useState<string>('default');
   const [tempUserId, setTempUserId] = useState<string>('default');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const [activeTab, setActiveTab] = useState<'arena' | 'chat' | 'multi'>('arena');
+  const [activeTab, setActiveTab] = useState<'shopping' | 'arena' | 'chat' | 'multi'>('shopping');
   const [isZeroGPaused, setIsZeroGPaused] = useState<boolean>(false);
   const [floatingCategory, setFloatingCategory] = useState<'all' | 'audio' | 'laptops' | 'phones' | 'appliances' | 'wearables'>('all');
   const [marketFilter, setMarketFilter] = useState<'all' | 'new_releases' | 'flagships'>('all');
@@ -2925,6 +2926,17 @@ export default function App() {
 
             <div className="flex items-center bg-violet-50/90 border border-violet-200 p-1 rounded-2xl backdrop-blur-md">
               <button
+                onClick={() => setActiveTab('shopping')}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'shopping'
+                    ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-md font-bold'
+                    : 'text-[#6D28D9] hover:text-[#2E1065]'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-current" />
+                <span>🛍️ AI Shopping & Compare</span>
+              </button>
+              <button
                 onClick={() => setActiveTab('arena')}
                 className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'arena'
@@ -3042,6 +3054,13 @@ export default function App() {
                   </button>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Tab: Full AI Shopping Assistant (AI Picks, Compare Mode, Wishlist, Smart Follow-ups) */}
+          {activeTab === 'shopping' && (
+            <div className="space-y-6">
+              <VantageShoppingApp onOpenProductModal={handleOpenProductModal} />
             </div>
           )}
 

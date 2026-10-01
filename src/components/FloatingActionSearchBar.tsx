@@ -101,7 +101,7 @@ export const FloatingActionSearchBar: React.FC<FloatingActionSearchBarProps> = (
   return (
     <div
       ref={containerRef}
-      className="fixed top-3 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-2xl pointer-events-auto"
+      className="fixed top-[calc(0.75rem+2cm)] left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-2xl pointer-events-auto transition-all duration-300"
     >
       {/* Floating Pill Search Bar */}
       <motion.div

@@ -34,7 +34,7 @@ import { handleImageError } from '../utils/image-validator';
 
 interface LandingPageProps {
   isWhite: boolean;
-  onLaunchApp: (options?: { tab?: 'arena' | 'chat' | 'multi'; initialQuery?: string }) => void;
+  onLaunchApp: (options?: { tab?: 'shopping' | 'arena' | 'chat' | 'multi'; initialQuery?: string }) => void;
   floatingProducts: FloatingProduct[];
   userId: string;
   onOpenProductModal?: (product: any) => void;

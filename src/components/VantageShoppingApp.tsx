@@ -729,8 +729,21 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
         </form>
       </header>
 
-      {/* Main Container with Smooth Sidebar Transition */}
-      <div className="flex max-w-7xl mx-auto w-full transition-all duration-300 ease-in-out relative">
+      {/* Main Container with Fluid CSS Grid Sidebar Transition */}
+      <div
+        className={`w-full max-w-7xl mx-auto relative md:grid transition-all duration-300 ease-in-out ${
+          sidebarOpen
+            ? 'md:grid-cols-[18rem_minmax(0,1fr)]'
+            : 'md:grid-cols-[0rem_minmax(0,1fr)]'
+        }`}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: sidebarOpen
+            ? 'minmax(0, 18rem) minmax(0, 1fr)'
+            : 'minmax(0, 0rem) minmax(0, 1fr)',
+          transition: 'grid-template-columns 300ms ease-in-out'
+        }}
+      >
         {/* Mobile Backdrop Overlay - closes sidebar on backdrop tap */}
         <div
           className={`fixed inset-0 bg-black/40 backdrop-blur-xs z-30 md:hidden transition-opacity duration-300 ease-in-out ${
@@ -740,14 +753,13 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
           aria-hidden="true"
         />
 
-        {/* Collapsible Sidebar with Smooth Width & Slide Transitions */}
+        {/* Collapsible Sidebar with Fluid Grid & Width Transitions */}
         <aside
-          className={`fixed md:sticky top-[65px] left-0 z-40 md:z-20 shrink-0 overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out border-r border-violet-200/50 dark:border-white/10 glass-panel ${
+          className={`overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out border-r border-violet-200/50 dark:border-white/10 glass-panel ${
             sidebarOpen
-              ? 'w-72 opacity-100 translate-x-0 shadow-2xl md:shadow-none pointer-events-auto'
+              ? 'w-72 md:w-full opacity-100 translate-x-0 shadow-2xl md:shadow-none pointer-events-auto'
               : 'w-0 opacity-0 -translate-x-full md:translate-x-0 border-r-0 pointer-events-none'
-          }`}
-          style={{ height: 'calc(100vh - 65px)' }}
+          } fixed md:sticky top-[65px] left-0 z-40 md:z-20 h-[calc(100vh-65px)]`}
         >
           {/* Inner fixed-width container prevents content squishing or reflow during transition */}
           <div className="w-72 p-4 space-y-6">
@@ -926,8 +938,8 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
             </div>
         </aside>
 
-        {/* Dynamic Main Content Area - Smoothly expands & contracts to avoid overlap */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 overflow-hidden transition-all duration-300 ease-in-out">
+        {/* Dynamic Main Content Area - Adjusts width fluidly with CSS Grid */}
+        <main className="w-full min-w-0 p-4 sm:p-6 overflow-hidden transition-all duration-300 ease-in-out">
           {/* Smart Follow-up Refinement Card (Shown when query is vague) */}
           {pendingFollowUp && (
             <div className="mb-6 p-5 sm:p-6 rounded-3xl glass-panel-violet border border-violet-300 dark:border-violet-700/60 shadow-xl animate-in fade-in slide-in-from-top-3 duration-300">
@@ -1129,7 +1141,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
               {/* 3 AI Picks Cards: Top Pick, Best Budget, Best Value */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {/* 1. Top Pick */}
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-500/10 to-violet-600/5 dark:from-violet-950/40 dark:to-transparent border border-violet-300/40 dark:border-violet-700/50 transform transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/10">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-500/10 to-violet-600/5 dark:from-violet-950/40 dark:to-transparent border border-violet-300/40 dark:border-violet-700/50 shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:-translate-y-1">
                   <div className="flex items-center justify-between text-xs mb-1">
                     <span className="font-extrabold text-[#7C3AED] dark:text-violet-300 uppercase tracking-wide text-[10px] flex items-center gap-1">
                       <span>🏆</span> #1 Overall Top Pick
@@ -1147,7 +1159,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                 </div>
 
                 {/* 2. Best Budget Pick */}
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 dark:from-emerald-950/40 dark:to-transparent border border-emerald-300/40 dark:border-emerald-700/50 transform transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 dark:from-emerald-950/40 dark:to-transparent border border-emerald-300/40 dark:border-emerald-700/50 shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:-translate-y-1">
                   <div className="flex items-center justify-between text-xs mb-1">
                     <span className="font-extrabold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide text-[10px] flex items-center gap-1">
                       <span>💰</span> Best Budget Pick
@@ -1165,7 +1177,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                 </div>
 
                 {/* 3. Best Value Pick */}
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 dark:from-cyan-950/40 dark:to-transparent border border-cyan-300/40 dark:border-cyan-700/50 transform transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 dark:from-cyan-950/40 dark:to-transparent border border-cyan-300/40 dark:border-cyan-700/50 shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:-translate-y-1">
                   <div className="flex items-center justify-between text-xs mb-1">
                     <span className="font-extrabold text-cyan-700 dark:text-cyan-400 uppercase tracking-wide text-[10px] flex items-center gap-1">
                       <span>⚖️</span> Best Value Pick
@@ -1410,7 +1422,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                   )}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300 ease-in-out">
                   {displayProducts.map((product) => {
                     const isComparing = compareItems.some((item) => item.id === product.id || item.name === product.name);
                     const isWishlisted = isProductWishlisted(product);
@@ -1418,7 +1430,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                     return (
                       <div
                         key={product.id}
-                        className="rounded-3xl border border-violet-100 dark:border-white/10 glass-panel-white overflow-hidden flex flex-col justify-between transform transition-all duration-300 ease-out hover:scale-[1.025] hover:-translate-y-1 hover:shadow-2xl hover:shadow-violet-500/20 dark:hover:shadow-violet-900/40 hover:border-violet-300 dark:hover:border-violet-500/60 group will-change-transform"
+                        className="rounded-3xl border border-violet-100 dark:border-white/10 glass-panel-white overflow-hidden flex flex-col justify-between shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-[1.025] hover:-translate-y-1 hover:border-violet-300 dark:hover:border-violet-500/60 group will-change-transform min-w-0"
                       >
                         <div>
                           {/* Image View + Badges */}
@@ -1704,7 +1716,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                     const isBestPrice = prod.id === compareAnalytics.bestPriceId;
 
                     return (
-                      <div key={prod.id} className="p-4 rounded-2xl border border-violet-100 dark:border-white/10 bg-white/70 dark:bg-white/5 space-y-3 relative">
+                      <div key={prod.id} className="p-4 rounded-2xl border border-violet-100 dark:border-white/10 bg-white/70 dark:bg-white/5 space-y-3 relative shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-[1.01]">
                         <button
                           onClick={() => setCompareItems((prev) => prev.filter((p) => p.id !== prod.id))}
                           className="absolute top-2 right-2 p-1 rounded-lg text-gray-400 hover:text-rose-500"
