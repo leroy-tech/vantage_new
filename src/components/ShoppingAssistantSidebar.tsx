@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import { FloatingProduct, getProductFallbackImg } from '../App';
 import { handleImageError } from '../utils/image-validator';
+import { VerifiedProductImage } from './VerifiedProductImage';
+import { VerifiedBuyCardActions } from './VerifiedBuyCardActions';
 
 // Comprehensive Popular Products Catalog across Flipkart, Amazon, Croma, Tata CLiQ
 export interface CuratedStoreProduct {
@@ -78,7 +80,6 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Flipkart Assured · Motorola Direct',
     sourceUrl: 'https://www.flipkart.com/motorola-edge-50-ultra-peach-fuzz-512-gb/p/itmdb2ebdc8104fb',
     flipkartUrl: 'https://www.flipkart.com/motorola-edge-50-ultra-peach-fuzz-512-gb/p/itmdb2ebdc8104fb',
-    amazonUrl: 'https://www.amazon.in/s?k=Motorola+Edge+50+Ultra',
     imageUrl: 'https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=600&q=80',
     rating: 4.7,
     reviewsCount: '3,200+',
@@ -96,7 +97,6 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Flipkart Exclusive · Nothing Brand',
     sourceUrl: 'https://www.flipkart.com/nothing-phone-2a-plus-grey-256-gb/p/itmd5b94f0685956',
     flipkartUrl: 'https://www.flipkart.com/nothing-phone-2a-plus-grey-256-gb/p/itmd5b94f0685956',
-    amazonUrl: 'https://www.amazon.in/s?k=Nothing+Phone+2a+Plus',
     imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80',
     rating: 4.6,
     reviewsCount: '12,800+',
@@ -114,7 +114,7 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Flipkart Assured · Top Rated Gaming',
     sourceUrl: 'https://www.flipkart.com/acer-nitro-v-amd-ryzen-7-octa-core-8845hs-16-gb-1-tb-ssd-windows-11-home-8-gb-graphics-nvidia-geforce-rtx-4060-anv16-41-gaming-laptop/p/itmffad400e93a65',
     flipkartUrl: 'https://www.flipkart.com/acer-nitro-v-amd-ryzen-7-octa-core-8845hs-16-gb-1-tb-ssd-windows-11-home-8-gb-graphics-nvidia-geforce-rtx-4060-anv16-41-gaming-laptop/p/itmffad400e93a65',
-    amazonUrl: 'https://www.amazon.in/s?k=Acer+Nitro+V+16+RTX+4060',
+    amazonUrl: 'https://www.amazon.in/dp/B0D5BN5BFL',
     imageUrl: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=600&q=80',
     rating: 4.8,
     reviewsCount: '1,950+',
@@ -132,7 +132,6 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Flipkart Assured · Nothing Official',
     sourceUrl: 'https://www.flipkart.com/nothing-ear-a-active-noise-cancellation-bluetooth-headset/p/itm5a3857db7f561',
     flipkartUrl: 'https://www.flipkart.com/nothing-ear-a-active-noise-cancellation-bluetooth-headset/p/itm5a3857db7f561',
-    amazonUrl: 'https://www.amazon.in/s?k=Nothing+Ear+a',
     imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80',
     rating: 4.6,
     reviewsCount: '8,400+',
@@ -150,7 +149,6 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Flipkart Assured · ASUS India',
     sourceUrl: 'https://www.flipkart.com/asus-vivobook-16x-oled-intel-core-i7-13th-gen-13700h-16-gb-512-gb-ssd-windows-11-home-k3605vu-mb741ws-laptop/p/itmcdbd158913926',
     flipkartUrl: 'https://www.flipkart.com/asus-vivobook-16x-oled-intel-core-i7-13th-gen-13700h-16-gb-512-gb-ssd-windows-11-home-k3605vu-mb741ws-laptop/p/itmcdbd158913926',
-    amazonUrl: 'https://www.amazon.in/s?k=ASUS+Vivobook+16X+i7',
     imageUrl: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=80',
     rating: 4.7,
     reviewsCount: '3,100+',
@@ -334,8 +332,7 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Croma Verified · Official Retailer',
     sourceUrl: 'https://www.croma.com/sony-bravia-xr-164-cm-65-inch-4k-ultra-hd-oled-google-tv-xr-65a80l/p/272714',
     cromaUrl: 'https://www.croma.com/sony-bravia-xr-164-cm-65-inch-4k-ultra-hd-oled-google-tv-xr-65a80l/p/272714',
-    amazonUrl: 'https://www.amazon.in/s?k=Sony+Bravia+65+OLED+A80L',
-    flipkartUrl: 'https://www.flipkart.com/search?q=Sony+Bravia+65+OLED+A80L',
+    amazonUrl: 'https://www.amazon.in/dp/B0C15BLYS3',
     imageUrl: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
     rating: 4.9,
     reviewsCount: '1,450+',
@@ -353,8 +350,7 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Croma Verified · Free Installation',
     sourceUrl: 'https://www.croma.com/lg-c3-139-cm-55-inch-4k-ultra-hd-oled-webos-tv-oled55c3psa/p/271836',
     cromaUrl: 'https://www.croma.com/lg-c3-139-cm-55-inch-4k-ultra-hd-oled-webos-tv-oled55c3psa/p/271836',
-    amazonUrl: 'https://www.amazon.in/s?k=LG+C3+55+OLED',
-    flipkartUrl: 'https://www.flipkart.com/search?q=LG+C3+55+OLED',
+    amazonUrl: 'https://www.amazon.in/dp/B0C7QVC24W',
     imageUrl: 'https://images.unsplash.com/photo-1509281373149-e957c6296406?auto=format&fit=crop&w=600&q=80',
     rating: 4.9,
     reviewsCount: '2,800+',
@@ -372,8 +368,7 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Croma Best Seller · 90% Less Fat',
     sourceUrl: 'https://www.croma.com/philips-essential-4-1-litres-air-fryer-hd9252-90-black-/p/234720',
     cromaUrl: 'https://www.croma.com/philips-essential-4-1-litres-air-fryer-hd9252-90-black-/p/234720',
-    amazonUrl: 'https://www.amazon.in/s?k=Philips+HD9252+Air+Fryer',
-    flipkartUrl: 'https://www.flipkart.com/search?q=Philips+HD9252+Air+Fryer',
+    amazonUrl: 'https://www.amazon.in/dp/B097RJ867P',
     imageUrl: 'https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=600&q=80',
     rating: 4.7,
     reviewsCount: '34,000+',
@@ -391,8 +386,7 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Croma Official Partner · Dyson Tech',
     sourceUrl: 'https://www.croma.com/dyson-v15-detect-cordless-vacuum-cleaner-yellow-iron-/p/243689',
     cromaUrl: 'https://www.croma.com/dyson-v15-detect-cordless-vacuum-cleaner-yellow-iron-/p/243689',
-    amazonUrl: 'https://www.amazon.in/dp/B0B2W2B7Z3',
-    flipkartUrl: 'https://www.flipkart.com/search?q=Dyson+V15+Detect',
+    amazonUrl: 'https://www.amazon.in/dp/B0B53T9H9L',
     imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=600&q=80',
     rating: 4.8,
     reviewsCount: '3,200+',
@@ -411,8 +405,7 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     store: 'Tata CLiQ',
     storeBadge: 'Tata CLiQ Luxury · 100% Genuine Guarantee',
     sourceUrl: 'https://www.tatacliq.com/marshall-stanmore-iii-wireless-bluetooth-speaker-black/p-mp000000018596328',
-    amazonUrl: 'https://www.amazon.in/s?k=Marshall+Stanmore+III',
-    flipkartUrl: 'https://www.flipkart.com/search?q=Marshall+Stanmore+III',
+    amazonUrl: 'https://www.amazon.in/dp/B0B23H752B',
     imageUrl: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=600&q=80',
     rating: 4.9,
     reviewsCount: '2,600+',
@@ -429,8 +422,7 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     store: 'Tata CLiQ',
     storeBadge: 'Tata CLiQ Luxury · Fujifilm Official',
     sourceUrl: 'https://www.tatacliq.com/fujifilm-x100vi-digital-camera-silver/p-mp000000021485901',
-    amazonUrl: 'https://www.amazon.in/s?k=Fujifilm+X100VI',
-    flipkartUrl: 'https://www.flipkart.com/search?q=Fujifilm+X100VI',
+    amazonUrl: 'https://www.amazon.in/dp/B0CVZ8V9MN',
     imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80',
     rating: 4.9,
     reviewsCount: '1,100+',
@@ -447,8 +439,7 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     store: 'Tata CLiQ',
     storeBadge: 'Tata CLiQ Luxury · Audiophile Grade',
     sourceUrl: 'https://www.tatacliq.com/sennheiser-momentum-4-wireless-over-ear-headphones-black/p-mp000000015482390',
-    amazonUrl: 'https://www.amazon.in/s?k=Sennheiser+Momentum+4',
-    flipkartUrl: 'https://www.flipkart.com/search?q=Sennheiser+Momentum+4',
+    amazonUrl: 'https://www.amazon.in/dp/B0B6GHW1SX',
     imageUrl: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=600&q=80',
     rating: 4.8,
     reviewsCount: '4,500+',
@@ -841,17 +832,15 @@ export const ShoppingAssistantSidebar: React.FC<ShoppingAssistantSidebarProps> =
                       <div className="flex gap-2.5 mb-2.5">
                         <div
                           onClick={() => handleOpenProductModal(item)}
-                          className={`w-14 h-14 rounded-xl overflow-hidden shrink-0 border cursor-pointer relative group ${
-                            isWhite ? 'bg-violet-50 border-violet-100' : 'bg-black/50 border-white/10'
-                          }`}
+                          className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border cursor-pointer relative group"
                           title="Click to view full specs & photos"
                         >
-                          <img
+                          <VerifiedProductImage
                             src={item.imageUrl}
                             alt={item.name}
-                            referrerPolicy="no-referrer"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                            onError={e => handleImageError(e)}
+                            productName={item.name}
+                            imageSourceUrl={item.sourceUrl}
+                            aspectRatioClass="aspect-square w-16 h-16"
                           />
                         </div>
 
@@ -902,19 +891,18 @@ export const ShoppingAssistantSidebar: React.FC<ShoppingAssistantSidebarProps> =
                         </span>
                       </div>
 
-                      {/* DIRECT BUY BUTTON (Strict original platform URL) */}
+                      {/* Verified Direct Buy Actions */}
                       <div className="space-y-1.5">
-                        <a
-                          href={directUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`w-full bg-gradient-to-r ${storeBtnColor} text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer`}
-                          title={`Direct Buy on ${item.store} — strictly opens ${directUrl}`}
-                        >
-                          <ShoppingCart className="w-3.5 h-3.5" />
-                          <span>Direct Buy on {item.store}</span>
-                          <ExternalLink className="w-3 h-3 opacity-80 ml-0.5" />
-                        </a>
+                        <VerifiedBuyCardActions
+                          productName={item.name}
+                          buyUrl={directUrl}
+                          sourceDomain={item.sourceUrl ? new URL(item.sourceUrl).hostname.replace(/^www\./, '') : ''}
+                          platform={item.store}
+                          verified={true}
+                          imageSourceUrl={item.sourceUrl}
+                          priceInr={item.price}
+                          isCompact={true}
+                        />
 
                         {/* Secondary Store Links & Specs Action */}
                         <div className="flex items-center gap-1.5 pt-0.5">

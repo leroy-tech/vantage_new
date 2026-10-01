@@ -55,6 +55,8 @@ import { ProductDetailModal, ProductModalData } from './components/ProductDetail
 import { FloatingActionSearchBar } from './components/FloatingActionSearchBar';
 import { CompareDrawer } from './components/CompareDrawer';
 import { ShoppingAssistantSidebar } from './components/ShoppingAssistantSidebar';
+import { VerifiedProductImage } from './components/VerifiedProductImage';
+import { VerifiedBuyCardActions } from './components/VerifiedBuyCardActions';
 import {
   VERIFIED_FALLBACK_PLACEHOLDER,
   CATEGORY_FALLBACK_PLACEHOLDERS,
@@ -1365,7 +1367,6 @@ const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
     store: 'Flipkart Direct',
     sourceUrl: 'https://www.flipkart.com/motorola-edge-50-ultra-peach-fuzz-512-gb/p/itmdb2ebdc8104fb',
     sourceBadge: 'Official Brand Listing · Motorola India',
-    amazonUrl: 'https://www.amazon.in/s?k=Motorola+Edge+50+Ultra',
     flipkartUrl: 'https://www.flipkart.com/motorola-edge-50-ultra-peach-fuzz-512-gb/p/itmdb2ebdc8104fb',
     imageUrl: 'https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=1000&q=80',
     gallery: [
@@ -1410,7 +1411,6 @@ const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
     store: 'Flipkart Direct',
     sourceUrl: 'https://www.flipkart.com/nothing-phone-2a-plus-grey-256-gb/p/itmd5b94f0685956',
     sourceBadge: 'Official Brand Listing · Nothing India',
-    amazonUrl: 'https://www.amazon.in/s?k=Nothing+Phone+2a+Plus',
     flipkartUrl: 'https://www.flipkart.com/nothing-phone-2a-plus-grey-256-gb/p/itmd5b94f0685956',
     imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=80',
     gallery: [
@@ -1455,7 +1455,7 @@ const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
     store: 'Flipkart Direct',
     sourceUrl: 'https://www.flipkart.com/acer-nitro-v-amd-ryzen-7-octa-core-8845hs-16-gb-1-tb-ssd-windows-11-home-8-gb-graphics-nvidia-geforce-rtx-4060-anv16-41-gaming-laptop/p/itmffad400e93a65',
     sourceBadge: 'Official Brand Listing · Acer India',
-    amazonUrl: 'https://www.amazon.in/s?k=Acer+Nitro+V+16+RTX+4060',
+    amazonUrl: 'https://www.amazon.in/dp/B0D5BN5BFL',
     flipkartUrl: 'https://www.flipkart.com/acer-nitro-v-amd-ryzen-7-octa-core-8845hs-16-gb-1-tb-ssd-windows-11-home-8-gb-graphics-nvidia-geforce-rtx-4060-anv16-41-gaming-laptop/p/itmffad400e93a65',
     imageUrl: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=80',
     gallery: [
@@ -1500,7 +1500,6 @@ const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
     store: 'Flipkart Direct',
     sourceUrl: 'https://www.flipkart.com/nothing-ear-a-active-noise-cancellation-bluetooth-headset/p/itm5a3857db7f561',
     sourceBadge: 'Official Brand Listing · Nothing India',
-    amazonUrl: 'https://www.amazon.in/s?k=Nothing+Ear+a',
     flipkartUrl: 'https://www.flipkart.com/nothing-ear-a-active-noise-cancellation-bluetooth-headset/p/itm5a3857db7f561',
     imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
     gallery: [
@@ -1586,8 +1585,7 @@ const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
     store: 'Tata CLiQ Luxury',
     sourceUrl: 'https://www.tatacliq.com/sennheiser-momentum-4-wireless-over-ear-headphones-black/p-mp000000015482390',
     sourceBadge: 'Official Brand Listing · Sennheiser India',
-    amazonUrl: 'https://www.amazon.in/s?k=Sennheiser+Momentum+4',
-    flipkartUrl: 'https://www.flipkart.com/search?q=Sennheiser+Momentum+4',
+    amazonUrl: 'https://www.amazon.in/dp/B0B6GHW1SX',
     imageUrl: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1000&q=80',
     gallery: [
       'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1000&q=80'
@@ -1704,42 +1702,8 @@ function getFallbackStoreLinks(name: string, sourceUrl?: string): StoreLink[] {
     }
   }
 
-  if (!links.some(l => l.store === 'Amazon India')) {
-    links.push({
-      store: 'Amazon India',
-      name: 'Amazon.in',
-      url: `https://www.amazon.in/s?k=${q}`,
-      badge: 'Check Deals',
-      color: '#FF9900',
-    });
-  }
-
-  if (!links.some(l => l.store === 'Flipkart')) {
-    links.push({
-      store: 'Flipkart',
-      name: 'Flipkart',
-      url: `https://www.flipkart.com/search?q=${q}`,
-      badge: 'Check Offers',
-      color: '#2874F0',
-    });
-  }
-
-  links.push({
-    store: 'Croma',
-    name: 'Croma',
-    url: `https://www.croma.com/searchB?q=${q}`,
-    badge: 'Store Pickup',
-    color: '#00E8C6',
-  });
-
-  links.push({
-    store: 'Reliance Digital',
-    name: 'Reliance Digital',
-    url: `https://www.reliancedigital.in/search?q=${q}`,
-    badge: 'Compare',
-    color: '#E42529',
-  });
-
+  // Strictly adhere to rule: Never fabricate a search URL as a buy_url.
+  // Only authentic verified product detail pages (PDP) are allowed.
   return links;
 }
 
@@ -3418,20 +3382,19 @@ export default function App() {
                         {/* Product Image Floating Display - Clickable to open full details */}
                         <div
                           onClick={() => handleOpenProductModal(product)}
-                          className={`w-full h-44 rounded-2xl overflow-hidden ${isWhite ? 'bg-violet-50 border-violet-100 group-hover:border-violet-300/60' : 'bg-black/40 border-white/10 group-hover:border-[#F0B429]/50'} border relative mb-3.5 transition-all cursor-pointer`}
+                          className="w-full relative mb-3.5 cursor-pointer"
                           title="Click to open full product details and pictures"
                         >
-                          <img
+                          <VerifiedProductImage
                             src={product.imageUrl}
                             alt={product.name}
-                            referrerPolicy="no-referrer"
-                            className="w-full h-full object-contain p-2 group-hover:scale-108 transition-transform duration-500"
-                            onError={(e) => handleImageError(e, product.category)}
+                            productName={product.name}
+                            imageSourceUrl={product.image_source_url || product.sourceUrl}
+                            fallbackUrls={product.gallery}
+                            aspectRatioClass="aspect-[4/3] h-44"
+                            showSourceBadge={true}
                           />
-                          <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-lg ${isWhite ? 'bg-violet-100/95 text-[#2E1065] border-violet-200' : 'bg-black/85 text-[#7C3AED] border-violet-300/40'} border text-[10px] font-bold shadow-xs backdrop-blur-md`}>
-                            Verified Photo
-                          </div>
-                          <div className={`absolute bottom-2 left-2 px-2.5 py-1 rounded-xl ${isWhite ? 'bg-white/95 text-emerald-700 border-violet-100 shadow-md font-bold' : 'bg-black/80 text-emerald-400 border-white/10 font-mono font-black'} backdrop-blur-md border text-xs`}>
+                          <div className={`absolute bottom-2 left-2 px-2.5 py-1 rounded-xl ${isWhite ? 'bg-white/95 text-emerald-700 border-violet-100 shadow-md font-bold' : 'bg-black/80 text-emerald-400 border-white/10 font-mono font-black'} backdrop-blur-md border text-xs z-20`}>
                             {product.price}
                           </div>
                         </div>
@@ -3439,7 +3402,7 @@ export default function App() {
                         {/* Details - Clickable */}
                         <div
                           onClick={() => handleOpenProductModal(product)}
-                          className="space-y-1.5 flex-1 mb-3.5 cursor-pointer"
+                          className="space-y-1.5 flex-1 mb-3 cursor-pointer"
                         >
                           <h4 className={`font-heading font-bold text-sm ${isWhite ? 'text-[#2E1065] hover:text-[#7C3AED]' : 'text-white hover:text-amber-400'} line-clamp-2 leading-snug transition-colors`}>
                             {product.name}
@@ -3470,40 +3433,62 @@ export default function App() {
                           <ArrowRight className="w-3 h-3 ml-0.5 opacity-80" />
                         </button>
 
-                        {/* Direct Store Links Bar */}
-                        <div className={`space-y-1.5 mb-3 pt-2 border-t ${isWhite ? 'border-violet-100' : 'border-white/10'}`}>
-                          {/* Primary Direct Buy Button from the Taken Resource */}
-                          <a
-                            href={product.sourceUrl || product.amazonUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] hover:from-purple-600 hover:to-violet-700 text-white font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
-                          >
-                            <ShoppingCart className="w-3.5 h-3.5" />
-                            <span>Buy on {product.store} (Direct)</span>
-                            <ExternalLink className="w-3 h-3 opacity-80" />
-                          </a>
+                        {/* Verified Direct Store Buy Actions */}
+                        <div className={`space-y-2 mb-3 pt-2 border-t ${isWhite ? 'border-violet-100' : 'border-white/10'}`}>
+                          <VerifiedBuyCardActions
+                            productName={product.name}
+                            buyUrl={product.sourceUrl || product.amazonUrl || product.flipkartUrl}
+                            sourceDomain={product.source_domain || (product.sourceUrl ? new URL(product.sourceUrl).hostname.replace(/^www\./, '') : '')}
+                            platform={product.platform || product.store || 'Verified Store'}
+                            verified={product.verified !== false}
+                            imageSourceUrl={product.image_source_url || product.sourceUrl}
+                            priceInr={product.price}
+                          />
 
-                          <div className="grid grid-cols-2 gap-1.5">
-                            <a
-                              href={product.amazonUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={`${isWhite ? 'bg-violet-50 hover:bg-violet-100 border-violet-200 text-[#2E1065] font-bold' : 'bg-amber-950/40 hover:bg-amber-900/60 border-amber-600/40 hover:border-violet-400 text-[#FFB020]'} border text-[11px] py-1 px-2 rounded-xl flex items-center justify-center gap-1 transition-all`}
-                            >
-                              <span>Amazon</span>
-                              <ExternalLink className="w-2.5 h-2.5 opacity-80" />
-                            </a>
-                            <a
-                              href={product.flipkartUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={`${isWhite ? 'bg-blue-50 hover:bg-blue-100 border-blue-300 text-blue-900 font-bold' : 'bg-blue-950/40 hover:bg-blue-900/60 border-blue-600/40 hover:border-blue-500 text-[#93C5FD]'} border text-[11px] py-1 px-2 rounded-xl flex items-center justify-center gap-1 transition-all`}
-                            >
-                              <span>Flipkart</span>
-                              <ExternalLink className="w-2.5 h-2.5 opacity-80" />
-                            </a>
-                          </div>
+                          {/* Secondary Platform Links if available */}
+                          {(product.amazonUrl || product.flipkartUrl) && (
+                            <div className="grid grid-cols-2 gap-1.5 pt-1">
+                              {product.amazonUrl ? (
+                                <a
+                                  href={product.amazonUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`${isWhite ? 'bg-violet-50 hover:bg-violet-100 border-violet-200 text-[#2E1065] font-bold' : 'bg-amber-950/40 hover:bg-amber-900/60 border-amber-600/40 hover:border-violet-400 text-[#FFB020]'} border text-[11px] py-1 px-2 rounded-xl flex items-center justify-between gap-1 transition-all`}
+                                  title={`Buy on Amazon India — opens ${product.amazonUrl}`}
+                                >
+                                  <span className="truncate">Amazon</span>
+                                  <div className="flex items-center gap-0.5 text-[9px] opacity-75 font-mono">
+                                    <span>amazon.in</span>
+                                    <ExternalLink className="w-2 h-2" />
+                                  </div>
+                                </a>
+                              ) : (
+                                <div className="text-[10px] text-slate-400 bg-slate-50 border border-slate-200 py-1 px-2 rounded-xl text-center">
+                                  Not found on Amazon
+                                </div>
+                              )}
+
+                              {product.flipkartUrl ? (
+                                <a
+                                  href={product.flipkartUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`${isWhite ? 'bg-blue-50 hover:bg-blue-100 border-blue-300 text-blue-900 font-bold' : 'bg-blue-950/40 hover:bg-blue-900/60 border-blue-600/40 hover:border-blue-500 text-[#93C5FD]'} border text-[11px] py-1 px-2 rounded-xl flex items-center justify-between gap-1 transition-all`}
+                                  title={`Buy on Flipkart — opens ${product.flipkartUrl}`}
+                                >
+                                  <span className="truncate">Flipkart</span>
+                                  <div className="flex items-center gap-0.5 text-[9px] opacity-75 font-mono">
+                                    <span>flipkart.com</span>
+                                    <ExternalLink className="w-2 h-2" />
+                                  </div>
+                                </a>
+                              ) : (
+                                <div className="text-[10px] text-slate-400 bg-slate-50 border border-slate-200 py-1 px-2 rounded-xl text-center">
+                                  Not found on Flipkart
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
 
                         {/* AI Trigger & Modal Actions */}

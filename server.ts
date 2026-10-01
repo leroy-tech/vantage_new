@@ -7,6 +7,15 @@ import * as db from './server/db';
 import * as agent from './server/agent';
 import * as notifications from './server/notifications';
 import { resolveExactProductImage, getProductImageUrl, resolveExactProductSource } from './server/productImages';
+import {
+  queryVerifiedCatalog,
+  getVerifiedPlatformLinks,
+  validateProductDetailPage,
+  VERIFIED_PRODUCT_CATALOG,
+  TRUSTED_DOMAINS,
+  cleanProductUrl,
+  verifyProductLive
+} from './server/productVerifier';
 
 dotenv.config();
 
@@ -30,6 +39,47 @@ app.get('/api/product-source', async (req, res) => {
   }
   const source = await resolveExactProductSource(q);
   res.json(source);
+});
+
+// Strict Verified Product & Direct Buy PDP Lookup
+// Schema: name, brand, platform, price_inr, rating, image_url, image_source_url, buy_url, source_domain, verified, last_checked
+app.get('/api/verify-product', async (req, res) => {
+  const q = String(req.query.q || '').trim();
+  if (!q) {
+    return res.status(400).json({ error: 'q parameter is required' });
+  }
+
+  const candidateUrl = String(req.query.url || '').trim();
+  try {
+    const verified = await verifyProductLive(q, candidateUrl);
+    res.json(verified);
+  } catch (err: any) {
+    res.status(500).json({
+      name: q,
+      brand: q.split(' ')[0] || 'Unknown',
+      platform: 'Not Verified',
+      price_inr: 'N/A',
+      rating: 0,
+      image_url: '',
+      image_source_url: '',
+      buy_url: '',
+      source_domain: '',
+      verified: false,
+      last_checked: new Date().toISOString(),
+      retry: true,
+      error: err?.message || 'Verification failed',
+      message: 'Failed to verify product detail page. Please retry.'
+    });
+  }
+});
+
+// Verified Products Catalog Endpoint
+app.get('/api/verified-catalog', (req, res) => {
+  res.json({
+    total: VERIFIED_PRODUCT_CATALOG.length,
+    products: VERIFIED_PRODUCT_CATALOG,
+    trusted_domains: TRUSTED_DOMAINS,
+  });
 });
 
 // Comprehensive Product Details & Specifications Lookup

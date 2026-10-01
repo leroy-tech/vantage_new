@@ -4,14 +4,19 @@ import * as webSearch from './webSearch';
 import { getProductImageUrl, resolveExactProductImage, resolveExactProductSource } from './productImages';
 import { getStoreLinks, StoreLink } from './storeLinks';
 import { DetailedProductInfo, getCuratedProductDetails } from './productCatalog';
+import {
+  queryVerifiedCatalog,
+  validateProductDetailPage,
+  cleanProductUrl,
+  extractSourceDomain,
+  isTrustedDomain
+} from './productVerifier';
 
 // Supported models with prioritized fallbacks for high-demand spikes and quota management
 const CANDIDATE_MODELS = [
   process.env.GEMINI_MODEL,
-  'gemini-2.5-flash',
-  'gemini-2.5-flash-lite',
-  'gemini-3.1-flash-lite',
   'gemini-3.8-flash',
+  'gemini-3.1-flash-lite',
   'gemini-flash-latest',
 ].filter((m): m is string => Boolean(m));
 
