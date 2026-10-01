@@ -731,18 +731,27 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
 
       {/* Main Container with Smooth Sidebar Transition */}
       <div className="flex max-w-7xl mx-auto w-full transition-all duration-300 ease-in-out relative">
-        {/* Collapsible Sidebar */}
-        <aside
-          className={`shrink-0 overflow-y-auto z-30 transition-all duration-300 ease-in-out border-r border-violet-200/50 dark:border-white/10 glass-panel ${
-            sidebarOpen
-              ? 'w-72 p-4 opacity-100 translate-x-0'
-              : 'w-0 p-0 opacity-0 -translate-x-full pointer-events-none'
+        {/* Mobile Backdrop Overlay - closes sidebar on backdrop tap */}
+        <div
+          className={`fixed inset-0 bg-black/40 backdrop-blur-xs z-30 md:hidden transition-opacity duration-300 ease-in-out ${
+            sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
-          style={{ height: 'calc(100vh - 65px)', position: 'sticky', top: '65px' }}
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Collapsible Sidebar with Smooth Width & Slide Transitions */}
+        <aside
+          className={`fixed md:sticky top-[65px] left-0 z-40 md:z-20 shrink-0 overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out border-r border-violet-200/50 dark:border-white/10 glass-panel ${
+            sidebarOpen
+              ? 'w-72 opacity-100 translate-x-0 shadow-2xl md:shadow-none pointer-events-auto'
+              : 'w-0 opacity-0 -translate-x-full md:translate-x-0 border-r-0 pointer-events-none'
+          }`}
+          style={{ height: 'calc(100vh - 65px)' }}
         >
-          {sidebarOpen && (
-            <div className="space-y-6">
-              {/* Close sidebar helper for small screens */}
+          {/* Inner fixed-width container prevents content squishing or reflow during transition */}
+          <div className="w-72 p-4 space-y-6">
+            {/* Close sidebar helper for small screens */}
               <div className="flex items-center justify-between pb-2 border-b border-violet-100 dark:border-white/10">
                 <span className="text-xs font-bold uppercase tracking-wider text-[#7C3AED] dark:text-violet-400">
                   Assistant Filters
@@ -915,11 +924,10 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                 </div>
               </div>
             </div>
-          )}
         </aside>
 
-        {/* Dynamic Main Content Area - Expands or contracts without overlap */}
-        <main className="flex-1 p-4 sm:p-6 overflow-hidden min-w-0">
+        {/* Dynamic Main Content Area - Smoothly expands & contracts to avoid overlap */}
+        <main className="flex-1 min-w-0 p-4 sm:p-6 overflow-hidden transition-all duration-300 ease-in-out">
           {/* Smart Follow-up Refinement Card (Shown when query is vague) */}
           {pendingFollowUp && (
             <div className="mb-6 p-5 sm:p-6 rounded-3xl glass-panel-violet border border-violet-300 dark:border-violet-700/60 shadow-xl animate-in fade-in slide-in-from-top-3 duration-300">
@@ -1410,7 +1418,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                     return (
                       <div
                         key={product.id}
-                        className="rounded-3xl border border-violet-100 dark:border-white/10 glass-panel-white overflow-hidden flex flex-col justify-between transform transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-violet-500/15 dark:hover:shadow-violet-900/30 hover:border-violet-300 dark:hover:border-violet-500/60 group"
+                        className="rounded-3xl border border-violet-100 dark:border-white/10 glass-panel-white overflow-hidden flex flex-col justify-between transform transition-all duration-300 ease-out hover:scale-[1.025] hover:-translate-y-1 hover:shadow-2xl hover:shadow-violet-500/20 dark:hover:shadow-violet-900/40 hover:border-violet-300 dark:hover:border-violet-500/60 group will-change-transform"
                       >
                         <div>
                           {/* Image View + Badges */}

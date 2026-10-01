@@ -76,8 +76,8 @@ export interface FloatingProduct {
   store: string;
   sourceUrl: string;
   sourceBadge: string;
-  amazonUrl: string;
-  flipkartUrl: string;
+  amazonUrl?: string;
+  flipkartUrl?: string;
   imageUrl: string;
   gallery?: string[];
   tag: string;
@@ -92,6 +92,10 @@ export interface FloatingProduct {
   expertTake?: string;
   isNewRelease?: boolean;
   launchBadge?: string;
+  image_source_url?: string;
+  source_domain?: string;
+  platform?: string;
+  verified?: boolean;
 }
 
 const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
@@ -2871,7 +2875,7 @@ export default function App() {
           />
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
+      <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden relative z-10 transition-all duration-300 ease-in-out">
         {/* Top Navbar */}
         <header className={`px-4 sm:px-6 py-4 ${isWhite ? 'bg-white/85 border-b border-violet-100 shadow-sm' : 'glass-panel border-b border-white/10'} flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-md transition-colors`}>
           <div className="flex items-center gap-3.5">
