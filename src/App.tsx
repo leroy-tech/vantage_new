@@ -40,11 +40,21 @@ import {
   Moon,
   ArrowRight,
   Shield,
-  Eye
+  Eye,
+  Scale,
+  ArrowDownUp,
+  PanelLeftClose,
+  PanelLeftOpen,
+  CheckSquare,
+  Square
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { LandingPage } from './components/LandingPage';
 import { ProductDetailSlideOver } from './components/ProductDetailSlideOver';
 import { ProductDetailModal, ProductModalData } from './components/ProductDetailModal';
+import { FloatingActionSearchBar } from './components/FloatingActionSearchBar';
+import { CompareDrawer } from './components/CompareDrawer';
+import { ShoppingAssistantSidebar } from './components/ShoppingAssistantSidebar';
 import {
   VERIFIED_FALLBACK_PLACEHOLDER,
   CATEGORY_FALLBACK_PLACEHOLDERS,
@@ -1016,6 +1026,599 @@ const RAW_FLOATING_PRODUCTS: FloatingProduct[] = [
     communityTake: 'Most recommended keyboard on r/developersIndia for Mac and PC setups.',
     expertTake: 'Ranked best mechanical keyboard under ₹10,000 by TechRadar India.'
   },
+  {
+    id: 'airpods-pro-2',
+    name: 'Apple AirPods Pro (2nd Gen with USB-C MagSafe)',
+    category: 'audio',
+    price: '₹22,990',
+    mrp: '₹24,900',
+    savings: 'Save ₹1,910 with Bank Offer',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CHX6X33L',
+    sourceBadge: 'Official Brand Listing · Apple India',
+    amazonUrl: 'https://www.amazon.in/dp/B0CHX6X33L',
+    flipkartUrl: 'https://www.flipkart.com/apple-airpods-pro-2nd-gen-magsafe-case-usb-c/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'H2 Chip + Adaptive Audio',
+    animationClass: 'animate-float-1',
+    rating: 4.9,
+    reviewsCount: '24,800+ reviews',
+    isNewRelease: true,
+    launchBadge: 'USB-C Lossless Audio',
+    highlights: [
+      'Apple-designed H2 chip delivers up to 2x more Active Noise Cancellation',
+      'Adaptive Audio dynamically blends Transparency mode and Active Noise Cancellation',
+      'Personalized Spatial Audio with dynamic head tracking for cinema-like surround sound',
+      'Up to 30 hours of total listening time with the MagSafe Charging Case (USB-C)'
+    ],
+    specs: {
+      'Chip': 'Apple H2 headphone chip + Apple U1 in charging case',
+      'Noise Cancellation': 'Active Noise Cancellation with Transparency & Adaptive Audio',
+      'Sweat Resistance': 'IP54 dust, sweat, and water resistant (earbuds and case)',
+      'Battery': 'Up to 6 hours listening (ANC on) / 30 hours total with case',
+      'Warranty': '1 Year Apple India Official Warranty'
+    },
+    pros: [
+      'Industry-leading transparency mode sounds just like natural hearing',
+      'USB-C case with speaker for Find My precision tracking',
+      'Flawless instant pairing across iPhone, iPad, and Mac'
+    ],
+    cons: [
+      'Full features require Apple ecosystem'
+    ],
+    communityTake: 'Gold standard for everyday Indian commutes and crystal-clear phone calls.',
+    expertTake: 'Rated 9.5/10 by The Verge and Gadgets360.'
+  },
+  {
+    id: 'nothing-phone-2',
+    name: 'Nothing Phone (2) 5G (Dark Grey 12GB/256GB)',
+    category: 'phones',
+    price: '₹36,999',
+    mrp: '₹49,999',
+    savings: 'Save ₹13,000 (26% off)',
+    store: 'Flipkart Direct',
+    sourceUrl: 'https://www.flipkart.com/nothing-phone-2-dark-grey-256-gb/p/itm5a840c83a71b1',
+    sourceBadge: 'Official Brand Listing · Nothing India',
+    amazonUrl: 'https://www.amazon.in/dp/B0C9J7L3VN',
+    flipkartUrl: 'https://www.flipkart.com/nothing-phone-2-dark-grey-256-gb/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Glyph Interface + Snapdragon 8+ Gen 1',
+    animationClass: 'animate-float-2',
+    rating: 4.6,
+    reviewsCount: '18,200+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Iconic Transparent Design',
+    highlights: [
+      'New Glyph Interface with 33 addressable LED zones for essential notifications and timers',
+      'Snapdragon 8+ Gen 1 chipset offering flagship responsiveness and gaming speed',
+      '6.7-inch flexible LTPO OLED display with 1-120Hz adaptive refresh rate',
+      'Dual 50MP Sony IMX890 rear camera with OIS and advanced HDR'
+    ],
+    specs: {
+      'Processor': 'Snapdragon 8+ Gen 1 (4nm)',
+      'RAM / Storage': '12GB LPDDR5 / 256GB UFS 3.1',
+      'Display': '6.7-inch LTPO OLED, 120Hz, 1600 nits peak',
+      'Battery': '4700 mAh with 45W PPS fast charge and 15W Qi wireless',
+      'Warranty': '1 Year Nothing India Warranty'
+    },
+    pros: [
+      'Nothing OS 2.5 is beautifully clean with monochromatic aesthetic widgets',
+      'Glyph lights let you check Zomato/Uber order progress face-down',
+      'Terrific build quality with recycled aluminum frame'
+    ],
+    cons: [
+      'No dedicated zoom telephoto lens'
+    ],
+    communityTake: 'Popular recommendation on r/GadgetsIndia for clean software and head-turning looks.',
+    expertTake: 'Beebom Choice Award for best sub-₹40,000 smartphone.'
+  },
+  {
+    id: 'logitech-mx-master-3s',
+    name: 'Logitech MX Master 3S Wireless Performance Mouse',
+    category: 'laptops',
+    price: '₹8,995',
+    mrp: '₹10,995',
+    savings: 'Save ₹2,000 (18% off)',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0B11D792B',
+    sourceBadge: 'Official Brand Listing · Logitech',
+    amazonUrl: 'https://www.amazon.in/dp/B0B11D792B',
+    flipkartUrl: 'https://www.flipkart.com/logitech-mx-master-3s-performance-wireless-mouse/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: '8K DPI + MagSpeed Quiet Scroll',
+    animationClass: 'animate-float-3',
+    rating: 4.8,
+    reviewsCount: '9,400+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Developer Ergonomic King',
+    highlights: [
+      '8,000 DPI Darkfield tracking tracks anywhere, even on clear glass tables',
+      'Quiet Click switches reduce click noise by 90% while keeping tactile feel',
+      'MagSpeed electromagnetic wheel scrolls 1,000 lines per second silently',
+      'Connects up to 3 devices across macOS, Windows, and Linux with Logitech Flow'
+    ],
+    specs: {
+      'Sensor': 'Darkfield high precision (200 - 8000 DPI)',
+      'Buttons': '7 buttons with gesture button and thumbwheel',
+      'Battery': 'Rechargeable Li-Po (500 mAh) lasting up to 70 days',
+      'Connectivity': 'Bluetooth Low Energy + Logi Bolt USB Receiver',
+      'Warranty': '1 Year Logitech India Warranty'
+    },
+    pros: [
+      'MagSpeed scroll wheel is addictively fast for long codebases and Excel sheets',
+      'Ergonomic thumb rest eliminates wrist strain during 10-hour workdays',
+      'Horizontal thumb wheel speeds up video timelines and spreadsheets'
+    ],
+    cons: [
+      'Designed primarily for right-handed users'
+    ],
+    communityTake: 'The undisputed mouse champion on r/developersIndia and tech YouTube.',
+    expertTake: 'Rated 10/10 by Wirecutter and Tom’s Guide.'
+  },
+  {
+    id: 'lg-c3-oled',
+    name: 'LG 55" C3 4K Smart OLED evo TV (Dolby Vision & Atmos)',
+    category: 'appliances',
+    price: '₹1,19,990',
+    mrp: '₹1,69,990',
+    savings: 'Save ₹50,000 with Bank Cashback',
+    store: 'Flipkart Direct',
+    sourceUrl: 'https://www.flipkart.com/lg-55-inch-oled-ultra-hd-4k-smart-tv/p/itm5a840c83a71b1',
+    sourceBadge: 'Official Brand Listing · LG India',
+    amazonUrl: 'https://www.amazon.in/dp/B0C392J8M2',
+    flipkartUrl: 'https://www.flipkart.com/lg-55-inch-oled-ultra-hd-4k-smart-tv/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'OLED evo + 4x HDMI 2.1 120Hz',
+    animationClass: 'animate-float-4',
+    rating: 4.9,
+    reviewsCount: '8,200+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Infinite Contrast Reference',
+    highlights: [
+      'LG OLED evo with Brightness Booster for radiant picture clarity and infinite contrast',
+      'α9 AI Processor Gen6 with AI Super Upscaling 4K and OLED Dynamic Tone Mapping Pro',
+      '4 full-bandwidth HDMI 2.1 ports with 4K 120Hz, VRR, NVIDIA G-Sync and AMD FreeSync',
+      'Ultra-slim design with almost invisible bezels for true cinematic immersion'
+    ],
+    specs: {
+      'Display': '55-inch 4K Self-Lighting OLED evo (3840 x 2160, 120Hz)',
+      'Processor': 'α9 Gen6 AI 4K Processor',
+      'Gaming': '0.1ms response time, 4x HDMI 2.1, G-Sync, FreeSync Premium',
+      'Audio': '40W 2.2 Channel Dolby Atmos audio',
+      'Warranty': '3 Years Comprehensive LG India Warranty'
+    },
+    pros: [
+      'True perfect blacks with zero blooming around subtitles',
+      'Best gaming television in the world for PS5, Xbox Series X, and PC rigs',
+      'Thin profile hangs flush on walls like a canvas painting'
+    ],
+    cons: [
+      'Requires moderate lighting environment to avoid reflections'
+    ],
+    communityTake: 'Indian movie and PS5 gamers consider it the pinnacle home theater display.',
+    expertTake: 'RTINGS 9.0/10: "The benchmark OLED television."'
+  },
+  {
+    id: 'kindle-paperwhite',
+    name: 'Amazon Kindle Paperwhite 16GB (6.8" 300 ppi Display)',
+    category: 'laptops',
+    price: '₹14,999',
+    mrp: '₹16,999',
+    savings: 'Save ₹2,000 with Prime Offer',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B08N41Y4Q2',
+    sourceBadge: 'Official Brand Listing · Amazon Devices',
+    amazonUrl: 'https://www.amazon.in/dp/B08N41Y4Q2',
+    flipkartUrl: 'https://www.flipkart.com/all-new-kindle-paperwhite-16-gb-6-8-display/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Warm Light + 10-Week Battery',
+    animationClass: 'animate-float-1',
+    rating: 4.8,
+    reviewsCount: '32,100+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Waterproof E-Reader',
+    highlights: [
+      '6.8-inch glare-free 300 ppi Paperwhite display reads like real paper even in direct sunlight',
+      'Adjustable warm light shifts screen shade from white to amber for nighttime reading',
+      'Up to 10 weeks of battery life on a single USB-C charge',
+      'IPX8 waterproof rated to read safely by the pool or in the bath'
+    ],
+    specs: {
+      'Display': '6.8-inch glare-free Paperwhite (300 ppi, 16-level gray scale)',
+      'Storage': '16GB (Holds thousands of books)',
+      'Battery': 'Up to 10 weeks (USB-C Fast Charge in 2.5 hours)',
+      'Waterproofing': 'IPX8 (Submersion in 2 meters of fresh water for 60 mins)',
+      'Warranty': '1 Year Amazon India Warranty'
+    },
+    pros: [
+      'Zero eye strain compared to reading on phones or tablets',
+      'Charge once every 2 months with normal daily reading',
+      'Warm light makes reading in bed comforting before sleep'
+    ],
+    cons: [
+      'Black and white display only (no color comics)'
+    ],
+    communityTake: 'Indian book lovers call it their best gadget purchase for distraction-free reading.',
+    expertTake: 'Wirecutter: "The best e-reader for everyone."'
+  },
+  {
+    id: 'gopro-hero-12',
+    name: 'GoPro HERO12 Black Waterproof Action Camera (5.3K60)',
+    category: 'audio',
+    price: '₹37,990',
+    mrp: '₹45,000',
+    savings: 'Save ₹7,010 (16% off)',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CGV44BL6',
+    sourceBadge: 'Official Brand Listing · GoPro India',
+    amazonUrl: 'https://www.amazon.in/dp/B0CGV44BL6',
+    flipkartUrl: 'https://www.flipkart.com/gopro-hero-12-black-action-camera/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: '5.3K60 HDR + HyperSmooth 6.0',
+    animationClass: 'animate-float-2',
+    rating: 4.7,
+    reviewsCount: '7,400+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Enduro Battery Included',
+    highlights: [
+      'Incredible 5.3K60 and 4K120 video with high dynamic range (HDR) color capture',
+      'Emmy Award-winning HyperSmooth 6.0 video stabilization with 360-degree Horizon Lock',
+      'Rugged and waterproof down to 33 feet (10m) straight out of the box',
+      'Wireless Bluetooth audio support for AirPods and microphones'
+    ],
+    specs: {
+      'Sensor': '27 Megapixel 1/1.9-inch CMOS Sensor',
+      'Video': '5.3K at 60fps / 4K at 120fps / 2.7K at 240fps slow-mo',
+      'Stabilization': 'HyperSmooth 6.0 with AutoBoost and 360° Horizon Lock',
+      'Battery': 'Cold-weather Enduro 1720 mAh battery (2x longer runtime)',
+      'Warranty': '2 Years Official GoPro India Warranty'
+    },
+    pros: [
+      'Horizon Lock keeps footage perfectly level even if the camera spins 360 degrees',
+      'Enduro battery performs reliably in Ladakh and high altitude winter trips',
+      'Connects directly to AirPods for crystal-clear helmet audio while riding'
+    ],
+    cons: [
+      'Small sensor requires good daylight for low-noise footage'
+    ],
+    communityTake: 'Essential travel gear for Indian motorcycle tourers and coastal scuba divers.',
+    expertTake: 'DPReview: "The undisputed king of action video cameras."'
+  },
+  {
+    id: 'dyson-airwrap',
+    name: 'Dyson Airwrap Multi-Styler Complete Long',
+    category: 'appliances',
+    price: '₹45,900',
+    mrp: '₹49,900',
+    savings: 'Save ₹4,000 with Bank Cashback',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0B53T9H9L',
+    sourceBadge: 'Official Brand Listing · Dyson India',
+    amazonUrl: 'https://www.amazon.in/dp/B0B53T9H9L',
+    flipkartUrl: 'https://www.flipkart.com/dyson-airwrap-multi-styler-complete-long/p/itm5a840c83a71b1',
+    imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Coanda Air Styling + No Extreme Heat',
+    animationClass: 'animate-float-3',
+    rating: 4.8,
+    reviewsCount: '6,100+ reviews',
+    isNewRelease: true,
+    launchBadge: 'Intelligent Heat Control',
+    highlights: [
+      'Harnesses the Coanda aerodynamic effect to curl, shape, smooth, and hide flyaways',
+      'Styles with air, not extreme heat — measures temperature over 40 times a second to prevent damage',
+      'Includes re-engineered barrels that curl in both clockwise and counter-clockwise directions',
+      'Prussian blue presentation case lined with soft fabric and magnetic clasp'
+    ],
+    specs: {
+      'Motor': 'Dyson Digital Motor V9 (110,000 rpm)',
+      'Heat Control': 'Intelligent Heat Control keeps temperature under 150°C',
+      'Airflow': '3 precise airflow speeds and 3 precise heat settings + Cold Shot',
+      'Power': '1300 Watts',
+      'Warranty': '2 Years Dyson India Warranty'
+    },
+    pros: [
+      'Zero heat damage leaves hair soft, shiny, and frizz-free',
+      'One tool dries, smooths, volumizes, and curls in half the time of salon visits',
+      'Re-engineered barrels switch curl directions with a simple twist'
+    ],
+    cons: [
+      'Requires short learning curve to master the Coanda wrap technique'
+    ],
+    communityTake: 'Considered an investment piece by Indian beauty editors for salon-quality hair at home.',
+    expertTake: 'Vogue & Allure Best of Beauty Winner.'
+  },
+  {
+    id: 'moto-edge-50-ultra',
+    name: 'Motorola Edge 50 Ultra 5G (Peach Fuzz 512GB, Snapdragon 8s Gen 3)',
+    category: 'phones',
+    price: '₹54,999',
+    mrp: '₹64,999',
+    savings: 'Save ₹10,000 Direct Deal',
+    store: 'Flipkart Direct',
+    sourceUrl: 'https://www.flipkart.com/motorola-edge-50-ultra-peach-fuzz-512-gb/p/itmdb2ebdc8104fb',
+    sourceBadge: 'Official Brand Listing · Motorola India',
+    amazonUrl: 'https://www.amazon.in/s?k=Motorola+Edge+50+Ultra',
+    flipkartUrl: 'https://www.flipkart.com/motorola-edge-50-ultra-peach-fuzz-512-gb/p/itmdb2ebdc8104fb',
+    imageUrl: 'https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Pantone Wooden Back',
+    animationClass: 'animate-float-1',
+    rating: 4.7,
+    reviewsCount: '3,200+ reviews',
+    isNewRelease: true,
+    launchBadge: '2026 Pantone Edition',
+    highlights: [
+      'Real Nordic Wood back with aluminum sandblasted frame',
+      '125W TurboPower wired + 50W wireless charging',
+      '50MP triple camera system with 64MP periscope telephoto 3x optical'
+    ],
+    specs: {
+      'Processor': 'Snapdragon 8s Gen 3 Mobile Platform',
+      'Display': '6.7-inch 1.5K Super HD pOLED 144Hz (Pantone Validated)',
+      'Camera': '50MP OIS + 50MP Ultrawide + 64MP Periscope 3x',
+      'Battery': '4500 mAh with 125W TurboPower (in-box charger)',
+      'Warranty': '1 Year Motorola India Warranty'
+    },
+    pros: [
+      'Gorgeous real wood back feels phenomenal without a case',
+      '144Hz Pantone-validated display is ultra smooth',
+      'Full 125W fast charger included in the Indian retail box'
+    ],
+    cons: [
+      'Curved edges may experience occasional palm rejection'
+    ],
+    communityTake: 'One of the most visually distinctive phones in India with stellar cameras.',
+    expertTake: 'Rated 8.9/10 by TechPP and 91Mobiles.'
+  },
+  {
+    id: 'nothing-phone-2a-plus',
+    name: 'Nothing Phone (2a) Plus (Metallic Grey 256GB)',
+    category: 'phones',
+    price: '₹27,999',
+    mrp: '₹31,999',
+    savings: 'Save ₹4,000 Instant',
+    store: 'Flipkart Direct',
+    sourceUrl: 'https://www.flipkart.com/nothing-phone-2a-plus-grey-256-gb/p/itmd5b94f0685956',
+    sourceBadge: 'Official Brand Listing · Nothing India',
+    amazonUrl: 'https://www.amazon.in/s?k=Nothing+Phone+2a+Plus',
+    flipkartUrl: 'https://www.flipkart.com/nothing-phone-2a-plus-grey-256-gb/p/itmd5b94f0685956',
+    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Glyph LED Lightshow',
+    animationClass: 'animate-float-2',
+    rating: 4.6,
+    reviewsCount: '12,800+ reviews',
+    isNewRelease: true,
+    launchBadge: '2026 Dimensity 7350 Pro',
+    highlights: [
+      'MediaTek Dimensity 7350 Pro 5G with up to 3.0 GHz clocks',
+      'Iconic Glyph Interface with customizable light sequences',
+      'Upgraded 50MP selfie camera with 4K recording'
+    ],
+    specs: {
+      'Processor': 'MediaTek Dimensity 7350 Pro 5G (4nm)',
+      'Display': '6.7-inch Flexible AMOLED 120Hz, 1300 nits peak',
+      'Camera': '50MP OIS Main + 50MP Ultrawide + 50MP Front',
+      'Battery': '5000 mAh with 50W fast charging',
+      'Warranty': '1 Year Nothing India Warranty'
+    },
+    pros: [
+      'Zero bloatware Nothing OS 2.6 with widget ecosystem',
+      'Symmetric bezels and striking transparent back design',
+      'Class-leading battery life lasting over 1.5 days easily'
+    ],
+    cons: [
+      'No wireless charging included'
+    ],
+    communityTake: 'Favorite midrange phone on r/gadgetsIndia for design and clean software.',
+    expertTake: 'Ranked Best Mid-Range Phone 2026 by Android Central.'
+  },
+  {
+    id: 'acer-nitro-v16',
+    name: 'Acer Nitro V 16 Gaming Laptop (Ryzen 7 8845HS, RTX 4060, 16GB/1TB)',
+    category: 'laptops',
+    price: '₹94,990',
+    mrp: '₹1,19,999',
+    savings: 'Save ₹25,009 Big Saving',
+    store: 'Flipkart Direct',
+    sourceUrl: 'https://www.flipkart.com/acer-nitro-v-amd-ryzen-7-octa-core-8845hs-16-gb-1-tb-ssd-windows-11-home-8-gb-graphics-nvidia-geforce-rtx-4060-anv16-41-gaming-laptop/p/itmffad400e93a65',
+    sourceBadge: 'Official Brand Listing · Acer India',
+    amazonUrl: 'https://www.amazon.in/s?k=Acer+Nitro+V+16+RTX+4060',
+    flipkartUrl: 'https://www.flipkart.com/acer-nitro-v-amd-ryzen-7-octa-core-8845hs-16-gb-1-tb-ssd-windows-11-home-8-gb-graphics-nvidia-geforce-rtx-4060-anv16-41-gaming-laptop/p/itmffad400e93a65',
+    imageUrl: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'RTX 4060 + Ryzen 8845HS',
+    animationClass: 'animate-float-3',
+    rating: 4.8,
+    reviewsCount: '1,950+ reviews',
+    isNewRelease: true,
+    launchBadge: '2026 AI NPU Laptop',
+    highlights: [
+      'AMD Ryzen 7 8845HS 8-Core processor with Ryzen AI',
+      'NVIDIA GeForce RTX 4060 8GB GDDR6 with DLSS 3.5',
+      '16.0-inch 165Hz 100% sRGB WUXGA display'
+    ],
+    specs: {
+      'Processor': 'AMD Ryzen 7 8845HS (8 Cores, 16 Threads, up to 5.1 GHz)',
+      'Graphics': 'NVIDIA GeForce RTX 4060 8GB GDDR6 (85W TGP)',
+      'Memory': '16GB DDR5 5600MHz (expandable to 32GB)',
+      'Storage': '1TB PCIe Gen4 NVMe SSD',
+      'Warranty': '1 Year Acer India On-site Warranty'
+    },
+    pros: [
+      'Incredible gaming frame rates on Cyberpunk 2077 and Black Myth Wukong with DLSS',
+      'Dual-fan cooling system keeps palm rest cool during long sessions',
+      'Substantial 1TB SSD included out of the box'
+    ],
+    cons: [
+      'Power adapter is bulky for college backpacks'
+    ],
+    communityTake: 'Considered the benchmark for sub-₹1 Lakh RTX 4060 laptops in India.',
+    expertTake: 'Voted Best Value Gaming Machine 2026 by IGN India.'
+  },
+  {
+    id: 'nothing-ear-a',
+    name: 'Nothing Ear (a) Wireless ANC Earbuds (Yellow)',
+    category: 'audio',
+    price: '₹7,999',
+    mrp: '₹9,999',
+    savings: 'Save ₹2,000 + LDAC Support',
+    store: 'Flipkart Direct',
+    sourceUrl: 'https://www.flipkart.com/nothing-ear-a-active-noise-cancellation-bluetooth-headset/p/itm5a3857db7f561',
+    sourceBadge: 'Official Brand Listing · Nothing India',
+    amazonUrl: 'https://www.amazon.in/s?k=Nothing+Ear+a',
+    flipkartUrl: 'https://www.flipkart.com/nothing-ear-a-active-noise-cancellation-bluetooth-headset/p/itm5a3857db7f561',
+    imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Hi-Res Audio LDAC',
+    animationClass: 'animate-float-1',
+    rating: 4.6,
+    reviewsCount: '8,400+ reviews',
+    highlights: [
+      '45dB Smart Active Noise Cancellation with 5000Hz range',
+      'Hi-Res Audio Wireless certification with LDAC support',
+      'Up to 42.5 hours total battery life with case'
+    ],
+    specs: {
+      'Driver': '11mm custom dynamic driver with ceramic diaphragm',
+      'ANC': '45 dB adaptive noise cancellation',
+      'Codec': 'LDAC, AAC, SBC',
+      'Battery': 'Up to 9.5 hours per bud, 42.5 hours total',
+      'Warranty': '1 Year Nothing India Warranty'
+    },
+    pros: [
+      'Vibrant pop yellow transparent casing turns heads',
+      'Bass Enhance algorithm delivers punchy, deep Indian film scores',
+      'Super light and comfortable for 6+ hour listening stretches'
+    ],
+    cons: [
+      'No custom EQ profile sharing like Ear (2)'
+    ],
+    communityTake: 'Top-rated TWS under ₹8,000 on Indian tech forums.',
+    expertTake: 'Rated 9/10 by Stuff India.'
+  },
+  {
+    id: 'ps5-slim-disc',
+    name: 'Sony PlayStation 5 Slim Console (Disc Edition 1TB SSD)',
+    category: 'appliances',
+    price: '₹54,990',
+    mrp: '₹54,990',
+    savings: 'Official Sony India Warranty + Free Prime Delivery',
+    store: 'Amazon India Direct',
+    sourceUrl: 'https://www.amazon.in/dp/B0CY5HVDS2',
+    sourceBadge: 'Official Brand Listing · Sony PlayStation India',
+    amazonUrl: 'https://www.amazon.in/dp/B0CY5HVDS2',
+    flipkartUrl: 'https://www.flipkart.com/sony-playstation-5-slim-cfi-2008a01x-1024-gb/p/itm677ffce41416e',
+    imageUrl: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: 'Ultra HD 4K 120Hz',
+    animationClass: 'animate-float-2',
+    rating: 4.9,
+    reviewsCount: '9,800+ reviews',
+    highlights: [
+      'Slimmer design with 30% reduction in volume and full 1TB SSD',
+      'DualSense wireless controller with adaptive triggers and haptic feedback',
+      'Ray tracing acceleration and up to 120 fps with 120Hz output'
+    ],
+    specs: {
+      'Storage': '1TB Custom High-Speed NVMe SSD (5.5 GB/s raw)',
+      'Resolution': 'Up to 4K 120Hz with HDR, 8K support',
+      'Audio': 'Tempest 3D AudioTech',
+      'Drive': 'Ultra HD Blu-ray disc drive',
+      'Warranty': '1 Year Sony India Warranty'
+    },
+    pros: [
+      'Play pre-owned discs and 4K Ultra-HD Blu-ray movies',
+      'Instant loading screens on Spider-Man 2 and God of War Ragnarok',
+      'Haptic feedback makes rain and car accelerations feel real'
+    ],
+    cons: [
+      'Vertical stand sold separately'
+    ],
+    communityTake: 'Gold standard gaming console across Indian gaming communities.',
+    expertTake: 'Rated 10/10 by IGN.'
+  },
+  {
+    id: 'sennheiser-momentum-4',
+    name: 'Sennheiser Momentum 4 Wireless ANC Headphones (60h Battery)',
+    category: 'audio',
+    price: '₹24,990',
+    mrp: '₹34,990',
+    savings: 'Save ₹10,000 Audiophile Deal',
+    store: 'Tata CLiQ Luxury',
+    sourceUrl: 'https://www.tatacliq.com/sennheiser-momentum-4-wireless-over-ear-headphones-black/p-mp000000015482390',
+    sourceBadge: 'Official Brand Listing · Sennheiser India',
+    amazonUrl: 'https://www.amazon.in/s?k=Sennheiser+Momentum+4',
+    flipkartUrl: 'https://www.flipkart.com/search?q=Sennheiser+Momentum+4',
+    imageUrl: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1000&q=80'
+    ],
+    tag: '60h Battery Life',
+    animationClass: 'animate-float-3',
+    rating: 4.8,
+    reviewsCount: '4,500+ reviews',
+    highlights: [
+      'Phenomenal 60-hour battery life on a single charge',
+      '42mm audiophile-grade transducer system with deep bass',
+      'Adaptive Noise Cancellation with intuitive touch controls'
+    ],
+    specs: {
+      'Transducer': '42mm dynamic speaker',
+      'Frequency Response': '6 Hz to 22,000 Hz',
+      'Battery': 'Up to 60 hours playback via Bluetooth with ANC',
+      'Codecs': 'aptX Adaptive, aptX, AAC, SBC',
+      'Warranty': '2 Years Sennheiser India Warranty'
+    },
+    pros: [
+      'Battery lasts for 3 weeks of daily Indian office commutes without plugging in',
+      'Audiophile-grade clarity with lush mids and expansive stereo imaging',
+      'Fold-flat lightweight design with premium fabric travel case'
+    ],
+    cons: [
+      'Touch gestures on earcups can trigger when adjusting on head'
+    ],
+    communityTake: 'Praised by Indian sound engineers for battery endurance and tonal balance.',
+    expertTake: 'SoundGuys & What Hi-Fi? 5-Star Award Winner.'
+  },
 ];
 
 export const FLOATING_PRODUCTS: FloatingProduct[] = RAW_FLOATING_PRODUCTS.map((product): FloatingProduct => ({
@@ -1176,6 +1779,23 @@ export default function App() {
   const [floatingProductsList, setFloatingProductsList] = useState<FloatingProduct[]>(FLOATING_PRODUCTS);
   const [isSyncingReleases, setIsSyncingReleases] = useState<boolean>(false);
   const [lastRadarScanTime, setLastRadarScanTime] = useState<string>('Live Radar Active');
+
+  // Persistent Side-by-side Product Comparison State (.floating-obj-card)
+  const [comparedProductIds, setComparedProductIds] = useState<string[]>([]);
+  const handleToggleCompare = (productId: string) => {
+    setComparedProductIds(prev =>
+      prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]
+    );
+  };
+  const handleRemoveFromCompare = (productId: string) => {
+    setComparedProductIds(prev => prev.filter(id => id !== productId));
+  };
+  const handleClearCompare = () => {
+    setComparedProductIds([]);
+  };
+
+  // Sorting State for Arena View ('Lowest Price', 'Highest Rating', 'Newest Arrival')
+  const [sortBy, setSortBy] = useState<'default' | 'price_low' | 'price_high' | 'rating' | 'newest'>('default');
 
   const handleSyncMarketReleases = async () => {
     setIsSyncingReleases(true);
@@ -2163,6 +2783,25 @@ export default function App() {
               </button>
             )}
 
+            {/* Toggle Assistant Sidebar Button */}
+            <button
+              onClick={() => {
+                if (mainView === 'landing') setMainView('app');
+                setSidebarOpen(s => !s);
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                sidebarOpen && mainView === 'app'
+                  ? 'bg-violet-100 text-[#7C3AED] border-violet-300 shadow-xs'
+                  : 'bg-white hover:bg-violet-50 text-[#4C1D95] border-violet-200 shadow-xs'
+              }`}
+              title={sidebarOpen && mainView === 'app' ? "Close Assistant Sidebar" : "Open Assistant Sidebar (Flipkart, Amazon & Croma Deals)"}
+            >
+              <ShoppingCart className="w-3.5 h-3.5 text-[#7C3AED]" />
+              <span className="hidden sm:inline">
+                {sidebarOpen && mainView === 'app' ? 'Close Sidebar' : '🛍️ Assistant Deals'}
+              </span>
+            </button>
+
             {/* Design Constitution Trigger Button */}
             <button
               onClick={() => setIsConstitutionOpen(true)}
@@ -2216,409 +2855,76 @@ export default function App() {
         </div>
       ) : (
         <div className="flex-1 flex overflow-hidden relative z-10">
-          {/* Sidebar Drawer */}
-          <aside
-            className={`${
-              sidebarOpen ? 'w-84 md:w-92 shrink-0' : 'hidden'
-            } ${isWhite ? 'bg-white/95 border-r border-violet-100 shadow-xl' : 'bg-[#120726]/95 border-r border-violet-900/60 shadow-2xl'} flex flex-col h-full z-20 transition-all duration-200 relative`}
-          >
-        {/* Sidebar Header */}
-        <div className={`p-4 border-b ${isWhite ? 'border-violet-100 bg-violet-50/80' : 'border-violet-900/40 bg-[#1E0B38]/60'} flex items-center justify-between`}>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] flex items-center justify-center beacon-glow text-white font-heading font-black text-sm">
-              ₹
-            </div>
-            <div>
-              <span className={`font-heading font-bold text-base tracking-tight ${isWhite ? 'text-[#2E1065]' : 'text-white'} block leading-none`}>
-                Vantage Control
-              </span>
-              <span className="text-[10px] text-[#7C3AED] font-bold tracking-wide">
-                INDIA EDITION (INR ₹)
-              </span>
-            </div>
-          </div>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className={`p-1 rounded ${isWhite ? 'text-[#7C6898] hover:text-[#2E1065] hover:bg-violet-50' : 'text-violet-300 hover:text-white hover:bg-white/5'} md:hidden`}
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Sidebar Content Scrollable */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-5 text-sm">
-          {/* User Profile */}
-          <div className={`${isWhite ? 'glass-panel-white' : 'glass-panel'} p-3.5 rounded-2xl border ${isWhite ? 'border-violet-100' : 'border-violet-900/50'} shadow-md`}>
-            <div className="flex items-center gap-2 text-[#7C3AED] font-semibold text-xs tracking-wider uppercase mb-2">
-              <User className="w-4 h-4" />
-              <span>User Profile</span>
-            </div>
-            <form onSubmit={handleSwitchUser} className="flex gap-2">
-              <input
-                type="text"
-                value={tempUserId}
-                onChange={e => setTempUserId(e.target.value)}
-                placeholder="User ID (e.g. default, gowtham)"
-                className={`${isWhite ? 'bg-[#FAF8FF] border-violet-200 text-[#2E1065] focus:border-violet-500' : 'bg-black/30 border-violet-800 text-[#FAF8FF] focus:border-violet-400'} border rounded-xl px-3 py-1.5 text-xs w-full focus:outline-none transition-colors`}
-              />
-              <button
-                type="submit"
-                className={`${isWhite ? 'bg-violet-100 hover:bg-violet-200 text-[#6D28D9] border-violet-200' : 'bg-violet-900 hover:bg-violet-800 text-white border-violet-700'} border text-xs font-semibold px-3 py-1.5 rounded-xl shrink-0 transition-colors`}
-              >
-                Switch
-              </button>
-            </form>
-            <p className={`text-[11px] ${isWhite ? 'text-[#7C6898]' : 'text-violet-300'} mt-1.5 flex items-center justify-between`}>
-              <span>Active profile:</span>
-              <span className="text-[#7C3AED] font-mono font-bold">{userId}</span>
-            </p>
-          </div>
-
-          {/* Remembered Preferences */}
-          <div className={`${isWhite ? 'glass-panel-white' : 'glass-panel'} p-3.5 rounded-2xl border ${isWhite ? 'border-violet-100' : 'border-white/10'} shadow-md`}>
-            <div className="flex items-center justify-between mb-2">
-              <div className={`flex items-center gap-2 ${isWhite ? 'text-[#7C3AED]' : 'text-[#7C3AED]'} font-semibold text-xs tracking-wider uppercase`}>
-                <Brain className="w-4 h-4" />
-                <span>Memory & Preferences ({userSavedPrefs.length})</span>
-              </div>
-            </div>
-            <p className={`text-[11px] ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} mb-2.5`}>
-              Saved preferences (like budget or favorite brands) are factored into all recommendations.
-            </p>
-
-            {userSavedPrefs.length > 0 ? (
-              <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1 mb-3">
-                {userSavedPrefs.map(([k, v]) => (
-                  <div
-                    key={k}
-                    className={`flex items-center justify-between ${isWhite ? 'bg-[#FAF8FF] border-violet-100 text-[#2E1065]' : 'bg-black/40 border-white/5 text-[#D2D9E8]'} px-3 py-1.5 rounded-xl border text-xs`}
-                  >
-                    <div className="truncate mr-2">
-                      <span className={`font-semibold ${isWhite ? 'text-[#7C3AED]' : 'text-[#7C3AED]'}`}>{k}:</span>{' '}
-                      <span>{v}</span>
-                    </div>
-                    <button
-                      onClick={() => handleDeletePreference(k)}
-                      className={`${isWhite ? 'text-[#8B78A5] hover:text-rose-600' : 'text-[#8B96AC] hover:text-rose-400'} p-0.5 rounded transition-colors`}
-                      title="Forget preference"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className={`text-xs ${isWhite ? 'text-[#8B78A5]' : 'text-[#8B96AC]'} italic mb-3`}>No preferences saved yet.</div>
-            )}
-
-            <form onSubmit={handleSavePreference} className={`space-y-2 pt-2 border-t ${isWhite ? 'border-violet-100' : 'border-white/10'}`}>
-              <input
-                type="text"
-                value={newPrefKey}
-                onChange={e => setNewPrefKey(e.target.value)}
-                placeholder="Preference name (e.g. budget, brand)"
-                className={`${isWhite ? 'bg-[#FAF8FF] border-violet-200 text-[#2E1065] focus:border-[#7C3AED]' : 'bg-black/30 border-white/10 text-[#E9EDF5] focus:border-[#7C3AED]'} border rounded-xl px-3 py-1.5 text-xs w-full focus:outline-none`}
-              />
-              <input
-                type="text"
-                value={newPrefValue}
-                onChange={e => setNewPrefValue(e.target.value)}
-                placeholder="Value (e.g. under ₹20,000, Sony)"
-                className={`${isWhite ? 'bg-[#FAF8FF] border-violet-200 text-[#2E1065] focus:border-[#7C3AED]' : 'bg-black/30 border-white/10 text-[#E9EDF5] focus:border-[#7C3AED]'} border rounded-xl px-3 py-1.5 text-xs w-full focus:outline-none`}
-              />
-              <button
-                type="submit"
-                className={`w-full ${isWhite ? 'bg-violet-100 hover:bg-violet-200 text-[#2E1065] border-violet-200' : 'bg-[#7C3AED]/15 hover:bg-[#7C3AED]/25 text-[#7C3AED] border-[#F0B429]/30 hover:border-[#F0B429]'} border text-xs font-semibold py-1.5 rounded-xl transition-all flex items-center justify-center gap-1.5`}
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Remember Preference
-              </button>
-            </form>
-          </div>
-
-          {/* Notifications Settings */}
-          <div className={`${isWhite ? 'glass-panel-white' : 'glass-panel'} p-3.5 rounded-2xl border ${isWhite ? 'border-violet-100' : 'border-white/10'} shadow-md`}>
-            <div className={`flex items-center gap-2 ${isWhite ? 'text-[#7C3AED]' : 'text-[#7C3AED]'} font-semibold text-xs tracking-wider uppercase mb-1.5`}>
-              <Bell className="w-4 h-4" />
-              <span>Price-Drop Alerts</span>
-            </div>
-            <p className={`text-[11px] ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} mb-3`}>
-              Receive alerts when prices drop below your target price in ₹.
-            </p>
-
-            <form onSubmit={handleSaveNotifications} className="space-y-2 mb-3">
-              <div>
-                <label className={`text-[11px] ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} block mb-1`}>Alert Email</label>
-                <input
-                  type="email"
-                  value={notifyEmail}
-                  onChange={e => setNotifyEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className={`${isWhite ? 'bg-[#FAF8FF] border-violet-200 text-[#2E1065] focus:border-[#7C3AED]' : 'bg-black/30 border-white/10 text-[#E9EDF5] focus:border-[#7C3AED]'} border rounded-xl px-3 py-1.5 text-xs w-full focus:outline-none`}
-                />
-              </div>
-              <div>
-                <label className={`text-[11px] ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} block mb-1`}>Telegram Chat ID</label>
-                <input
-                  type="text"
-                  value={notifyTelegram}
-                  onChange={e => setNotifyTelegram(e.target.value)}
-                  placeholder="e.g. 123456789"
-                  className={`${isWhite ? 'bg-[#FAF8FF] border-violet-200 text-[#2E1065] focus:border-[#7C3AED]' : 'bg-black/30 border-white/10 text-[#E9EDF5] focus:border-[#7C3AED]'} border rounded-xl px-3 py-1.5 text-xs w-full focus:outline-none`}
-                />
-                <span className={`text-[10px] ${isWhite ? 'text-[#8B78A5]' : 'text-[#8B96AC]'} block mt-0.5`}>
-                  Telegram: message <code className={`${isWhite ? 'text-[#7C3AED] font-bold' : 'text-[#7C3AED]'}`}>@userinfobot</code> for your ID.
-                </span>
-              </div>
-              <button
-                type="submit"
-                className={`w-full ${isWhite ? 'bg-violet-50 hover:bg-slate-200 text-[#2E1065] border-violet-200' : 'bg-[#1E273A] hover:bg-[#2B3752] text-white border-white/10'} border text-xs font-semibold py-1.5 rounded-xl transition-colors`}
-              >
-                {notifySaved ? '✓ Saved' : 'Save Notification Settings'}
-              </button>
-            </form>
-
-            <button
-              type="button"
-              onClick={handleSendTestNotification}
-              disabled={isSendingTestAlert}
-              className={`w-full ${isWhite ? 'bg-violet-50 hover:bg-slate-200 text-[#2E1065] border-violet-200' : 'bg-black/40 hover:bg-black/60 border-white/10 hover:border-[#F0B429]/50 text-[#E9EDF5]'} border text-xs py-1.5 rounded-xl font-medium flex items-center justify-center gap-1.5 transition-all`}
-            >
-              {isSendingTestAlert ? (
-                <>
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-500" />
-                  Dispatching test alert...
-                </>
-              ) : (
-                <>
-                  <Send className="w-3.5 h-3.5 text-amber-500" />
-                  Send Test Notification
-                </>
-              )}
-            </button>
-
-            {testAlerts.length > 0 && (
-              <div className="mt-2.5 space-y-1">
-                {testAlerts.map((t, idx) => (
-                  <div
-                    key={idx}
-                    className={`text-[11px] p-2 rounded-xl border flex items-start gap-1.5 ${
-                      t.success
-                        ? isWhite ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-emerald-950/40 border-emerald-700/60 text-emerald-300'
-                        : isWhite ? 'bg-violet-50 border-amber-200 text-[#7C3AED]' : 'bg-amber-950/40 border-amber-700/60 text-[#7C3AED]'
-                    }`}
-                  >
-                    {t.success ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5 text-emerald-500" />
-                    ) : (
-                      <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-500" />
-                    )}
-                    <div>
-                      <strong className="capitalize">{t.channel}:</strong> {t.detail}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Tracked Products */}
-          <div className="glass-panel p-3.5 rounded-2xl border border-white/10 shadow-lg">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2 text-[#7C3AED] font-semibold text-xs tracking-wider uppercase">
-                <TrendingDown className="w-4 h-4" />
-                <span>Tracked Products ({products.length})</span>
-              </div>
-            </div>
-
-            <div className="space-y-2 mb-3">
-              {products.map(prod => {
-                const isExpanded = expandedProductIds.includes(prod.id);
-                const isChecking = checkingProductId === prod.id;
-                const alertInfo = priceCheckAlerts[prod.id];
-
-                return (
-                  <div key={prod.id} className={`${isWhite ? 'bg-white border-violet-100 shadow-sm' : 'bg-black/30 border-white/5'} rounded-xl border overflow-hidden`}>
-                    <div className={`w-full text-left px-3 py-2 flex items-center justify-between ${isWhite ? 'hover:bg-[#FAF8FF]' : 'hover:bg-white/5'} transition-colors`}>
-                      <div
-                        onClick={() => handleOpenProductModal(prod.name)}
-                        className="flex items-center gap-2.5 truncate pr-2 cursor-pointer flex-1"
-                        title="Click to view full pictures and details"
-                      >
-                        <div className={`w-9 h-9 rounded-lg overflow-hidden ${isWhite ? 'bg-violet-50 border-violet-100' : 'bg-black/50 border-white/10'} border shrink-0`}>
-                          <img
-                            src={getProductFallbackImg(prod.name)}
-                            alt={prod.name}
-                            referrerPolicy="no-referrer"
-                            className="w-full h-full object-cover"
-                            onError={(e) => handleImageError(e)}
-                          />
-                        </div>
-                        <div className="truncate">
-                          <div className={`font-semibold text-xs ${isWhite ? 'text-[#2E1065] hover:text-[#7C3AED]' : 'text-[#E9EDF5] hover:text-violet-300'} truncate transition-colors`}>{prod.name}</div>
-                          <div className={`text-[11px] ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'}`}>
-                            {prod.current_price ? (
-                              <span className="font-semibold text-emerald-600">{formatINR(prod.current_price)}</span>
-                            ) : (
-                              'No price check yet'
-                            )}
-                            {prod.target_price && (
-                              <span className="ml-1 text-[#7C3AED] font-bold">(target: {formatINR(prod.target_price)})</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => toggleProductExpand(prod.id)}
-                        className="p-1 hover:bg-violet-100 rounded-lg text-slate-400 hover:text-slate-600 cursor-pointer"
-                        title="Expand price history"
-                      >
-                        {isExpanded ? (
-                          <ChevronDown className={`w-4 h-4 ${isWhite ? 'text-[#8B78A5]' : 'text-[#8B96AC]'} shrink-0`} />
-                        ) : (
-                          <ChevronRight className={`w-4 h-4 ${isWhite ? 'text-[#8B78A5]' : 'text-[#8B96AC]'} shrink-0`} />
-                        )}
-                      </button>
-                    </div>
-
-                    {isExpanded && (
-                      <div className={`px-3 pb-3 pt-1 border-t ${isWhite ? 'border-violet-100 bg-[#FAF8FF]/80' : 'border-white/5 bg-black/40'} text-xs space-y-2`}>
-                        <p className={`text-[11px] ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'}`}>
-                          Query: <span className={`${isWhite ? 'text-[#2E1065]' : 'text-[#D2D9E8]'} font-mono`}>{prod.search_query}</span>
-                        </p>
-                        {prod.lowest_price !== null && (
-                          <p className="text-[11px] text-emerald-600 font-bold">
-                            Lowest seen in India: {formatINR(prod.lowest_price)}
-                          </p>
-                        )}
-
-                        {renderSparkline(prod.history)}
-
-                        {/* Quick store links & specs for tracked product */}
-                        <div className="flex items-center gap-1.5 pt-1 flex-wrap">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenProductModal(prod.name)}
-                            className="bg-violet-100 hover:bg-violet-200 border border-violet-200 text-[#4C1D95] px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors shadow-xs"
-                          >
-                            <Sparkles className="w-2.5 h-2.5 text-[#7C3AED]" />
-                            <span>Specs & Photos</span>
-                          </button>
-                          <a
-                            href={`https://www.amazon.in/s?k=${encodeURIComponent(prod.search_query)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`${isWhite ? 'bg-violet-100/80 hover:bg-violet-200/80 border-violet-200 text-[#2E1065]' : 'bg-violet-500/15 hover:bg-violet-500/25 border-amber-500/30 text-[#FF9900]'} border px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1`}
-                          >
-                            Amazon ↗
-                          </a>
-                          <a
-                            href={`https://www.flipkart.com/search?q=${encodeURIComponent(prod.search_query)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`${isWhite ? 'bg-blue-100/80 hover:bg-blue-200/80 border-blue-300 text-blue-900' : 'bg-blue-500/15 hover:bg-blue-500/25 border-blue-500/30 text-[#60A5FA]'} border px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1`}
-                          >
-                            Flipkart ↗
-                          </a>
-                        </div>
-
-                        {alertInfo && (
-                          <div
-                            className={`p-2 rounded-lg text-[11px] ${
-                              alertInfo.alert
-                                ? isWhite ? 'bg-violet-100 border border-violet-200 text-[#2E1065]' : 'bg-amber-950/60 border border-amber-600 text-amber-200'
-                                : isWhite ? 'bg-violet-50 border border-violet-100 text-[#3B1E7A]' : 'bg-[#141A29] border border-[#262F42] text-[#8B96AC]'
-                            }`}
-                          >
-                            {alertInfo.message}
-                          </div>
-                        )}
-
-                        <div className="flex gap-2 pt-1">
-                          <button
-                            onClick={() => handleCheckProductPrice(prod)}
-                            disabled={isChecking}
-                            className={`flex-1 ${isWhite ? 'bg-violet-100 hover:bg-violet-200 border-violet-200 text-[#2E1065]' : 'bg-[#7C3AED]/15 hover:bg-[#7C3AED]/25 border-[#F0B429]/40 text-[#7C3AED]'} border py-1 px-2 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors`}
-                          >
-                            {isChecking ? (
-                              <RefreshCw className="w-3 h-3 animate-spin" />
-                            ) : (
-                              <RefreshCw className="w-3 h-3" />
-                            )}
-                            Check Price in ₹
-                          </button>
-                          <button
-                            onClick={() => handleDeleteProduct(prod.id)}
-                            className={`${isWhite ? 'bg-violet-50 hover:bg-rose-100 text-[#7C6898] hover:text-rose-700 border-violet-100' : 'bg-white/5 hover:bg-rose-900/60 hover:text-rose-200 text-[#8B96AC]'} border p-1 px-2 rounded-lg text-[11px] transition-colors`}
-                            title="Remove tracked product"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Add product form */}
-            <form onSubmit={handleAddProduct} className={`space-y-2 pt-2 border-t ${isWhite ? 'border-violet-100' : 'border-white/10'}`}>
-              <div className={`text-[11px] font-semibold ${isWhite ? 'text-[#2E1065]' : 'text-[#D2D9E8]'} flex items-center gap-1`}>
-                <Tag className="w-3 h-3 text-amber-500" />
-                Track New Product
-              </div>
-              <input
-                type="text"
-                value={newProdName}
-                onChange={e => setNewProdName(e.target.value)}
-                placeholder="Product nickname (e.g. Sony XM5)"
-                className={`${isWhite ? 'bg-[#FAF8FF] border-violet-200 text-[#2E1065] focus:border-[#7C3AED]' : 'bg-black/30 border-white/10 text-[#E9EDF5] focus:border-[#7C3AED]'} border rounded-xl px-3 py-1.5 text-xs w-full focus:outline-none`}
-              />
-              <input
-                type="text"
-                value={newProdQuery}
-                onChange={e => setNewProdQuery(e.target.value)}
-                placeholder="Search query (e.g. Sony WH-1000XM5 price India)"
-                className={`${isWhite ? 'bg-[#FAF8FF] border-violet-200 text-[#2E1065] focus:border-[#7C3AED]' : 'bg-black/30 border-white/10 text-[#E9EDF5] focus:border-[#7C3AED]'} border rounded-xl px-3 py-1.5 text-xs w-full focus:outline-none`}
-              />
-              <div className="relative">
-                <span className="absolute left-3 top-1.5 text-xs text-[#7C3AED] font-bold">₹</span>
-                <input
-                  type="number"
-                  step="any"
-                  value={newProdTarget}
-                  onChange={e => setNewProdTarget(e.target.value)}
-                  placeholder="Target alert price in ₹ (optional)"
-                  className={`${isWhite ? 'bg-[#FAF8FF] border-violet-200 text-[#2E1065] focus:border-[#7C3AED]' : 'bg-black/30 border-white/10 text-[#E9EDF5] focus:border-[#7C3AED]'} border rounded-xl pl-7 pr-3 py-1.5 text-xs w-full focus:outline-none`}
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold text-xs py-2 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5"
-              >
-                <Plus className="w-3.5 h-3.5 stroke-[3]" />
-                Track Product in ₹
-              </button>
-            </form>
-          </div>
-        </div>
-      </aside>
+          {/* Shopping Assistant Sidebar (Flipkart, Amazon, Croma Deals & Direct Buy) */}
+          <ShoppingAssistantSidebar
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+            onToggle={() => setSidebarOpen(s => !s)}
+            isWhite={isWhite}
+            userId={userId}
+            tempUserId={tempUserId}
+            setTempUserId={setTempUserId}
+            handleSwitchUser={handleSwitchUser}
+            userSavedPrefs={userSavedPrefs}
+            handleDeletePreference={handleDeletePreference}
+            newPrefKey={newPrefKey}
+            setNewPrefKey={setNewPrefKey}
+            newPrefValue={newPrefValue}
+            setNewPrefValue={setNewPrefValue}
+            handleSavePreference={handleSavePreference}
+            notifyEmail={notifyEmail}
+            setNotifyEmail={setNotifyEmail}
+            notifyTelegram={notifyTelegram}
+            setNotifyTelegram={setNotifyTelegram}
+            notifySaved={notifySaved}
+            handleSaveNotifications={handleSaveNotifications}
+            handleSendTestNotification={handleSendTestNotification}
+            isSendingTestAlert={isSendingTestAlert}
+            testAlerts={testAlerts}
+            products={products}
+            expandedProductIds={expandedProductIds}
+            toggleProductExpand={toggleProductExpand}
+            checkingProductId={checkingProductId}
+            priceCheckAlerts={priceCheckAlerts}
+            renderSparkline={renderSparkline}
+            handleCheckProductPrice={handleCheckProductPrice}
+            handleDeleteProduct={handleDeleteProduct}
+            newProdName={newProdName}
+            setNewProdName={setNewProdName}
+            newProdQuery={newProdQuery}
+            setNewProdQuery={setNewProdQuery}
+            newProdTarget={newProdTarget}
+            setNewProdTarget={setNewProdTarget}
+            handleAddProduct={handleAddProduct}
+            handleOpenProductModal={handleOpenProductModal}
+            formatINR={formatINR}
+            onTrackCuratedProduct={(name, query, target) => {
+              setNewProdName(name);
+              setNewProdQuery(query);
+              if (target) setNewProdTarget(target);
+              handleAddProduct({ preventDefault: () => {} } as any);
+            }}
+          />
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
         {/* Top Navbar */}
         <header className={`px-4 sm:px-6 py-4 ${isWhite ? 'bg-white/85 border-b border-violet-100 shadow-sm' : 'glass-panel border-b border-white/10'} flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-md transition-colors`}>
           <div className="flex items-center gap-3.5">
-            {!sidebarOpen && (
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className={`p-2 rounded-xl ${isWhite ? 'bg-violet-50 border-violet-100 text-[#3B1E7A] hover:text-slate-950' : 'bg-black/40 border-white/10 text-[#8B96AC] hover:text-white'} border transition-colors`}
-                title="Open Control Panel"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-            )}
+            <button
+              onClick={() => setSidebarOpen(s => !s)}
+              className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-2 ${
+                sidebarOpen
+                  ? 'bg-violet-100 text-[#7C3AED] border-violet-200 hover:bg-violet-200'
+                  : 'bg-violet-50 border-violet-100 text-[#3B1E7A] hover:bg-violet-100 hover:text-slate-950'
+              }`}
+              title={sidebarOpen ? "Close Shopping Assistant Sidebar" : "Open Shopping Assistant Sidebar (Flipkart & Amazon Deals)"}
+            >
+              {sidebarOpen ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
+              <span className="text-xs font-bold hidden sm:inline">
+                {sidebarOpen ? 'Close Assistant' : '🛍️ Open Assistant'}
+              </span>
+            </button>
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] beacon-glow flex items-center justify-center shrink-0 text-white font-heading font-black text-xl">
               ₹
             </div>
@@ -2993,36 +3299,121 @@ export default function App() {
                       {cat.label}
                     </button>
                   ))}
+
+                  {/* Sorting Dropdown Menu ('Lowest Price', 'Highest Rating', 'Newest Arrival') */}
+                  <div className="flex items-center gap-1.5 ml-auto shrink-0 bg-white/90 border border-violet-200 px-3 py-1 rounded-xl shadow-xs">
+                    <ArrowDownUp className="w-3.5 h-3.5 text-[#7C3AED]" />
+                    <span className="text-[11px] font-bold text-[#7C6898]">Sort:</span>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      className="bg-transparent text-[#2E1065] text-xs font-bold outline-none cursor-pointer"
+                    >
+                      <option value="default">Featured & Zero-G</option>
+                      <option value="price_low">Lowest Price (₹)</option>
+                      <option value="price_high">Highest Price (₹)</option>
+                      <option value="rating">Highest Rating (★)</option>
+                      <option value="newest">Newest Arrival (2026)</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
               {/* Levitating Products 3D Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 perspective-1000">
-                {floatingProductsList.filter(
-                  p => floatingCategory === 'all' || p.category === floatingCategory
-                ).map((product, idx) => {
-                  const animClass = isZeroGPaused ? '' : product.animationClass;
+                {[...floatingProductsList]
+                  .filter(p => floatingCategory === 'all' || p.category === floatingCategory)
+                  .sort((a, b) => {
+                    if (sortBy === 'price_low') {
+                      const pA = parseInt(a.price.replace(/[^\d]/g, '')) || 0;
+                      const pB = parseInt(b.price.replace(/[^\d]/g, '')) || 0;
+                      return pA - pB;
+                    }
+                    if (sortBy === 'price_high') {
+                      const pA = parseInt(a.price.replace(/[^\d]/g, '')) || 0;
+                      const pB = parseInt(b.price.replace(/[^\d]/g, '')) || 0;
+                      return pB - pA;
+                    }
+                    if (sortBy === 'rating') {
+                      return (b.rating || 0) - (a.rating || 0);
+                    }
+                    if (sortBy === 'newest') {
+                      return (b.isNewRelease ? 1 : 0) - (a.isNewRelease ? 1 : 0);
+                    }
+                    return 0;
+                  })
+                  .map((product, idx) => {
+                    const animClass = isZeroGPaused ? '' : product.animationClass;
+                    const isCompared = comparedProductIds.includes(product.id);
 
-                  return (
-                    <div
-                      key={product.id}
-                      className={`flex flex-col preserve-3d ${animClass}`}
-                      style={{ animationDelay: `${(idx % 4) * 0.4}s` }}
-                    >
-                      {/* Levitating Card */}
-                      <div className="glass-panel-white border border-violet-200/70 hover:border-violet-400 rounded-3xl p-4 flex flex-col justify-between h-full floating-obj-card relative overflow-hidden backdrop-blur-2xl group transition-all duration-300 hover:-translate-y-1.5">
-                        {/* Glowing ambient backdrop on hover with soft violet sheen */}
-                        <div className="absolute top-0 right-0 w-36 h-36 bg-violet-400/15 group-hover:bg-violet-400/25 rounded-full blur-2xl pointer-events-none transition-colors" />
+                    return (
+                      <div
+                        key={product.id}
+                        className={`flex flex-col preserve-3d ${animClass}`}
+                        style={{ animationDelay: `${(idx % 4) * 0.4}s` }}
+                      >
+                        {/* Levitating Card with Framer Motion Staggered Entrance, Lift & Compare Scale */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 25 }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                            scale: isCompared ? 1.02 : 1
+                          }}
+                          whileHover={{
+                            y: -8,
+                            transition: { duration: 0.25, ease: 'easeOut' }
+                          }}
+                          transition={{
+                            delay: Math.min((idx % 12) * 0.04, 0.35),
+                            duration: 0.4,
+                            ease: 'easeOut'
+                          }}
+                          className={`glass-panel-white border ${
+                            isCompared
+                              ? 'border-[#7C3AED] ring-2 ring-violet-500/40 shadow-xl'
+                              : 'border-violet-200/70 hover:border-violet-400 shadow-md'
+                          } rounded-3xl p-4 flex flex-col justify-between h-full floating-obj-card relative overflow-hidden backdrop-blur-2xl group transition-all duration-300`}
+                          style={{
+                            boxShadow: isCompared
+                              ? '0 0 0 2px #7C3AED, 0 16px 36px -4px rgba(109, 40, 217, 0.25)'
+                              : undefined
+                          }}
+                        >
+                          {/* Glowing ambient backdrop on hover with soft violet sheen */}
+                          <div className="absolute top-0 right-0 w-36 h-36 bg-violet-400/15 group-hover:bg-violet-400/25 rounded-full blur-2xl pointer-events-none transition-colors" />
 
-                        {/* Top Tag & Store Pill */}
-                        <div className="flex items-center justify-between gap-1 mb-3">
-                          <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg ${isWhite ? 'bg-violet-50 text-[#7C3AED] border-violet-200' : 'bg-black/60 text-[#7C3AED] border-[#F0B429]/30'} border`}>
-                            {product.tag}
-                          </span>
-                          <span className={`text-[10px] ${isWhite ? 'text-[#4C1D95] bg-violet-50 border border-violet-100' : 'text-[#A0AEC0] bg-white/5'} font-medium px-2 py-0.5 rounded-md`}>
-                            {product.store}
-                          </span>
-                        </div>
+                          {/* Top Tag, Store Pill & Compare Checkbox */}
+                          <div className="flex items-center justify-between gap-1 mb-3">
+                            <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg ${isWhite ? 'bg-violet-50 text-[#7C3AED] border-violet-200' : 'bg-black/60 text-[#7C3AED] border-[#F0B429]/30'} border`}>
+                              {product.tag}
+                            </span>
+
+                            <div className="flex items-center gap-1.5">
+                              {/* Compare Checkbox */}
+                              <label
+                                onClick={(e) => e.stopPropagation()}
+                                className={`flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold border cursor-pointer select-none transition-all ${
+                                  isCompared
+                                    ? 'bg-[#7C3AED] text-white border-[#6D28D9] shadow-xs'
+                                    : 'bg-violet-50 hover:bg-violet-100 text-[#4C1D95] border-violet-200'
+                                }`}
+                                title="Add to side-by-side comparison"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isCompared}
+                                  onChange={() => handleToggleCompare(product.id)}
+                                  className="accent-[#7C3AED] rounded w-3 h-3 cursor-pointer"
+                                />
+                                <span>{isCompared ? 'Comparing' : 'Compare'}</span>
+                              </label>
+
+                              <span className={`text-[10px] ${isWhite ? 'text-[#4C1D95] bg-violet-50 border border-violet-100' : 'text-[#A0AEC0] bg-white/5'} font-medium px-2 py-0.5 rounded-md`}>
+                                {product.store}
+                              </span>
+                            </div>
+                          </div>
 
                         {/* Product Image Floating Display - Clickable to open full details */}
                         <div
@@ -3151,7 +3542,7 @@ export default function App() {
                             </button>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
 
                       {/* Levitating Shadow Beneath the Floating Object */}
                       <div
@@ -3714,6 +4105,51 @@ export default function App() {
       </div>
     </div>
   )}
+
+  {/* Floating Global Search Bar with Autocomplete across All Views */}
+  <FloatingActionSearchBar
+    products={floatingProductsList}
+    onSelectProduct={(p) => handleOpenProductModal(p)}
+    onSearchQuerySubmit={(q) => {
+      setFrontSearchQuery(q);
+      lookupProductSource(q);
+      if (mainView === 'landing') setMainView('app');
+      if (activeTab !== 'arena') setActiveTab('arena');
+    }}
+    isWhite={isWhite}
+  />
+
+  {/* Persistent Compare Drawer at Bottom when products are selected */}
+  <CompareDrawer
+    comparedProducts={floatingProductsList.filter(p => comparedProductIds.includes(p.id))}
+    onRemoveFromCompare={handleRemoveFromCompare}
+    onClearCompare={() => setComparedProductIds([])}
+    isWhite={isWhite}
+  />
+
+  {/* Persistent Global Floating Toggle for Shopping Assistant Sidebar */}
+  <button
+    onClick={() => {
+      if (mainView === 'landing') setMainView('app');
+      setSidebarOpen(s => !s);
+    }}
+    className={`fixed bottom-6 left-6 z-40 px-4 py-2.5 rounded-2xl font-bold text-xs shadow-2xl flex items-center gap-2.5 transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+      sidebarOpen && mainView === 'app'
+        ? 'bg-gradient-to-r from-[#7C3AED] to-[#6D28D9] text-white ring-2 ring-violet-400 shadow-violet-500/25'
+        : 'bg-white/95 text-[#2E1065] border-2 border-[#7C3AED]/40 hover:border-[#7C3AED] shadow-xl backdrop-blur-md'
+    }`}
+    title={sidebarOpen && mainView === 'app' ? "Close Shopping Assistant Sidebar" : "Open Shopping Assistant Sidebar (Flipkart & Amazon Deals)"}
+  >
+    <span className="relative flex h-2.5 w-2.5">
+      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+    </span>
+    <ShoppingCart className="w-4 h-4 text-[#7C3AED]" />
+    <span className="font-heading font-extrabold">{sidebarOpen && mainView === 'app' ? 'Close Assistant' : '🛍️ Shopping Assistant'}</span>
+    <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ${sidebarOpen && mainView === 'app' ? 'bg-white/20 text-white' : 'bg-violet-100 text-[#6D28D9]'}`}>
+      Flipkart · Amazon ↗
+    </span>
+  </button>
 </div>
   );
 }
