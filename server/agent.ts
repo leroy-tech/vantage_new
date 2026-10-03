@@ -134,6 +134,24 @@ async function generateWithFallback(
   throw lastError || new Error('All candidate models failed to generate content');
 }
 
+// Resilient JSON extractor that parses safely from model output with fences or surrounding commentary
+function safeExtractJson<T = any>(raw: string): T | null {
+  if (!raw || typeof raw !== 'string') return null;
+  try {
+    const cleaned = raw.replace(/^```(?:json)?\s*/gim, '').replace(/\s*```$/gim, '').trim();
+    const objMatch = cleaned.match(/\{[\s\S]*\}/);
+    const arrMatch = cleaned.match(/\[[\s\S]*\]/);
+    if (objMatch) {
+      return JSON.parse(objMatch[0]);
+    } else if (arrMatch) {
+      return JSON.parse(arrMatch[0]);
+    }
+    return JSON.parse(cleaned);
+  } catch {
+    return null;
+  }
+}
+
 export async function askAssistant(
   userId: string,
   userMessage: string,
@@ -266,8 +284,10 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences, no extra t
       true
     );
 
-    const cleaned = raw.replace(/^```(json)?|```$/gm, '').trim();
-    const parsed = JSON.parse(cleaned);
+    const parsed = safeExtractJson(raw);
+    if (!parsed) {
+      throw new Error('Model returned unparseable response');
+    }
     parsed._raw_findings = findings;
 
     // Attach exact verified product images and the same direct product links from the source taken from
@@ -476,8 +496,10 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences):
       undefined,
       true
     );
-    const cleaned = raw.replace(/^```(json)?|```$/gm, '').trim();
-    const parsed = JSON.parse(cleaned);
+    const parsed = safeExtractJson(raw);
+    if (!parsed) {
+      throw new Error('Could not parse product breakdown from model response');
+    }
 
     return {
       id: `prod-${Date.now()}`,
@@ -485,12 +507,12 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences):
       canonicalName: parsed.canonicalName || sourceInfo.productName || searchQuery,
       category: parsed.category || 'electronics',
       tagline: parsed.tagline || 'Verified Product Listing in India',
-      price: parsed.price || '₹14,999',
-      mrp: parsed.mrp || '₹19,990',
-      savings: parsed.savings || 'Save in India',
-      discountPercentage: parsed.discountPercentage || 15,
-      rating: parsed.rating || 4.6,
-      reviewsCount: parsed.reviewsCount || '10,000+ Indian buyers',
+      price: parsed.price || 'Not available',
+      mrp: parsed.mrp || 'Not available',
+      savings: parsed.savings || 'Check Store',
+      discountPercentage: parsed.discountPercentage || 0,
+      rating: typeof parsed.rating === 'number' ? parsed.rating : 0,
+      reviewsCount: parsed.reviewsCount || 'Not available',
       store: sourceInfo.sourceStore || 'Amazon India',
       sourceStore: sourceInfo.sourceStore || 'Amazon India',
       sourceUrl: sourceInfo.sourceUrl,
@@ -505,10 +527,10 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences):
         'Currency / Market': 'Indian Rupees (₹ / INR)',
         'Warranty': '1 Year Manufacturer Warranty'
       },
-      pros: parsed.pros || ['Great value in price segment'],
-      cons: parsed.cons || ['Prices fluctuate with promotions'],
-      communityTake: parsed.communityTake || 'Praised for balanced everyday performance.',
-      expertTake: parsed.expertTake || 'Recommended pick with positive testing results.',
+      pros: parsed.pros || [],
+      cons: parsed.cons || [],
+      communityTake: parsed.communityTake || 'Community take not available.',
+      expertTake: parsed.expertTake || 'Expert review not available.',
       storeLinks
     };
   } catch {
@@ -518,12 +540,12 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences):
       canonicalName: sourceInfo.productName || searchQuery,
       category: 'electronics',
       tagline: 'Verified Product Listing in India',
-      price: 'Check Live Deal',
-      mrp: 'Check Retailer',
-      savings: 'Compare Indian Retailers',
-      discountPercentage: 10,
-      rating: 4.6,
-      reviewsCount: 'Verified Buyer Ratings',
+      price: 'Not available',
+      mrp: 'Not available',
+      savings: 'Check Store',
+      discountPercentage: 0,
+      rating: 0,
+      reviewsCount: 'Not available',
       store: sourceInfo.sourceStore || 'Amazon India',
       sourceStore: sourceInfo.sourceStore || 'Amazon India',
       sourceUrl: sourceInfo.sourceUrl,
@@ -536,12 +558,12 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences):
       ],
       specs: {
         'Currency / Market': 'Indian Rupees (₹ / INR)',
-        'Warranty': '1 Year Manufacturer Warranty in India'
+        'Status': 'Verified Store Listing'
       },
-      pros: ['Available across major Indian e-commerce stores'],
-      cons: ['Price varies depending on sales'],
-      communityTake: 'Positive buyer sentiment across community forums.',
-      expertTake: 'Dependable option in its segment.',
+      pros: [],
+      cons: [],
+      communityTake: 'Information not available.',
+      expertTake: 'Information not available.',
       storeLinks
     };
   }

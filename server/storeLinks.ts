@@ -1,92 +1,78 @@
+import { validateProductDetailPage, queryVerifiedCatalog, cleanProductUrl } from './productVerifier';
+
 export interface StoreLink {
   store: string;
   name: string;
   url: string;
   badge: string;
   color: string;
+  isVerified?: boolean;
 }
 
+/**
+ * Returns strictly verified product detail page (PDP) store links.
+ * Search URLs, category pages, and homepages are strictly omitted.
+ */
 export function getStoreLinks(productName: string, primaryUrl?: string): StoreLink[] {
-  const cleanName = productName.replace(/\(.*?\)/g, '').trim();
-  const query = encodeURIComponent(cleanName);
   const links: StoreLink[] = [];
+  const addedUrls = new Set<string>();
 
-  // Direct source URL if provided by web search
+  // 1. Direct source URL if provided and validated as an authentic PDP on a trusted domain
   if (primaryUrl && primaryUrl.startsWith('http') && !primaryUrl.includes('example.com')) {
-    if (primaryUrl.includes('amazon.')) {
+    const cleaned = cleanProductUrl(primaryUrl);
+    const check = validateProductDetailPage(cleaned || primaryUrl);
+    if (check.isValidPdp) {
+      const urlToAdd = check.cleanUrl || primaryUrl;
+      const lower = urlToAdd.toLowerCase();
+      let storeName = check.platform || 'Official Store';
+      let color = '#7C3AED';
+
+      if (lower.includes('amazon.')) {
+        storeName = 'Amazon India';
+        color = '#FF9900';
+      } else if (lower.includes('flipkart.')) {
+        storeName = 'Flipkart';
+        color = '#2874F0';
+      } else if (lower.includes('croma.')) {
+        storeName = 'Croma';
+        color = '#00B5B5';
+      } else if (lower.includes('tatacliq.')) {
+        storeName = 'Tata CLiQ';
+        color = '#0F1111';
+      } else if (lower.includes('myntra.')) {
+        storeName = 'Myntra';
+        color = '#FF3F6C';
+      }
+
       links.push({
-        store: 'Amazon India',
-        name: 'Amazon.in',
-        url: primaryUrl,
-        badge: 'Direct Listing',
-        color: '#FF9900',
+        store: storeName,
+        name: storeName,
+        url: urlToAdd,
+        badge: 'Verified Direct PDP',
+        color,
+        isVerified: true
       });
-    } else if (primaryUrl.includes('flipkart.')) {
-      links.push({
-        store: 'Flipkart',
-        name: 'Flipkart',
-        url: primaryUrl,
-        badge: 'Direct Listing',
-        color: '#2874F0',
-      });
-    } else if (primaryUrl.includes('croma.')) {
-      links.push({
-        store: 'Croma',
-        name: 'Croma',
-        url: primaryUrl,
-        badge: 'Direct Listing',
-        color: '#00B5B5',
-      });
-    } else {
-      links.push({
-        store: 'Official / Store',
-        name: 'Brand Store / Spec Sheet',
-        url: primaryUrl,
-        badge: 'Verified Source',
-        color: '#F0B429',
-      });
+      addedUrls.add(urlToAdd);
     }
   }
 
-  // Ensure Amazon India link exists
-  if (!links.some(l => l.store === 'Amazon India')) {
-    links.push({
-      store: 'Amazon India',
-      name: 'Amazon.in',
-      url: `https://www.amazon.in/s?k=${query}`,
-      badge: 'Check Deals',
-      color: '#FF9900',
-    });
+  // 2. Cross-reference curated and grounded verified catalog for exact PDP links
+  const verifiedMatch = queryVerifiedCatalog(productName);
+  if (verifiedMatch && verifiedMatch.buy_url && !addedUrls.has(verifiedMatch.buy_url)) {
+    const check = validateProductDetailPage(verifiedMatch.buy_url);
+    if (check.isValidPdp) {
+      links.push({
+        store: verifiedMatch.platform,
+        name: verifiedMatch.platform,
+        url: check.cleanUrl || verifiedMatch.buy_url,
+        badge: 'Verified Direct PDP',
+        color: verifiedMatch.platform.includes('Amazon') ? '#FF9900' : '#2874F0',
+        isVerified: true
+      });
+      addedUrls.add(verifiedMatch.buy_url);
+    }
   }
 
-  // Ensure Flipkart link exists
-  if (!links.some(l => l.store === 'Flipkart')) {
-    links.push({
-      store: 'Flipkart',
-      name: 'Flipkart',
-      url: `https://www.flipkart.com/search?q=${query}`,
-      badge: 'Check Offers',
-      color: '#2874F0',
-    });
-  }
-
-  // Croma
-  links.push({
-    store: 'Croma',
-    name: 'Croma',
-    url: `https://www.croma.com/searchB?q=${query}`,
-    badge: 'Store Pickup',
-    color: '#00E8C6',
-  });
-
-  // Reliance Digital
-  links.push({
-    store: 'Reliance Digital',
-    name: 'Reliance Digital',
-    url: `https://www.reliancedigital.in/search?q=${query}`,
-    badge: 'Compare Price',
-    color: '#E42529',
-  });
-
+  // Strict Rule: Never return fabricated search URLs (e.g. /s?k= or /search?q=)
   return links;
 }

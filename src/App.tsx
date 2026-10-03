@@ -46,7 +46,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   CheckSquare,
-  Square
+  Square,
+  ArrowUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LandingPage } from './components/LandingPage';
@@ -1798,6 +1799,16 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [sidebarOpen]);
 
+  const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 350);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const [activeTab, setActiveTab] = useState<'shopping' | 'arena' | 'chat' | 'multi'>('shopping');
   const [isZeroGPaused, setIsZeroGPaused] = useState<boolean>(false);
   const [floatingCategory, setFloatingCategory] = useState<'all' | 'audio' | 'laptops' | 'phones' | 'appliances' | 'wearables'>('all');
@@ -1959,8 +1970,8 @@ export default function App() {
       price: productData.price || 'Check Live Price',
       mrp: productData.mrp,
       savings: productData.savings,
-      rating: productData.rating || 4.7,
-      reviewsCount: productData.reviewsCount || '15,000+ verified ratings',
+      rating: typeof productData.rating === 'number' ? productData.rating : undefined,
+      reviewsCount: productData.reviewsCount || undefined,
       category: productData.category,
       imageUrl: productData.imageUrl || productData.image_url || getProductFallbackImg(productData.name),
       gallery: productData.gallery || [
@@ -3747,8 +3758,18 @@ export default function App() {
               {multiResult && (
                 <div className="space-y-4">
                   {multiResult.error ? (
-                    <div className="bg-rose-950/40 border border-rose-800 text-rose-300 p-4 rounded-2xl text-sm">
-                      <strong>Error:</strong> {multiResult.error}
+                    <div className="bg-rose-950/40 border border-rose-800 text-rose-300 p-4 rounded-2xl text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                      <div>
+                        <strong>Error:</strong> {multiResult.error}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => runMultiResearch()}
+                        className="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shrink-0 transition-all cursor-pointer shadow-md"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5" />
+                        <span>Retry Research</span>
+                      </button>
                     </div>
                   ) : (
                     <>
@@ -3968,6 +3989,68 @@ export default function App() {
               )}
             </div>
           )}
+
+          {/* Global Vantage Shopping Assistant Footer with Mandatory Price Disclaimer & Verified Domain Badges */}
+          <footer className="mt-16 pt-8 pb-12 border-t border-violet-200/60 dark:border-white/10 text-xs text-[#5B3E8C] dark:text-slate-400 space-y-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white font-black shadow-md shadow-violet-500/25">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-heading font-black text-sm text-[#2E1065] dark:text-white tracking-tight">
+                    Vantage AI Shopping Assistant
+                  </div>
+                  <div className="text-[11px] text-[#7C6898] dark:text-slate-400">
+                    Strict Verified Direct Buy PDPs & Multi-Source Intelligence
+                  </div>
+                </div>
+              </div>
+
+              {/* Trusted Retailers Strip */}
+              <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                {['amazon.in', 'flipkart.com', 'croma.com', 'tatacliq.com', 'myntra.com', 'ajio.com', 'reliancedigital.in', 'vijaysales.com'].map(domain => (
+                  <span
+                    key={domain}
+                    className="px-2 py-0.5 rounded-md bg-white/80 dark:bg-white/5 border border-violet-200/60 dark:border-white/10 text-[10px] font-mono font-bold text-[#6D28D9] dark:text-violet-300"
+                  >
+                    {domain}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Mandatory Price & Availability Disclaimer */}
+            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-amber-900 dark:text-amber-300 flex items-start gap-2.5 text-xs">
+              <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <div className="leading-relaxed">
+                <strong className="font-semibold">Notice:</strong> Price and availability may change, check the store before buying. Vantage AI surfaces direct product detail pages (PDP) and compares live prices across verified Indian stores with zero sponsored ranking influence.
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#7C6898] dark:text-slate-500 pt-2 border-t border-violet-100 dark:border-white/5">
+              <div>
+                © 2026 Vantage AI. Direct Indian Retail Grounding Engine.
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setIsConstitutionOpen(true)}
+                  className="hover:text-[#7C3AED] transition-colors cursor-pointer underline"
+                >
+                  Constitutional Manifesto
+                </button>
+                <button
+                  type="button"
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="hover:text-[#7C3AED] transition-colors cursor-pointer flex items-center gap-1"
+                >
+                  <span>Back to top</span>
+                  <ArrowUp className="w-3 h-3" />
+                </button>
+              </div>
+            </div>
+          </footer>
         </div>
       </main>
 
@@ -4164,6 +4247,23 @@ export default function App() {
     onClearCompare={() => setComparedProductIds([])}
     isWhite={isWhite}
   />
+
+  {/* Floating Back to Top Button */}
+  {showBackToTop && (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      className={`fixed bottom-20 sm:bottom-6 right-6 sm:right-48 z-40 px-3.5 py-2.5 rounded-2xl font-bold text-xs shadow-2xl flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+        isWhite
+          ? 'bg-white/95 text-[#2E1065] border-2 border-violet-200/80 hover:border-[#7C3AED] shadow-xl backdrop-blur-md'
+          : 'bg-[#181126]/95 text-white border-2 border-violet-500/40 hover:border-violet-500 shadow-xl backdrop-blur-md'
+      }`}
+      title="Scroll back to top"
+      aria-label="Back to top"
+    >
+      <ArrowUp className="w-4 h-4 text-[#7C3AED]" />
+      <span className="hidden sm:inline font-heading font-extrabold text-xs">Top</span>
+    </button>
+  )}
 
   {/* Persistent Global Floating Assistant Button fixed at bottom-right corner */}
   <button

@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { FloatingProduct } from '../App';
 import { handleImageError } from '../utils/image-validator';
+import { POPULAR_STORE_PRODUCTS } from './ShoppingAssistantSidebar';
 
 export interface ProductSpecification {
   category: string;
@@ -158,21 +159,23 @@ export const PRODUCT_DETAILS_DATABASE: Record<string, Omit<DetailedProductData, 
         priceNum: 29990,
         mrp: '₹34,990',
         savings: 'Save ₹5,000',
-        url: 'https://www.croma.com/searchB?q=Sony+WH-1000XM5',
+        url: 'https://www.croma.com/sony-wh-1000xm5-bluetooth-headphone-with-mic/p/256860',
         inStock: true,
         deliveryTime: 'Store Pickup Available Today (In 2 Hours)',
-        bankOffer: '₹1,000 Instant Discount on HDFC Cards'
+        bankOffer: '₹1,000 Instant Discount on HDFC Cards',
+        badge: 'Croma Verified PDP'
       },
       {
-        store: 'Reliance Digital',
-        price: '₹31,990',
-        priceNum: 31990,
+        store: 'Tata CLiQ Luxury',
+        price: '₹29,990',
+        priceNum: 29990,
         mrp: '₹34,990',
-        savings: 'Save ₹3,000',
-        url: 'https://www.reliancedigital.in/search?q=Sony+WH-1000XM5',
+        savings: 'Save ₹5,000',
+        url: 'https://www.tatacliq.com/sony-wh-1000xm5-wireless-over-ear-headphones-with-mic-black/p-mp000000013778553',
         inStock: true,
         deliveryTime: 'Standard Delivery in 2-3 Days',
-        bankOffer: 'Flat 5% Cashback on ICICI Bank Cards'
+        bankOffer: 'Flat 5% Cashback on ICICI Bank Cards',
+        badge: 'Tata CLiQ Verified PDP'
       }
     ],
     reviews: [
@@ -326,10 +329,11 @@ export const PRODUCT_DETAILS_DATABASE: Record<string, Omit<DetailedProductData, 
         priceNum: 124900,
         mrp: '₹1,34,900',
         savings: 'Save ₹10,000',
-        url: 'https://www.croma.com/searchB?q=MacBook+Air+M3',
+        url: 'https://www.croma.com/apple-macbook-air-2024-m3-13-6-inch-8gb-256gb-ssd-macos-space-grey-/p/305260',
         inStock: true,
         deliveryTime: 'Same Day Store Pickup',
-        bankOffer: '₹5,000 Instant Bank Discount'
+        bankOffer: '₹5,000 Instant Bank Discount',
+        badge: 'Croma Verified PDP'
       }
     ],
     reviews: [
@@ -556,10 +560,11 @@ export const PRODUCT_DETAILS_DATABASE: Record<string, Omit<DetailedProductData, 
         priceNum: 7490,
         mrp: '₹10,995',
         savings: 'Save ₹3,505',
-        url: 'https://www.croma.com/searchB?q=Philips+HD9252',
+        url: 'https://www.croma.com/philips-4-1-litres-1400w-digital-air-fryer-rapid-air-technology-black-/p/243641',
         inStock: true,
         deliveryTime: 'Same Day Store Pickup',
-        bankOffer: '₹500 Discount on HDFC Cards'
+        bankOffer: '₹500 Discount on HDFC Cards',
+        badge: 'Croma Verified PDP'
       }
     ],
     reviews: [
@@ -1090,53 +1095,101 @@ export function getProductDetailData(product: any): DetailedProductData {
     vantageScore: 92,
     aiVerdict: `Verified Authentic Indian Retail Listing. Current price of ${rawPrice} represents a solid deal against the official MRP of ${rawMrp}.`,
     specs: dynamicSpecs,
-    priceComparisons: [
-      {
-        store: rawStore,
-        price: rawPrice,
-        priceNum: priceInt,
-        mrp: rawMrp,
-        savings: rawSavings,
-        url: product.sourceUrl || product.amazonUrl || `https://www.amazon.in/s?k=${q}`,
-        inStock: true,
-        deliveryTime: 'Free Express Delivery Available',
-        bankOffer: 'Instant Bank Discounts & No Cost EMI available at checkout',
-        badge: 'Verified Primary Source',
-        isLowest: true
-      },
-      {
-        store: 'Amazon India',
-        price: rawPrice,
-        priceNum: priceInt,
-        mrp: rawMrp,
-        savings: rawSavings,
-        url: product.amazonUrl || `https://www.amazon.in/s?k=${q}`,
-        inStock: true,
-        deliveryTime: 'Prime 1-Day Delivery Available',
-        bankOffer: '5% Cashback on Amazon Pay ICICI Credit Card'
-      },
-      {
-        store: 'Flipkart',
-        price: `₹${(priceInt + 200).toLocaleString('en-IN')}`,
-        priceNum: priceInt + 200,
-        mrp: rawMrp,
-        savings: 'Verified Offer',
-        url: product.flipkartUrl || `https://www.flipkart.com/search?q=${q}`,
-        inStock: true,
-        deliveryTime: 'Delivery in 2-3 Days',
-        bankOffer: '5% Unlimited Cashback on Flipkart Axis Card'
-      },
-      {
-        store: 'Croma',
-        price: `₹${(priceInt + 500).toLocaleString('en-IN')}`,
-        priceNum: priceInt + 500,
-        mrp: rawMrp,
-        savings: 'Store Pickup',
-        url: `https://www.croma.com/searchB?q=${q}`,
-        inStock: true,
-        deliveryTime: 'Available for in-store pickup'
+    priceComparisons: (() => {
+      const comparisons: StorePriceComparison[] = [];
+      const addedUrls = new Set<string>();
+
+      const primaryUrl = product.sourceUrl || product.amazonUrl || product.flipkartUrl || '';
+      if (primaryUrl) {
+        comparisons.push({
+          store: rawStore,
+          price: rawPrice,
+          priceNum: priceInt,
+          mrp: rawMrp,
+          savings: rawSavings,
+          url: primaryUrl,
+          inStock: true,
+          deliveryTime: 'Free Express Delivery Available',
+          bankOffer: 'Instant Bank Discounts & No Cost EMI available at checkout',
+          badge: 'Verified Primary Source',
+          isLowest: true
+        });
+        addedUrls.add(primaryUrl);
       }
-    ],
+
+      // Check curated verified catalog for companion direct store links
+      const match = POPULAR_STORE_PRODUCTS.find(p =>
+        cleanName.includes(p.name.toLowerCase()) || p.name.toLowerCase().includes(cleanName)
+      );
+
+      if (match) {
+        if (match.amazonUrl && !addedUrls.has(match.amazonUrl)) {
+          const numPrice = parseInt(String(match.price).replace(/[^0-9]/g, ''), 10) || priceInt;
+          comparisons.push({
+            store: 'Amazon India',
+            price: match.price,
+            priceNum: numPrice,
+            mrp: match.mrp,
+            savings: match.savings,
+            url: match.amazonUrl,
+            inStock: true,
+            deliveryTime: 'Prime 1-Day Delivery Available',
+            bankOffer: '5% Cashback on Amazon Pay ICICI Credit Card',
+            badge: 'Amazon Prime Verified PDP'
+          });
+          addedUrls.add(match.amazonUrl);
+        }
+        if (match.flipkartUrl && !addedUrls.has(match.flipkartUrl)) {
+          const numPrice = parseInt(String(match.price).replace(/[^0-9]/g, ''), 10) || priceInt;
+          comparisons.push({
+            store: 'Flipkart',
+            price: match.price,
+            priceNum: numPrice,
+            mrp: match.mrp,
+            savings: match.savings,
+            url: match.flipkartUrl,
+            inStock: true,
+            deliveryTime: 'Delivery in 2-3 Days',
+            bankOffer: '5% Unlimited Cashback on Flipkart Axis Card',
+            badge: 'Flipkart Assured Verified PDP'
+          });
+          addedUrls.add(match.flipkartUrl);
+        }
+      } else {
+        if (product.amazonUrl && !addedUrls.has(product.amazonUrl)) {
+          comparisons.push({
+            store: 'Amazon India',
+            price: rawPrice,
+            priceNum: priceInt,
+            mrp: rawMrp,
+            savings: rawSavings,
+            url: product.amazonUrl,
+            inStock: true,
+            deliveryTime: 'Prime 1-Day Delivery Available',
+            bankOffer: '5% Cashback on Amazon Pay ICICI Credit Card',
+            badge: 'Amazon Verified PDP'
+          });
+          addedUrls.add(product.amazonUrl);
+        }
+        if (product.flipkartUrl && !addedUrls.has(product.flipkartUrl)) {
+          comparisons.push({
+            store: 'Flipkart',
+            price: rawPrice,
+            priceNum: priceInt,
+            mrp: rawMrp,
+            savings: rawSavings,
+            url: product.flipkartUrl,
+            inStock: true,
+            deliveryTime: 'Delivery in 2-3 Days',
+            bankOffer: '5% Unlimited Cashback on Flipkart Axis Card',
+            badge: 'Flipkart Verified PDP'
+          });
+          addedUrls.add(product.flipkartUrl);
+        }
+      }
+
+      return comparisons;
+    })(),
     reviews: [
       {
         id: 'rev-dyn-1',

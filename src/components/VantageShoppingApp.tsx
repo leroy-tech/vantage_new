@@ -262,6 +262,14 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
   const [productsList, setProductsList] = useState<GroundedProduct[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage((current) => (current === msg ? null : current));
+    }, 3200);
+  };
 
   // Recent searches (last 5)
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
@@ -538,7 +546,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
       setCompareItems((prev) => prev.filter((item) => item.id !== product.id && item.name !== product.name));
     } else {
       if (compareItems.length >= 3) {
-        alert('You can compare up to 3 products at a time.');
+        showToast('You can compare up to 3 products at a time.');
         return;
       }
       setCompareItems((prev) => [...prev, product]);
@@ -1852,6 +1860,14 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Inline non-blocking toast notification */}
+      {toastMessage && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-[#1E1136] text-white text-xs font-semibold shadow-2xl border border-violet-500/30 flex items-center gap-2 animate-in fade-in slide-in-from-top-4 duration-200">
+          <Info className="w-4 h-4 text-violet-400 shrink-0" />
+          <span>{toastMessage}</span>
         </div>
       )}
     </div>

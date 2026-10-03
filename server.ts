@@ -16,6 +16,7 @@ import {
   cleanProductUrl,
   verifyProductLive
 } from './server/productVerifier';
+import { searchAllIndianPlatforms } from './server/multiPlatformSearch';
 
 dotenv.config();
 
@@ -69,6 +70,37 @@ app.get('/api/verify-product', async (req, res) => {
       retry: true,
       error: err?.message || 'Verification failed',
       message: 'Failed to verify product detail page. Please retry.'
+    });
+  }
+});
+
+// Multi-platform Live Indian Search with Filtering & Strict PDP Verification
+app.get('/api/search/vantage', async (req, res) => {
+  const q = String(req.query.q || '').trim() || 'best phone under 20000';
+  const page = parseInt(String(req.query.page || '1'), 10) || 1;
+  const limit = parseInt(String(req.query.limit || '12'), 10) || 12;
+
+  try {
+    const result = await searchAllIndianPlatforms(q, page, limit);
+    res.json(result);
+  } catch (err: any) {
+    console.error('[server] search/vantage error:', err);
+    res.status(500).json({
+      error: err?.message || 'Search failed across Indian platforms',
+      query: q,
+      totalProducts: 0,
+      page,
+      hasMore: false,
+      summary: {
+        overview: 'Temporarily unable to fetch live data. Please retry in a few moments.',
+        topPick: { name: '', reason: '', priceFormatted: '' },
+        budgetPick: { name: '', reason: '', priceFormatted: '' },
+        valuePick: { name: '', reason: '', priceFormatted: '' },
+      },
+      products: [],
+      availableBrands: [],
+      availablePlatforms: [],
+      priceRange: { min: 0, max: 0 }
     });
   }
 });

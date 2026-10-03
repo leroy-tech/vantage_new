@@ -156,8 +156,19 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   ];
 
   const buyUrl = product.sourceUrl ||
-    (product.storeLinks && product.storeLinks[0]?.url) ||
-    `https://www.amazon.in/s?k=${encodeURIComponent(product.name)}`;
+    (product.storeLinks && product.storeLinks[0]?.url) || '';
+
+  const safeSourceDomain = (() => {
+    if (product.source_domain) return product.source_domain;
+    try {
+      if (buyUrl && buyUrl.startsWith('http')) {
+        return new URL(buyUrl).hostname.replace(/^www\./, '');
+      }
+    } catch {
+      // fallback
+    }
+    return '';
+  })();
 
   return (
     <div
@@ -285,7 +296,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <VerifiedBuyCardActions
                   productName={product.name}
                   buyUrl={product.buy_url || buyUrl}
-                  sourceDomain={product.source_domain || (buyUrl ? new URL(buyUrl).hostname.replace(/^www\./, '') : '')}
+                  sourceDomain={safeSourceDomain}
                   platform={product.sourceStore || product.store || 'Verified Store'}
                   verified={product.verified !== false}
                   imageSourceUrl={product.image_source_url || product.sourceUrl}

@@ -2,6 +2,7 @@ import { GoogleGenAI } from '@google/genai';
 import { sanitizeProductImage, VERIFIED_PRODUCT_IMAGE_MAP } from '../src/utils/image-validator';
 import * as webSearch from './webSearch';
 import { DETAILED_PRODUCTS_CATALOG } from './productCatalog';
+import { VERIFIED_PRODUCT_CATALOG } from './productVerifier';
 
 export interface PlatformOffer {
   platform: string;
@@ -439,11 +440,15 @@ Return ONLY a JSON object in this exact schema (no markdown formatting, no code 
     }
   }
 
-  // If no external search results were retrieved (e.g. API quota or offline testing), seed from our verified catalog
+  // If no external search results were retrieved (e.g. API quota or offline testing), seed from our verified catalogs
   if (rawProducts.length === 0) {
-    const qTokens = cleanQuery.toLowerCase().split(/\s+/).filter((t) => t.length >= 2);
+    const qLower = cleanQuery.toLowerCase();
+    const qTokens = qLower.split(/\s+/).filter((t) => t.length >= 2);
+    const generalKeywords = ['deal', 'deals', 'tech', 'good', 'stuff', 'popular', 'top', 'best', 'recommend', 'trending', 'store', 'buy'];
+    const isGeneral = cleanQuery.length < 4 || generalKeywords.some(gk => qLower.includes(gk));
+
+    // First check DETAILED_PRODUCTS_CATALOG
     for (const [catKey, info] of Object.entries(DETAILED_PRODUCTS_CATALOG)) {
-      const isGeneral = cleanQuery.length < 5 || cleanQuery.includes('deal') || cleanQuery.includes('tech');
       const matches = isGeneral || qTokens.some((t) =>
         catKey.includes(t) ||
         info.name.toLowerCase().includes(t) ||
@@ -478,6 +483,73 @@ Return ONLY a JSON object in this exact schema (no markdown formatting, no code 
             pros: info.pros.slice(0, 3),
             cons: info.cons.slice(0, 3),
             hasData: true,
+          },
+        });
+      }
+    }
+
+    // Next check VERIFIED_PRODUCT_CATALOG (with authentic verified Indian retail items)
+    for (const item of VERIFIED_PRODUCT_CATALOG) {
+      const nameLower = item.name.toLowerCase();
+      const brandLower = item.brand.toLowerCase();
+      const numPrice = parsePrice(item.price_inr);
+
+      // Check price filters if mentioned in query (e.g. "under 20000")
+      let priceMatch = true;
+      if (qLower.includes('under 20000') || qLower.includes('under 20k') || qLower.includes('below 20000')) {
+        priceMatch = (numPrice || 0) <= 20000;
+      }
+
+      const matches = (isGeneral && rawProducts.length < 8) || (priceMatch && qTokens.some((t) => {
+        if (t === 'under' || t === '20000' || t === '20k' || t === 'for' || t === 'with' || t === 'and') return false;
+        if (t === 'phone' || t === 'phones' || t === 'smartphone' || t === 'mobile') {
+          return nameLower.includes('phone') || nameLower.includes('pixel') || nameLower.includes('ultra') || nameLower.includes('5g') || brandLower === 'motorola' || brandLower === 'nothing' || brandLower === 'samsung' || brandLower === 'apple';
+        }
+        if (t === 'shoe' || t === 'shoes' || t === 'running') {
+          return nameLower.includes('shoe') || nameLower.includes('running') || nameLower.includes('pegasus') || brandLower === 'nike';
+        }
+        if (t === 'laptop' || t === 'laptops' || t === 'coding') {
+          return nameLower.includes('macbook') || nameLower.includes('laptop') || nameLower.includes('vivobook') || nameLower.includes('nitro');
+        }
+        if (t === 'earbud' || t === 'earbuds' || t === 'ear' || t === 'headphone' || t === 'headphones' || t === 'audio') {
+          return nameLower.includes('earbud') || nameLower.includes('ear (a)') || nameLower.includes('headphone') || nameLower.includes('wh-1000xm5') || nameLower.includes('nirvana') || nameLower.includes('momentum');
+        }
+        return nameLower.includes(t) || brandLower.includes(t);
+      }));
+
+      if (matches) {
+        const check = verifyTrustedDomain(item.buy_url);
+        const offer: PlatformOffer = {
+          platform: check?.platformName || item.platform,
+          domain: check?.domain || item.source_domain,
+          price: numPrice,
+          priceFormatted: item.price_inr,
+          buyUrl: item.buy_url,
+          isVerifiedGrounded: true,
+          storeBadge: item.storeBadge || 'Verified Direct Listing',
+          inStock: true,
+        };
+
+        let cat = 'electronics';
+        if (nameLower.includes('phone') || nameLower.includes('pixel') || nameLower.includes('ultra 5g') || nameLower.includes('g85')) cat = 'phones';
+        else if (nameLower.includes('macbook') || nameLower.includes('laptop') || nameLower.includes('vivobook')) cat = 'laptops';
+        else if (nameLower.includes('shoe') || nameLower.includes('running')) cat = 'shoes';
+        else if (nameLower.includes('headphone') || nameLower.includes('earbud') || nameLower.includes('speaker')) cat = 'audio';
+        else if (nameLower.includes('watch')) cat = 'wearables';
+        else if (nameLower.includes('fryer') || nameLower.includes('vacuum')) cat = 'appliances';
+
+        rawProducts.push({
+          name: item.name,
+          brand: item.brand,
+          category: cat,
+          rating: item.rating,
+          ratingCount: 'Verified Buyer Ratings',
+          specs: item.highlights ? item.highlights.slice(0, 3) : ['Official India Retail Listing', 'Manufacturer Warranty'],
+          offers: [offer],
+          reviewSummary: {
+            pros: item.pros ? item.pros.slice(0, 3) : ['High satisfaction in segment'],
+            cons: item.cons ? item.cons.slice(0, 3) : ['Prices vary across stores'],
+            hasData: Boolean(item.pros && item.pros.length > 0),
           },
         });
       }
@@ -616,28 +688,30 @@ Return ONLY a JSON object in this exact schema (no markdown formatting, no code 
 
   const summary: SearchSummary = {
     overview:
-      parsedData?.summary?.overview ||
-      `Grounded comparison across ${platformsSet.size || 5}+ trusted Indian platforms with live pricing and direct store checkout links.`,
+      allDeduplicatedProducts.length === 0
+        ? `No verified products found matching "${cleanQuery}". Please try searching for popular terms like "phone under 20000", "running shoes", "laptop for coding", or "earbuds".`
+        : (parsedData?.summary?.overview ||
+          `Grounded comparison across ${platformsSet.size || 5}+ trusted Indian platforms with live pricing and direct store checkout links.`),
     topPick: {
-      name: topPickItem ? topPickItem.name : cleanQuery,
+      name: topPickItem ? topPickItem.name : 'No verified pick',
       reason: topPickItem
         ? `Ranked highest with ${topPickItem.rating}★ rating, ${topPickItem.specs[0] || 'standout specs'}, and best price at ${topPickPrice} on ${topPickItem.cheapestOffer?.platform || 'trusted store'}.`
-        : 'Top ranked verified listing.',
-      priceFormatted: topPickPrice,
+        : 'Search for a specific product to see AI top pick.',
+      priceFormatted: topPickItem ? topPickPrice : '—',
     },
     budgetPick: {
-      name: budgetPickItem ? budgetPickItem.name : 'Budget Pick',
+      name: budgetPickItem ? budgetPickItem.name : 'No verified pick',
       reason: budgetPickItem
         ? `Lowest verified price at ${budgetPickPrice} on ${budgetPickItem.cheapestOffer?.platform || 'trusted store'} with ${budgetPickItem.rating}★ rating.`
-        : 'Best low-cost option in verified results.',
-      priceFormatted: budgetPickPrice,
+        : 'Search for a specific product to see budget recommendations.',
+      priceFormatted: budgetPickItem ? budgetPickPrice : '—',
     },
     valuePick: {
-      name: valuePickItem ? valuePickItem.name : 'Value Pick',
+      name: valuePickItem ? valuePickItem.name : 'No verified pick',
       reason: valuePickItem
         ? `Optimal balance of specs (${valuePickItem.specs[0] || 'solid features'}) and price at ${valuePickPrice}.`
-        : 'Best price-to-performance ratio.',
-      priceFormatted: valuePickPrice,
+        : 'Search for a specific product to see value recommendations.',
+      priceFormatted: valuePickItem ? valuePickPrice : '—',
     },
   };
 

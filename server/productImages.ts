@@ -9,6 +9,7 @@
  */
 
 import { StoreLink } from './storeLinks';
+import { queryVerifiedCatalog, validateProductDetailPage, cleanProductUrl } from './productVerifier';
 
 export interface ExactProductSourceInfo {
   productName: string;
@@ -625,51 +626,46 @@ export function isTrustedImageUrl(url: string | undefined): boolean {
 }
 
 /**
- * Builds direct store links for a resolved product, placing the exact source product listing first
+ * Builds direct store links for a resolved product, strictly using verified direct PDPs
  */
 function buildStoreLinksFromEntry(entry: VerifiedSourceEntry, productName: string): StoreLink[] {
-  const query = encodeURIComponent(productName.replace(/\(.*?\)/g, '').trim());
   const links: StoreLink[] = [];
 
   // Primary direct source link
-  links.push({
-    store: entry.sourceStore,
-    name: `${entry.sourceStore} (Buy Directly)`,
-    url: entry.sourceUrl,
-    badge: entry.badge || 'Direct Listing · Verified Photo',
-    color: entry.sourceStore.includes('Amazon') ? '#7C3AED' : '#6D28D9',
-  });
+  if (entry.sourceUrl) {
+    links.push({
+      store: entry.sourceStore,
+      name: `${entry.sourceStore} (Buy Directly)`,
+      url: entry.sourceUrl,
+      badge: entry.badge || 'Direct Listing · Verified Photo',
+      color: entry.sourceStore.includes('Amazon') ? '#7C3AED' : '#6D28D9',
+      isVerified: true
+    });
+  }
 
-  // Amazon direct or search
-  if (!entry.sourceStore.includes('Amazon')) {
+  // Amazon direct PDP if available
+  if (entry.amazonDirect && !entry.sourceStore.includes('Amazon')) {
     links.push({
       store: 'Amazon India',
       name: 'Amazon.in',
-      url: entry.amazonDirect || `https://www.amazon.in/s?k=${query}`,
-      badge: 'Compare Deals',
-      color: '#7C3AED',
+      url: entry.amazonDirect,
+      badge: 'Verified Direct PDP',
+      color: '#FF9900',
+      isVerified: true
     });
   }
 
-  // Flipkart direct or search
-  if (!entry.sourceStore.includes('Flipkart')) {
+  // Flipkart direct PDP if available
+  if (entry.flipkartDirect && !entry.sourceStore.includes('Flipkart')) {
     links.push({
       store: 'Flipkart',
       name: 'Flipkart',
-      url: entry.flipkartDirect || `https://www.flipkart.com/search?q=${query}`,
-      badge: 'Check Offers',
-      color: '#6D28D9',
+      url: entry.flipkartDirect,
+      badge: 'Verified Direct PDP',
+      color: '#2874F0',
+      isVerified: true
     });
   }
-
-  // Croma
-  links.push({
-    store: 'Croma',
-    name: 'Croma',
-    url: `https://www.croma.com/searchB?q=${query}`,
-    badge: 'Store Pickup',
-    color: '#8B5CF6',
-  });
 
   return links;
 }
@@ -726,72 +722,71 @@ export async function resolveExactProductSource(
     }
   }
 
-  // 2. If explicit source and image is already from a trusted source
+  // 2. Cross-reference curated verified catalog
+  const catalogMatch = queryVerifiedCatalog(productName);
+  if (catalogMatch && catalogMatch.buy_url) {
+    const check = validateProductDetailPage(catalogMatch.buy_url);
+    if (check.isValidPdp) {
+      const verifiedResult: ExactProductSourceInfo = {
+        productName: catalogMatch.name,
+        imageUrl: catalogMatch.image_url || getProductImageUrl(productName),
+        sourceUrl: check.cleanUrl || catalogMatch.buy_url,
+        sourceStore: catalogMatch.platform,
+        badge: catalogMatch.storeBadge || 'Verified Direct Listing',
+        storeLinks: [
+          {
+            store: catalogMatch.platform,
+            name: `${catalogMatch.platform} (Buy Directly)`,
+            url: check.cleanUrl || catalogMatch.buy_url,
+            badge: 'Verified Direct PDP',
+            color: catalogMatch.platform.includes('Amazon') ? '#FF9900' : '#2874F0',
+            isVerified: true
+          }
+        ]
+      };
+      inMemorySourceCache.set(clean, verifiedResult);
+      return verifiedResult;
+    }
+  }
+
+  // 3. If explicit source and image is already from a trusted source
   if (isTrustedImageUrl(explicitImageUrl) && explicitSourceUrl && explicitSourceUrl.startsWith('http')) {
+    const cleanedUrl = cleanProductUrl(explicitSourceUrl);
+    const pdpCheck = validateProductDetailPage(cleanedUrl || explicitSourceUrl);
     const isAmazon = explicitSourceUrl.includes('amazon.');
     const isFlipkart = explicitSourceUrl.includes('flipkart.');
-    const storeName = isAmazon ? 'Amazon India' : isFlipkart ? 'Flipkart' : 'Official Retailer';
-    const q = encodeURIComponent(clean);
+    const storeName = isAmazon ? 'Amazon India' : isFlipkart ? 'Flipkart' : (pdpCheck.platform || 'Official Retailer');
 
     const res: ExactProductSourceInfo = {
       productName,
       imageUrl: explicitImageUrl!,
-      sourceUrl: explicitSourceUrl,
+      sourceUrl: pdpCheck.isValidPdp ? (pdpCheck.cleanUrl || explicitSourceUrl) : explicitSourceUrl,
       sourceStore: storeName,
-      badge: 'Verified Official CDN Photo',
-      storeLinks: [
+      badge: pdpCheck.isValidPdp ? 'Verified Official PDP' : 'Authentic Product Reference',
+      storeLinks: pdpCheck.isValidPdp ? [
         {
           store: storeName,
           name: `${storeName} (Direct)`,
-          url: explicitSourceUrl,
+          url: pdpCheck.cleanUrl || explicitSourceUrl,
           badge: 'Direct Product Link',
           color: '#7C3AED',
-        },
-        {
-          store: isAmazon ? 'Flipkart' : 'Amazon India',
-          name: isAmazon ? 'Flipkart' : 'Amazon.in',
-          url: isAmazon ? `https://www.flipkart.com/search?q=${q}` : `https://www.amazon.in/s?k=${q}`,
-          badge: 'Compare Price',
-          color: '#6D28D9',
-        },
-      ],
+          isVerified: true
+        }
+      ] : []
     };
     inMemorySourceCache.set(clean, res);
     return res;
   }
 
-  // 3. Fallback to exact authentic category asset from official retailer CDNs
-  const defaultUrl = `https://www.amazon.in/s?k=${encodeURIComponent(clean)}`;
+  // 4. Default authentic category asset from official retailer CDNs
   const defaultImg = getProductImageUrl(productName);
   const fallbackResult: ExactProductSourceInfo = {
     productName,
     imageUrl: defaultImg,
-    sourceUrl: defaultUrl,
-    sourceStore: 'Amazon India',
+    sourceUrl: '',
+    sourceStore: 'Official Store',
     badge: '✓ Verified Retailer CDN Asset',
-    storeLinks: [
-      {
-        store: 'Amazon India',
-        name: 'Amazon.in (Direct Listing)',
-        url: defaultUrl,
-        badge: 'Verified Store',
-        color: '#7C3AED',
-      },
-      {
-        store: 'Flipkart',
-        name: 'Flipkart',
-        url: `https://www.flipkart.com/search?q=${encodeURIComponent(clean)}`,
-        badge: 'Compare Deals',
-        color: '#6D28D9',
-      },
-      {
-        store: 'Croma',
-        name: 'Croma',
-        url: `https://www.croma.com/searchB?q=${encodeURIComponent(clean)}`,
-        badge: 'Store Pickup',
-        color: '#8B5CF6',
-      },
-    ],
+    storeLinks: []
   };
 
   inMemorySourceCache.set(clean, fallbackResult);
