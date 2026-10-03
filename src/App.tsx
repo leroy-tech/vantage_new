@@ -52,7 +52,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LandingPage } from './components/LandingPage';
 import { ProductDetailSlideOver } from './components/ProductDetailSlideOver';
 import { ProductDetailModal, ProductModalData } from './components/ProductDetailModal';
-import { FloatingActionSearchBar } from './components/FloatingActionSearchBar';
 import { CompareDrawer } from './components/CompareDrawer';
 import { ShoppingAssistantSidebar } from './components/ShoppingAssistantSidebar';
 import { VantageShoppingApp } from './components/VantageShoppingApp';
@@ -3005,31 +3004,6 @@ export default function App() {
 
         {/* Scrollable View Area */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 max-w-5xl w-full mx-auto">
-          {/* Stat Chips */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-4">
-            <div className={`${isWhite ? 'glass-panel-white border-violet-100' : 'glass-panel border-white/10'} border rounded-2xl p-4 relative overflow-hidden group hover:border-violet-300 transition-colors shadow-sm`}>
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#7C3AED] to-transparent opacity-60" />
-              <div className={`font-heading text-2xl sm:text-3xl font-extrabold ${isWhite ? 'text-[#7C3AED]' : 'text-[#7C3AED]'} tracking-tight`}>
-                {stats.tracked_count}
-              </div>
-              <div className={`text-xs ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} font-medium mt-1`}>Tracked Products</div>
-            </div>
-            <div className={`${isWhite ? 'glass-panel-white border-violet-100' : 'glass-panel border-white/10'} border rounded-2xl p-4 relative overflow-hidden group hover:border-violet-300 transition-colors shadow-sm`}>
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#7C3AED] to-transparent opacity-60" />
-              <div className={`font-heading text-2xl sm:text-3xl font-extrabold ${isWhite ? 'text-[#7C3AED]' : 'text-[#7C3AED]'} tracking-tight`}>
-                {stats.total_checks}
-              </div>
-              <div className={`text-xs ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} font-medium mt-1`}>Price Checks Logged</div>
-            </div>
-            <div className={`${isWhite ? 'glass-panel-white border-violet-100' : 'glass-panel border-white/10'} border rounded-2xl p-4 relative overflow-hidden group hover:border-violet-300 transition-colors shadow-sm`}>
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#7C3AED] to-transparent opacity-60" />
-              <div className={`font-heading text-2xl sm:text-3xl font-extrabold ${isWhite ? 'text-[#7C3AED]' : 'text-[#7C3AED]'} tracking-tight`}>
-                {stats.pref_count}
-              </div>
-              <div className={`text-xs ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} font-medium mt-1`}>Preferences Saved</div>
-            </div>
-          </div>
-
           {/* Onboarding Banner */}
           {showOnboarding && (
             <div className={`${isWhite ? 'glass-panel-white border-violet-200 shadow-md' : 'glass-panel-white'} rounded-2xl p-5 relative overflow-hidden`}>
@@ -4182,19 +4156,6 @@ export default function App() {
       </div>
     </div>
   )}
-
-  {/* Floating Global Search Bar with Autocomplete across All Views */}
-  <FloatingActionSearchBar
-    products={floatingProductsList}
-    onSelectProduct={(p) => handleOpenProductModal(p)}
-    onSearchQuerySubmit={(q) => {
-      setFrontSearchQuery(q);
-      lookupProductSource(q);
-      if (mainView === 'landing') setMainView('app');
-      if (activeTab !== 'arena') setActiveTab('arena');
-    }}
-    isWhite={isWhite}
-  />
 
   {/* Persistent Compare Drawer at Bottom when products are selected */}
   <CompareDrawer
