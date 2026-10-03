@@ -276,7 +276,6 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
     storeBadge: 'Amazon Device Official Store',
     sourceUrl: 'https://www.amazon.in/dp/B08N3TCP2F',
     amazonUrl: 'https://www.amazon.in/dp/B08N3TCP2F',
-    flipkartUrl: 'https://www.flipkart.com/search?q=Amazon+Kindle+Paperwhite+16GB',
     imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80',
     rating: 4.8,
     reviewsCount: '21,000+',
@@ -448,11 +447,17 @@ export const POPULAR_STORE_PRODUCTS: CuratedStoreProduct[] = [
   }
 ];
 
-interface ShoppingAssistantSidebarProps {
+export interface ShoppingAssistantSidebarProps {
   isOpen: boolean;
   onClose: () => void;
   onToggle: () => void;
   isWhite: boolean;
+  // AI Assistant Chat props
+  chatMessages?: Array<{ role: 'user' | 'assistant'; content: string }>;
+  isChatLoading?: boolean;
+  onSendChat?: (text: string) => void;
+  onClearChat?: () => void;
+  sidebarInputRef?: React.RefObject<HTMLTextAreaElement | null>;
   userId: string;
   tempUserId: string;
   setTempUserId: (val: string) => void;
@@ -497,6 +502,11 @@ export const ShoppingAssistantSidebar: React.FC<ShoppingAssistantSidebarProps> =
   isOpen,
   onClose,
   isWhite,
+  chatMessages = [],
+  isChatLoading = false,
+  onSendChat,
+  onClearChat,
+  sidebarInputRef,
   userId,
   tempUserId,
   setTempUserId,
@@ -536,8 +546,33 @@ export const ShoppingAssistantSidebar: React.FC<ShoppingAssistantSidebarProps> =
   formatINR,
   onTrackCuratedProduct
 }) => {
-  // Sidebar Internal Tab Selection
-  const [activeSidebarTab, setActiveSidebarTab] = useState<'catalog' | 'tracked' | 'profile'>('catalog');
+  // Sidebar Internal Tab Selection - 'assistant' is default view
+  const [activeSidebarTab, setActiveSidebarTab] = useState<'assistant' | 'catalog' | 'tracked' | 'profile'>('assistant');
+  const [chatInputValue, setChatInputValue] = useState('');
+  const chatBottomRef = React.useRef<HTMLDivElement>(null);
+
+  // Auto-scroll chat to latest message
+  React.useEffect(() => {
+    if (activeSidebarTab === 'assistant') {
+      chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatMessages, isChatLoading, activeSidebarTab]);
+
+  const handleSendCurrentChat = () => {
+    if (!chatInputValue.trim() || isChatLoading) return;
+    if (onSendChat) {
+      onSendChat(chatInputValue.trim());
+      setChatInputValue('');
+    }
+  };
+
+  const SUGGESTED_PROMPT_CHIPS = [
+    'Best phone under ₹20,000',
+    'Compare these products',
+    'Lowest price for MacBook M3 Pro',
+    'Sony WH-1000XM5 deals',
+    'Top noise cancelling headphones in ₹',
+  ];
 
   // Catalog Filters
   const [catalogStoreFilter, setCatalogStoreFilter] = useState<'all' | 'Flipkart' | 'Amazon' | 'Croma' | 'Tata CLiQ'>('all');
@@ -563,129 +598,352 @@ export const ShoppingAssistantSidebar: React.FC<ShoppingAssistantSidebarProps> =
     setTimeout(() => setCopiedLinkProductId(null), 2000);
   };
 
+  // Render assistant message content with formatted bold text, bullets, and verified pills
+  const renderMessageContent = (text: string) => {
+    const lines = text.split('\n');
+    return (
+      <div className="space-y-1.5 text-xs leading-relaxed break-words">
+        {lines.map((line, lIdx) => {
+          if (!line.trim()) return <div key={lIdx} className="h-1" />;
+          const isBullet = line.trim().startsWith('- ') || line.trim().startsWith('* ');
+          const rawText = isBullet ? line.trim().replace(/^[-*]\s+/, '') : line;
+
+          const parts = rawText.split(/(\*\*.*?\*\*)/g);
+          const parsed = parts.map((part, pIdx) => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+              return (
+                <strong key={pIdx} className="font-bold text-violet-700 dark:text-violet-300">
+                  {part.slice(2, -2)}
+                </strong>
+              );
+            }
+            return part;
+          });
+
+          if (isBullet) {
+            return (
+              <div key={lIdx} className="flex items-start gap-1.5 ml-1">
+                <span className="text-violet-500 font-bold shrink-0 mt-0.5">•</span>
+                <span className="flex-1">{parsed}</span>
+              </div>
+            );
+          }
+          return <p key={lIdx}>{parsed}</p>;
+        })}
+      </div>
+    );
+  };
+
   return (
     <>
-      {/* Mobile Backdrop Overlay - closes sidebar on backdrop click */}
+      {/* Mobile & Tablet Backdrop Overlay - closes sidebar on backdrop click */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 lg:hidden transition-opacity duration-300"
           onClick={onClose}
           aria-hidden="true"
         />
       )}
 
-      {/* Shopping Assistant Sidebar Container */}
+      {/* Collapsible AI Assistant Sidebar Container */}
       <aside
-        className={`fixed lg:relative top-0 bottom-0 left-0 z-50 lg:z-20 h-full w-[90vw] sm:w-[420px] lg:w-[390px] xl:w-[420px] flex flex-col transition-all duration-300 ease-in-out ${
-          isOpen
-            ? 'translate-x-0 opacity-100 shadow-2xl shrink-0'
-            : '-translate-x-full lg:-translate-x-full lg:w-0 lg:overflow-hidden pointer-events-none opacity-0'
-        } ${
-          isWhite
-            ? 'bg-white/98 text-[#2E1065] border-r border-violet-100 backdrop-blur-2xl'
-            : 'bg-[#120726]/98 text-white border-r border-violet-900/60 backdrop-blur-2xl'
-        }`}
-        style={{
-          display: isOpen ? 'flex' : undefined
-        }}
+        id="vantage-assistant-sidebar"
+        role="complementary"
+        aria-label="AI Assistant"
+        className={`
+          h-full flex flex-col shrink-0
+          border-l shadow-[-6px_0_24px_rgba(0,0,0,0.06)] rounded-tl-2xl
+          ${isWhite ? 'bg-white border-violet-100 text-[#2E1065]' : 'bg-[#0E0C15] border-white/10 text-white'}
+          transition-[width,transform] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+          motion-reduce:transition-none
+          lg:relative lg:top-auto lg:bottom-auto lg:right-auto lg:z-20 lg:translate-x-0
+          ${isOpen ? 'lg:w-[380px]' : 'lg:w-0 lg:overflow-hidden lg:border-l-0'}
+          fixed top-0 right-0 bottom-0 z-50
+          ${isOpen
+            ? 'w-full sm:w-[360px] translate-x-0'
+            : 'w-full sm:w-[360px] translate-x-full pointer-events-none'
+          }
+        `}
       >
-        {/* --- Top Header with Close & Toggle Controls --- */}
+        {/* Inner Content Wrapper with 100ms Opacity Delay */}
         <div
-          className={`p-4 border-b ${
-            isWhite ? 'border-violet-100 bg-gradient-to-r from-violet-50/90 to-purple-50/70' : 'border-violet-900/40 bg-[#1E0B38]/90'
-          } flex items-center justify-between shrink-0`}
+          className={`w-full sm:w-[360px] lg:w-[380px] h-full flex flex-col overflow-hidden transition-opacity duration-200 ${
+            isOpen ? 'opacity-100 delay-100' : 'opacity-0 delay-0 pointer-events-none'
+          } motion-reduce:transition-none motion-reduce:delay-0`}
         >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] flex items-center justify-center text-white font-heading font-black text-base shadow-md">
-              🛍️
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className={`font-heading font-black text-base tracking-tight ${isWhite ? 'text-[#2E1065]' : 'text-white'}`}>
-                  Shopping Assistant
-                </span>
-                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
-                  LIVE
+          {/* --- Top Header with Vantage Assistant Title, Clear & Close --- */}
+          <div
+            className={`p-3.5 border-b ${
+              isWhite ? 'border-violet-100 bg-gradient-to-r from-violet-50/90 to-purple-50/70' : 'border-white/10 bg-[#160E29]/90'
+            } flex items-center justify-between shrink-0`}
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] flex items-center justify-center text-white shadow-xs">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h2 className="font-heading font-black text-sm tracking-tight">
+                    Vantage Assistant
+                  </h2>
+                  <span className="bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[9px] font-bold px-1.5 py-0.2 rounded-full border border-emerald-300 dark:border-emerald-800">
+                    AI
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 font-medium">
+                  Verified Shopping Intelligence in ₹
                 </span>
               </div>
-              <span className="text-[10px] text-[#7C3AED] font-bold tracking-wide flex items-center gap-1">
-                <span>Verified Direct Buy</span>
-                <span>•</span>
-                <span>Flipkart & Amazon</span>
-              </span>
+            </div>
+
+            <div className="flex items-center gap-1">
+              {/* Clear (New Chat) Button */}
+              {onClearChat && (
+                <button
+                  type="button"
+                  onClick={onClearChat}
+                  className={`p-1.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
+                    isWhite
+                      ? 'bg-white hover:bg-rose-50 text-slate-500 hover:text-rose-600 border-violet-200'
+                      : 'bg-white/5 hover:bg-rose-950/30 text-slate-400 hover:text-rose-400 border-white/10'
+                  }`}
+                  title="Start a new chat (clear messages)"
+                  aria-label="New chat"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span className="text-[10px] hidden sm:inline">New Chat</span>
+                </button>
+              )}
+
+              {/* Close (X) Button */}
+              <button
+                type="button"
+                onClick={onClose}
+                className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
+                  isWhite
+                    ? 'bg-white hover:bg-violet-100 text-[#7C6898] hover:text-[#2E1065] border-violet-200'
+                    : 'bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border-white/10'
+                }`}
+                title="Close AI Assistant (Esc)"
+                aria-label="Close AI Assistant"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
-          {/* Close Sidebar Button */}
-          <button
-            onClick={onClose}
-            className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-1 text-xs font-bold ${
-              isWhite
-                ? 'bg-white hover:bg-violet-100 text-[#7C6898] hover:text-[#2E1065] border-violet-200 shadow-xs'
-                : 'bg-white/10 hover:bg-white/20 text-violet-200 hover:text-white border-white/10'
-            }`}
-            title="Close Assistant Sidebar (or click backdrop)"
-          >
-            <X className="w-4 h-4 text-[#7C3AED]" />
-            <span className="text-[11px]">Close</span>
-          </button>
-        </div>
-
-        {/* --- Assistant Navigation Tabs --- */}
-        <div
-          className={`px-3 py-2 border-b flex items-center gap-1 shrink-0 ${
-            isWhite ? 'border-violet-100 bg-white/80' : 'border-violet-900/30 bg-black/20'
-          }`}
-        >
-          <button
-            onClick={() => setActiveSidebarTab('catalog')}
-            className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-              activeSidebarTab === 'catalog'
-                ? 'bg-[#7C3AED] text-white shadow-xs font-heading'
-                : isWhite
-                ? 'text-[#6D28D9] hover:bg-violet-50'
-                : 'text-violet-300 hover:bg-white/5'
+          {/* --- Assistant Navigation Tabs --- */}
+          <div
+            className={`px-3 py-1.5 border-b flex items-center gap-1 shrink-0 overflow-x-auto scrollbar-none ${
+              isWhite ? 'border-violet-100 bg-white/80' : 'border-white/10 bg-black/20'
             }`}
           >
-            <Store className="w-3.5 h-3.5" />
-            <span>Popular Deals ({filteredProducts.length})</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveSidebarTab('assistant')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                activeSidebarTab === 'assistant'
+                  ? 'bg-[#7C3AED] text-white shadow-xs'
+                  : isWhite
+                  ? 'text-[#6D28D9] hover:bg-violet-50'
+                  : 'text-violet-300 hover:bg-white/5'
+              }`}
+            >
+              <Sparkles className="w-3 h-3" />
+              <span>Chat</span>
+            </button>
 
-          <button
-            onClick={() => setActiveSidebarTab('tracked')}
-            className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-              activeSidebarTab === 'tracked'
-                ? 'bg-[#7C3AED] text-white shadow-xs font-heading'
-                : isWhite
-                ? 'text-[#6D28D9] hover:bg-violet-50'
-                : 'text-violet-300 hover:bg-white/5'
-            }`}
-          >
-            <TrendingDown className="w-3.5 h-3.5" />
-            <span>Tracked ({products.length})</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveSidebarTab('catalog')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                activeSidebarTab === 'catalog'
+                  ? 'bg-[#7C3AED] text-white shadow-xs'
+                  : isWhite
+                  ? 'text-[#6D28D9] hover:bg-violet-50'
+                  : 'text-violet-300 hover:bg-white/5'
+              }`}
+            >
+              <Store className="w-3 h-3" />
+              <span>Deals ({filteredProducts.length})</span>
+            </button>
 
-          <button
-            onClick={() => setActiveSidebarTab('profile')}
-            className={`py-1.5 px-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-all ${
-              activeSidebarTab === 'profile'
-                ? 'bg-[#7C3AED] text-white shadow-xs'
-                : isWhite
-                ? 'text-[#6D28D9] hover:bg-violet-50'
-                : 'text-violet-300 hover:bg-white/5'
-            }`}
-            title="User Profile & Settings"
-          >
-            <User className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Settings</span>
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={() => setActiveSidebarTab('tracked')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                activeSidebarTab === 'tracked'
+                  ? 'bg-[#7C3AED] text-white shadow-xs'
+                  : isWhite
+                  ? 'text-[#6D28D9] hover:bg-violet-50'
+                  : 'text-violet-300 hover:bg-white/5'
+              }`}
+            >
+              <TrendingDown className="w-3 h-3" />
+              <span>Tracked ({products.length})</span>
+            </button>
 
-        {/* --- Scrollable Content Area --- */}
-        <div className="flex-1 overflow-y-auto p-3.5 space-y-4 text-sm">
+            <button
+              type="button"
+              onClick={() => setActiveSidebarTab('profile')}
+              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ml-auto ${
+                activeSidebarTab === 'profile'
+                  ? 'bg-[#7C3AED] text-white shadow-xs'
+                  : isWhite
+                  ? 'text-[#6D28D9] hover:bg-violet-50'
+                  : 'text-violet-300 hover:bg-white/5'
+              }`}
+              title="Alerts & User Preferences"
+            >
+              <Bell className="w-3 h-3" />
+            </button>
+          </div>
+
           {/* ========================================================
-              TAB 1: CURATED STORE CATALOG & DIRECT BUY BUTTONS
+              TAB 0: AI ASSISTANT CHAT (PRIMARY CONVERSATIONAL EXPERIENCE)
              ======================================================== */}
+          {activeSidebarTab === 'assistant' && (
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+              {/* Scrollable Chat Area */}
+              <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin">
+                {chatMessages.length === 0 ? (
+                  <div className="py-4 space-y-4">
+                    {/* Welcome Card */}
+                    <div className={`p-4 rounded-2xl border ${isWhite ? 'bg-violet-50/70 border-violet-100' : 'bg-white/5 border-white/10'} space-y-2`}>
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] text-white flex items-center justify-center">
+                          <Sparkles className="w-3.5 h-3.5" />
+                        </div>
+                        <h3 className="font-heading font-black text-xs text-[#2E1065] dark:text-white">
+                          Verified Shopping Intelligence
+                        </h3>
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Ask about tech specs, lowest Indian street prices, and verified Amazon & Flipkart deals.
+                      </p>
+                    </div>
+
+                    {/* Suggested Prompt Chips */}
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        Suggested queries
+                      </span>
+                      <div className="flex flex-col gap-1.5">
+                        {SUGGESTED_PROMPT_CHIPS.map((chip, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              if (onSendChat) onSendChat(chip);
+                            }}
+                            className={`p-2.5 rounded-xl border text-left text-xs font-medium transition-all flex items-center justify-between gap-2 cursor-pointer ${
+                              isWhite
+                                ? 'bg-white hover:bg-violet-50 border-violet-100 text-[#2E1065] hover:border-violet-300 shadow-2xs'
+                                : 'bg-white/5 hover:bg-white/10 border-white/10 text-white hover:border-violet-500/40'
+                            }`}
+                          >
+                            <span>{chip}</span>
+                            <Sparkles className="w-3 h-3 text-[#7C3AED] shrink-0 opacity-80" />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {chatMessages.map((msg, index) => (
+                      <div
+                        key={index}
+                        className={`flex flex-col ${
+                          msg.role === 'user' ? 'items-end' : 'items-start'
+                        }`}
+                      >
+                        <div
+                          className={`p-3 rounded-2xl max-w-[90%] shadow-2xs ${
+                            msg.role === 'user'
+                              ? 'bg-gradient-to-r from-[#7C3AED] to-[#6D28D9] text-white rounded-tr-xs'
+                              : isWhite
+                              ? 'bg-violet-50/90 border border-violet-100 text-[#2E1065] rounded-tl-xs'
+                              : 'bg-white/5 border border-white/10 text-white rounded-tl-xs'
+                          }`}
+                        >
+                          {msg.role === 'assistant' ? (
+                            renderMessageContent(msg.content)
+                          ) : (
+                            <p className="text-xs leading-relaxed">{msg.content}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Typing Indicator */}
+                    {isChatLoading && (
+                      <div className="flex items-center gap-2 p-3 rounded-2xl bg-violet-50/70 dark:bg-white/5 border border-violet-100 dark:border-white/10 max-w-[85%] text-xs">
+                        <span className="flex gap-1 items-center py-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-violet-600 animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-violet-600 animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-violet-600 animate-bounce" style={{ animationDelay: '300ms' }} />
+                        </span>
+                        <span className="text-[11px] text-[#7C6898] dark:text-slate-400">
+                          Vantage AI is checking verified Indian store prices...
+                        </span>
+                      </div>
+                    )}
+
+                    <div ref={chatBottomRef} />
+                  </>
+                )}
+              </div>
+
+              {/* Fixed Bottom Message Input */}
+              <div className={`p-3 border-t ${isWhite ? 'border-violet-100 bg-white/95' : 'border-white/10 bg-[#0E0C15]/95'} shrink-0`}>
+                <div className={`flex items-end gap-2 p-1.5 rounded-xl border ${isWhite ? 'bg-violet-50/60 border-violet-200 focus-within:border-violet-500 focus-within:bg-white' : 'bg-black/40 border-white/10 focus-within:border-violet-500 focus-within:bg-black/70'} transition-all`}>
+                  <textarea
+                    ref={sidebarInputRef}
+                    value={chatInputValue}
+                    onChange={(e) => setChatInputValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendCurrentChat();
+                      }
+                    }}
+                    placeholder="Ask Vantage AI about specs, prices, deals..."
+                    rows={1}
+                    className="flex-1 bg-transparent resize-none text-xs outline-none p-1.5 max-h-24 leading-relaxed"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSendCurrentChat}
+                    disabled={!chatInputValue.trim() || isChatLoading}
+                    className={`p-2 rounded-lg transition-all shrink-0 cursor-pointer ${
+                      chatInputValue.trim() && !isChatLoading
+                        ? 'bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-xs'
+                        : 'bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
+                    }`}
+                    title="Send message (Enter)"
+                    aria-label="Send message"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <div className="flex items-center justify-between mt-1.5 px-1 text-[10px] text-slate-400">
+                  <span>Enter to send · Shift+Enter for newline</span>
+                  <span className="flex items-center gap-1 text-emerald-600 font-medium">
+                    <ShieldCheck className="w-2.5 h-2.5" />
+                    <span>Verified PDP Grounding</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+        {/* --- Scrollable Content Area for Secondary Tabs (Deals, Tracked, Settings) --- */}
+        {activeSidebarTab !== 'assistant' && (
+          <div className="flex-1 overflow-y-auto p-3.5 space-y-4 text-sm scrollbar-thin">
+            {/* ========================================================
+                TAB 1: CURATED STORE CATALOG & DIRECT BUY BUTTONS
+               ======================================================== */}
           {activeSidebarTab === 'catalog' && (
             <div className="space-y-3.5">
               {/* Trust & Guarantee Banner */}
@@ -1195,39 +1453,45 @@ export const ShoppingAssistantSidebar: React.FC<ShoppingAssistantSidebarProps> =
 
                             {renderSparkline(prod.history)}
 
-                            {/* Direct Buy Buttons for Tracked Product */}
-                            <div className="flex items-center gap-1.5 pt-1 flex-wrap">
-                              <a
-                                href={`https://www.flipkart.com/search?q=${encodeURIComponent(prod.search_query)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#2874F0] hover:bg-[#1E60D0] text-white px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow-xs"
-                                title="Direct Buy on Flipkart"
-                              >
-                                <ShoppingCart className="w-2.5 h-2.5" />
-                                <span>Flipkart ↗</span>
-                              </a>
-
-                              <a
-                                href={`https://www.amazon.in/s?k=${encodeURIComponent(prod.search_query)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#FF9900] hover:bg-[#E68A00] text-slate-950 px-2.5 py-1 rounded-lg text-[10px] font-black flex items-center gap-1 shadow-xs"
-                                title="Direct Buy on Amazon India"
-                              >
-                                <ShoppingCart className="w-2.5 h-2.5" />
-                                <span>Amazon ↗</span>
-                              </a>
-
-                              <button
-                                type="button"
-                                onClick={() => handleOpenProductModal(prod.name)}
-                                className="bg-violet-100 hover:bg-violet-200 border border-violet-200 text-[#4C1D95] px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors"
-                              >
-                                <Sparkles className="w-2.5 h-2.5 text-[#7C3AED]" />
-                                <span>Specs</span>
-                              </button>
-                            </div>
+                            {/* Direct Buy Buttons for Tracked Product - Strict PDP only */}
+                            {(() => {
+                              const matchingCurated = POPULAR_STORE_PRODUCTS.find(p => 
+                                p.name.toLowerCase().includes(prod.name.toLowerCase()) || 
+                                prod.name.toLowerCase().includes(p.name.toLowerCase())
+                              );
+                              return (
+                                <div className="space-y-1.5 pt-1">
+                                  {matchingCurated ? (
+                                    <VerifiedBuyCardActions
+                                      productName={matchingCurated.name}
+                                      buyUrl={matchingCurated.sourceUrl}
+                                      sourceDomain={matchingCurated.sourceUrl ? new URL(matchingCurated.sourceUrl).hostname.replace(/^www\./, '') : ''}
+                                      platform={matchingCurated.store}
+                                      verified={true}
+                                      priceInr={matchingCurated.price}
+                                      isCompact={true}
+                                    />
+                                  ) : (
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <span className="text-[10px] text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+                                        Not found on Amazon
+                                      </span>
+                                      <span className="text-[10px] text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+                                        Not found on Flipkart
+                                      </span>
+                                    </div>
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenProductModal(matchingCurated || prod.name)}
+                                    className="bg-violet-100 hover:bg-violet-200 border border-violet-200 text-[#4C1D95] px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                                  >
+                                    <Sparkles className="w-2.5 h-2.5 text-[#7C3AED]" />
+                                    <span>Specs & Verified Data</span>
+                                  </button>
+                                </div>
+                              );
+                            })()}
 
                             {alertInfo && (
                               <div
@@ -1464,16 +1728,17 @@ export const ShoppingAssistantSidebar: React.FC<ShoppingAssistantSidebarProps> =
             </div>
           )}
         </div>
+      )}
 
         {/* --- Footer Status Bar --- */}
         <div
-          className={`p-3 border-t text-[11px] flex items-center justify-between ${
-            isWhite ? 'border-violet-100 bg-violet-50/60 text-[#7C6898]' : 'border-violet-900/40 bg-black/40 text-violet-300'
+          className={`p-3 border-t text-[11px] flex items-center justify-between shrink-0 ${
+            isWhite ? 'border-violet-100 bg-violet-50/60 text-[#7C6898]' : 'border-white/10 bg-black/40 text-violet-300'
           }`}
         >
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Assistant Active</span>
+            <span className="font-medium">Vantage AI Active</span>
           </div>
           <button
             onClick={onClose}
@@ -1482,7 +1747,8 @@ export const ShoppingAssistantSidebar: React.FC<ShoppingAssistantSidebarProps> =
             Collapse Sidebar ✕
           </button>
         </div>
-      </aside>
-    </>
-  );
+      </div>
+    </aside>
+  </>
+);
 };

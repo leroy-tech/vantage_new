@@ -1740,7 +1740,65 @@ export default function App() {
   // locked to white & violet
   const [userId, setUserId] = useState<string>('default');
   const [tempUserId, setTempUserId] = useState<string>('default');
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+
+  // AI Assistant Sidebar state: Always starts closed on first visit, persisted in localStorage
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
+    try {
+      const visited = localStorage.getItem('vantage_assistant_visited');
+      if (!visited) {
+        localStorage.setItem('vantage_assistant_visited', 'true');
+        return false; // always start closed on first visit
+      }
+      return localStorage.getItem('vantage_assistant_open') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [hasUnreadReply, setHasUnreadReply] = useState<boolean>(false);
+  const assistantButtonRef = useRef<HTMLButtonElement>(null);
+  const sidebarInputRef = useRef<HTMLTextAreaElement>(null);
+  const prevSidebarOpenRef = useRef(sidebarOpen);
+
+  // Sync open/closed state to localStorage wrapped in try/catch
+  useEffect(() => {
+    try {
+      localStorage.setItem('vantage_assistant_open', String(sidebarOpen));
+    } catch {
+      // ignore
+    }
+    if (sidebarOpen) {
+      setHasUnreadReply(false);
+    }
+  }, [sidebarOpen]);
+
+  // Focus management: move focus into sidebar input when opened, return focus to assistant button when closed
+  useEffect(() => {
+    if (!prevSidebarOpenRef.current && sidebarOpen) {
+      setTimeout(() => {
+        sidebarInputRef.current?.focus();
+      }, 150);
+    } else if (prevSidebarOpenRef.current && !sidebarOpen) {
+      assistantButtonRef.current?.focus();
+    }
+    prevSidebarOpenRef.current = sidebarOpen;
+  }, [sidebarOpen]);
+
+  // Keyboard accessibility: Escape closes sidebar, Ctrl/Cmd + K toggles sidebar
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        setSidebarOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [sidebarOpen]);
+
   const [activeTab, setActiveTab] = useState<'shopping' | 'arena' | 'chat' | 'multi'>('shopping');
   const [isZeroGPaused, setIsZeroGPaused] = useState<boolean>(false);
   const [floatingCategory, setFloatingCategory] = useState<'all' | 'audio' | 'laptops' | 'phones' | 'appliances' | 'wearables'>('all');
@@ -2273,6 +2331,9 @@ export default function App() {
       if (res.ok) {
         const data = await res.json();
         setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+        if (!sidebarOpen) {
+          setHasUnreadReply(true);
+        }
       } else {
         setMessages(prev => [
           ...prev,
@@ -2382,7 +2443,7 @@ export default function App() {
     );
   };
 
-  // Automatically extracts product names from bold mentions to attach instant direct store links
+  // Automatically extracts product names from bold mentions to attach instant verified direct PDP store links
   const extractAutoStorePills = (line: string) => {
     if (line.includes('http://') || line.includes('https://')) return null;
 
@@ -2396,40 +2457,42 @@ export default function App() {
     }
     if (rawName.length < 3 || rawName.length > 50) return null;
 
-    const query = encodeURIComponent(rawName);
-    const amazonUrl = `https://www.amazon.in/s?k=${query}`;
-    const flipkartUrl = `https://www.flipkart.com/search?q=${query}`;
+    // Strict PDP Matching: Only match against verified products with exact product detail pages
+    const matchProd = RAW_FLOATING_PRODUCTS.find(p => 
+      p.name.toLowerCase().includes(lower) || 
+      lower.includes(p.name.toLowerCase().slice(0, 15))
+    );
 
+    if (matchProd && matchProd.sourceUrl) {
+      const hostname = new URL(matchProd.sourceUrl).hostname.replace(/^www\./, '');
+      const storeName = matchProd.store || (hostname.includes('amazon') ? 'Amazon' : hostname.includes('flipkart') ? 'Flipkart' : 'Store');
+      return (
+        <span className="inline-flex items-center gap-1.5 ml-2 flex-wrap">
+          <a
+            href={matchProd.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-bold bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-xs transition-colors"
+            title={`Buy ${matchProd.name} on ${storeName} (${hostname})`}
+          >
+            <span>Buy on {storeName}</span>
+            <span className="text-[9px] opacity-80 font-mono">({hostname})</span>
+            <ExternalLink className="w-2.5 h-2.5 opacity-80" />
+          </a>
+          <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            <CheckCircle2 className="w-2.5 h-2.5" />
+            Verified link
+          </span>
+        </span>
+      );
+    }
+
+    // Explicit Rule 5: If no verified link exists for a platform, show "Not found on <platform>" instead of a guessed link. Never fabricate a URL.
     return (
-      <span className="inline-flex items-center gap-1.5 ml-2 flex-wrap">
-        <a
-          href={amazonUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-bold border transition-all ${
-            isWhite
-              ? 'bg-violet-50 hover:bg-violet-100 text-[#2E1065] border-violet-200 shadow-sm'
-              : 'bg-amber-950/40 hover:bg-amber-900/60 text-[#FF9900] border-amber-600/40'
-          }`}
-          title={`Find ${rawName} on Amazon India`}
-        >
-          <span>Amazon 🛒</span>
-          <ExternalLink className="w-2.5 h-2.5 opacity-80" />
-        </a>
-        <a
-          href={flipkartUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-bold border transition-all ${
-            isWhite
-              ? 'bg-blue-50 hover:bg-blue-100 text-blue-950 border-blue-300 shadow-sm'
-              : 'bg-blue-950/40 hover:bg-blue-900/60 text-[#93C5FD] border-blue-600/40'
-          }`}
-          title={`Find ${rawName} on Flipkart`}
-        >
-          <span>Flipkart 🛍️</span>
-          <ExternalLink className="w-2.5 h-2.5 opacity-80" />
-        </a>
+      <span className="inline-flex items-center gap-1 ml-2 text-[10px] text-slate-500 italic">
+        <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+          Not found on Amazon
+        </span>
       </span>
     );
   };
@@ -2823,61 +2886,10 @@ export default function App() {
           />
         </div>
       ) : (
-        <div className="flex-1 flex overflow-hidden relative z-10">
-          {/* Shopping Assistant Sidebar (Flipkart, Amazon, Croma Deals & Direct Buy) */}
-          <ShoppingAssistantSidebar
-            isOpen={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-            onToggle={() => setSidebarOpen(s => !s)}
-            isWhite={isWhite}
-            userId={userId}
-            tempUserId={tempUserId}
-            setTempUserId={setTempUserId}
-            handleSwitchUser={handleSwitchUser}
-            userSavedPrefs={userSavedPrefs}
-            handleDeletePreference={handleDeletePreference}
-            newPrefKey={newPrefKey}
-            setNewPrefKey={setNewPrefKey}
-            newPrefValue={newPrefValue}
-            setNewPrefValue={setNewPrefValue}
-            handleSavePreference={handleSavePreference}
-            notifyEmail={notifyEmail}
-            setNotifyEmail={setNotifyEmail}
-            notifyTelegram={notifyTelegram}
-            setNotifyTelegram={setNotifyTelegram}
-            notifySaved={notifySaved}
-            handleSaveNotifications={handleSaveNotifications}
-            handleSendTestNotification={handleSendTestNotification}
-            isSendingTestAlert={isSendingTestAlert}
-            testAlerts={testAlerts}
-            products={products}
-            expandedProductIds={expandedProductIds}
-            toggleProductExpand={toggleProductExpand}
-            checkingProductId={checkingProductId}
-            priceCheckAlerts={priceCheckAlerts}
-            renderSparkline={renderSparkline}
-            handleCheckProductPrice={handleCheckProductPrice}
-            handleDeleteProduct={handleDeleteProduct}
-            newProdName={newProdName}
-            setNewProdName={setNewProdName}
-            newProdQuery={newProdQuery}
-            setNewProdQuery={setNewProdQuery}
-            newProdTarget={newProdTarget}
-            setNewProdTarget={setNewProdTarget}
-            handleAddProduct={handleAddProduct}
-            handleOpenProductModal={handleOpenProductModal}
-            formatINR={formatINR}
-            onTrackCuratedProduct={(name, query, target) => {
-              setNewProdName(name);
-              setNewProdQuery(query);
-              if (target) setNewProdTarget(target);
-              handleAddProduct({ preventDefault: () => {} } as any);
-            }}
-          />
-
-      {/* Main Content Area */}
-      <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden relative z-10 transition-all duration-300 ease-in-out">
-        {/* Top Navbar */}
+        <div className="flex-1 flex overflow-x-hidden overflow-y-hidden relative z-10 w-full">
+          {/* Main Content Area */}
+          <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden relative z-10 transition-[width,flex] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none">
+            {/* Top Navbar */}
         <header className={`px-4 sm:px-6 py-4 ${isWhite ? 'bg-white/85 border-b border-violet-100 shadow-sm' : 'glass-panel border-b border-white/10'} flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-md transition-colors`}>
           <div className="flex items-center gap-3.5">
             <button
@@ -2887,11 +2899,12 @@ export default function App() {
                   ? 'bg-violet-100 text-[#7C3AED] border-violet-200 hover:bg-violet-200'
                   : 'bg-violet-50 border-violet-100 text-[#3B1E7A] hover:bg-violet-100 hover:text-slate-950'
               }`}
-              title={sidebarOpen ? "Close Shopping Assistant Sidebar" : "Open Shopping Assistant Sidebar (Flipkart & Amazon Deals)"}
+              title={sidebarOpen ? "Close AI Assistant Sidebar (Esc or ⌘K)" : "Open AI Assistant Sidebar (⌘K)"}
+              aria-label={sidebarOpen ? "Close AI Assistant" : "Open AI Assistant"}
             >
-              {sidebarOpen ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
+              <Sparkles className="w-4 h-4 text-[#7C3AED]" />
               <span className="text-xs font-bold hidden sm:inline">
-                {sidebarOpen ? 'Close Assistant' : '🛍️ Open Assistant'}
+                {sidebarOpen ? 'Close Assistant' : 'AI Assistant'}
               </span>
             </button>
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] beacon-glow flex items-center justify-center shrink-0 text-white font-heading font-black text-xl">
@@ -3983,6 +3996,62 @@ export default function App() {
           )}
         </div>
       </main>
+
+      {/* Collapsible AI Assistant Sidebar on the RIGHT */}
+      <ShoppingAssistantSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onToggle={() => setSidebarOpen(s => !s)}
+        isWhite={isWhite}
+        chatMessages={messages}
+        isChatLoading={isChatLoading}
+        onSendChat={handleSendChat}
+        onClearChat={() => setMessages([])}
+        sidebarInputRef={sidebarInputRef}
+        userId={userId}
+        tempUserId={tempUserId}
+        setTempUserId={setTempUserId}
+        handleSwitchUser={handleSwitchUser}
+        userSavedPrefs={userSavedPrefs}
+        handleDeletePreference={handleDeletePreference}
+        newPrefKey={newPrefKey}
+        setNewPrefKey={setNewPrefKey}
+        newPrefValue={newPrefValue}
+        setNewPrefValue={setNewPrefValue}
+        handleSavePreference={handleSavePreference}
+        notifyEmail={notifyEmail}
+        setNotifyEmail={setNotifyEmail}
+        notifyTelegram={notifyTelegram}
+        setNotifyTelegram={setNotifyTelegram}
+        notifySaved={notifySaved}
+        handleSaveNotifications={handleSaveNotifications}
+        handleSendTestNotification={handleSendTestNotification}
+        isSendingTestAlert={isSendingTestAlert}
+        testAlerts={testAlerts}
+        products={products}
+        expandedProductIds={expandedProductIds}
+        toggleProductExpand={toggleProductExpand}
+        checkingProductId={checkingProductId}
+        priceCheckAlerts={priceCheckAlerts}
+        renderSparkline={renderSparkline}
+        handleCheckProductPrice={handleCheckProductPrice}
+        handleDeleteProduct={handleDeleteProduct}
+        newProdName={newProdName}
+        setNewProdName={setNewProdName}
+        newProdQuery={newProdQuery}
+        setNewProdQuery={setNewProdQuery}
+        newProdTarget={newProdTarget}
+        setNewProdTarget={setNewProdTarget}
+        handleAddProduct={handleAddProduct}
+        handleOpenProductModal={handleOpenProductModal}
+        formatINR={formatINR}
+        onTrackCuratedProduct={(name, query, target) => {
+          setNewProdName(name);
+          setNewProdQuery(query);
+          if (target) setNewProdTarget(target);
+          handleAddProduct({ preventDefault: () => {} } as any);
+        }}
+      />
     </div>
   )}
 
@@ -4135,28 +4204,38 @@ export default function App() {
     isWhite={isWhite}
   />
 
-  {/* Persistent Global Floating Toggle for Shopping Assistant Sidebar */}
+  {/* Persistent Global Floating Assistant Button fixed at bottom-right corner */}
   <button
+    ref={assistantButtonRef}
     onClick={() => {
       if (mainView === 'landing') setMainView('app');
       setSidebarOpen(s => !s);
     }}
-    className={`fixed bottom-6 left-6 z-40 px-4 py-2.5 rounded-2xl font-bold text-xs shadow-2xl flex items-center gap-2.5 transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+    aria-expanded={sidebarOpen}
+    aria-controls="vantage-assistant-sidebar"
+    aria-label={sidebarOpen ? "Close AI Assistant" : "Open AI Assistant"}
+    className={`fixed bottom-6 right-6 z-40 px-4 py-2.5 rounded-2xl font-bold text-xs shadow-2xl flex items-center gap-2.5 transition-all cursor-pointer hover:scale-105 active:scale-95 ${
       sidebarOpen && mainView === 'app'
         ? 'bg-gradient-to-r from-[#7C3AED] to-[#6D28D9] text-white ring-2 ring-violet-400 shadow-violet-500/25'
-        : 'bg-white/95 text-[#2E1065] border-2 border-[#7C3AED]/40 hover:border-[#7C3AED] shadow-xl backdrop-blur-md'
+        : isWhite
+        ? 'bg-white/95 text-[#2E1065] border-2 border-[#7C3AED]/40 hover:border-[#7C3AED] shadow-xl backdrop-blur-md'
+        : 'bg-[#181126]/95 text-white border-2 border-violet-500/40 hover:border-violet-500 shadow-xl backdrop-blur-md'
     }`}
-    title={sidebarOpen && mainView === 'app' ? "Close Shopping Assistant Sidebar" : "Open Shopping Assistant Sidebar (Flipkart & Amazon Deals)"}
+    title={sidebarOpen ? "Close AI Assistant (Esc or ⌘K)" : "Open AI Assistant (⌘K)"}
   >
-    <span className="relative flex h-2.5 w-2.5">
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-    </span>
-    <ShoppingCart className="w-4 h-4 text-[#7C3AED]" />
-    <span className="font-heading font-extrabold">{sidebarOpen && mainView === 'app' ? 'Close Assistant' : '🛍️ Shopping Assistant'}</span>
-    <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ${sidebarOpen && mainView === 'app' ? 'bg-white/20 text-white' : 'bg-violet-100 text-[#6D28D9]'}`}>
-      Flipkart · Amazon ↗
-    </span>
+    {/* Unread dot when new reply arrives while sidebar is closed */}
+    {hasUnreadReply && !sidebarOpen && (
+      <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+        <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-500 border-2 border-white dark:border-[#181126]"></span>
+      </span>
+    )}
+
+    <Sparkles className="w-4 h-4 text-[#7C3AED] shrink-0" />
+    <span className="font-heading font-extrabold">{sidebarOpen && mainView === 'app' ? 'Close Assistant' : 'Assistant'}</span>
+    <kbd className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold bg-violet-100 dark:bg-violet-900/60 text-[#6D28D9] dark:text-violet-200">
+      ⌘K
+    </kbd>
   </button>
 </div>
   );

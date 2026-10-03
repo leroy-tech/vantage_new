@@ -19,10 +19,12 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { handleImageError } from '../utils/image-validator';
+import { VerifiedBuyCardActions } from './VerifiedBuyCardActions';
 
 export interface ProductModalData {
   id?: string;
   name: string;
+  brand?: string;
   canonicalName?: string;
   category?: string;
   price: string;
@@ -31,9 +33,13 @@ export interface ProductModalData {
   rating?: number;
   reviewsCount?: string;
   imageUrl: string;
+  image_source_url?: string;
   gallery?: string[];
   store?: string;
   sourceUrl?: string;
+  buy_url?: string;
+  source_domain?: string;
+  verified?: boolean;
   sourceStore?: string;
   sourceBadge?: string;
   tag?: string;
@@ -274,18 +280,18 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 </div>
               )}
 
-              {/* Primary Buy CTA Button */}
+              {/* Verified Direct Buy Actions with PDP Check, Domain & Report Tool */}
               <div className="space-y-2 pt-2">
-                <a
-                  href={buyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] hover:from-purple-600 hover:to-violet-700 text-white font-black text-sm py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-violet-500/25 active:scale-[0.98]"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Buy on {product.sourceStore || product.store || 'Verified Store'} (Direct)</span>
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+                <VerifiedBuyCardActions
+                  productName={product.name}
+                  buyUrl={product.buy_url || buyUrl}
+                  sourceDomain={product.source_domain || (buyUrl ? new URL(buyUrl).hostname.replace(/^www\./, '') : '')}
+                  platform={product.sourceStore || product.store || 'Verified Store'}
+                  verified={product.verified !== false}
+                  imageSourceUrl={product.image_source_url || product.sourceUrl}
+                  priceInr={product.price}
+                  isCompact={false}
+                />
 
                 {/* Track Price & Ask AI buttons */}
                 <div className="grid grid-cols-2 gap-2">

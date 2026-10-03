@@ -1376,6 +1376,11 @@ export function ProductDetailSlideOver({
                 >
                   <ShoppingCart className="w-4 h-4" />
                   <span>Buy on {product.store}</span>
+                  {(product.sourceUrl || product.amazonUrl) && (
+                    <span className="text-[10px] opacity-80 font-mono">
+                      ({new URL(product.sourceUrl || product.amazonUrl!).hostname.replace(/^www\./, '')})
+                    </span>
+                  )}
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
 
@@ -1560,11 +1565,19 @@ export function ProductDetailSlideOver({
                     >
                       <ShoppingCart className="w-3.5 h-3.5" />
                       <span>Buy on {storeDeal.store}</span>
+                      {storeDeal.url && (
+                        <span className="text-[10px] opacity-80 font-mono">
+                          ({new URL(storeDeal.url).hostname.replace(/^www\./, '')})
+                        </span>
+                      )}
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
                 ))}
               </div>
+              <p className="text-[10px] text-slate-400 px-1 pt-2 italic">
+                Price and availability may change, check the store before buying.
+              </p>
             </div>
           )}
 
