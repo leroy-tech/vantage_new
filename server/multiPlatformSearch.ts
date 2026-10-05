@@ -5,6 +5,7 @@ import { DETAILED_PRODUCTS_CATALOG } from './productCatalog';
 import { VERIFIED_PRODUCT_CATALOG } from './productVerifier';
 import { understandQuery, ParsedQuery } from './queryUnderstanding';
 import { rankAndFilterProducts, ScoredProduct, calculateProductRelevance } from './relevanceRanker';
+import { GEMINI_CANDIDATE_MODELS } from './geminiConfig';
 
 export interface PlatformOffer {
   platform: string;
@@ -143,14 +144,7 @@ function getAiClient(): GoogleGenAI | null {
   });
 }
 
-const CANDIDATE_MODELS = [
-  process.env.GEMINI_MODEL,
-  'gemini-2.5-flash',
-  'gemini-2.5-flash-lite',
-  'gemini-3.1-flash-lite',
-  'gemini-3.8-flash',
-  'gemini-flash-latest',
-].filter((m): m is string => Boolean(m));
+const CANDIDATE_MODELS = GEMINI_CANDIDATE_MODELS;
 
 // 30-minute Search Cache
 interface CacheEntry {

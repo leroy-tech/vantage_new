@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { GEMINI_CANDIDATE_MODELS } from './geminiConfig';
 
 export interface ParsedQuery {
   original_query: string;
@@ -45,14 +46,7 @@ function getAiClient(): GoogleGenAI | null {
   });
 }
 
-const CANDIDATE_MODELS = [
-  process.env.GEMINI_MODEL,
-  'gemini-2.5-flash',
-  'gemini-2.5-flash-lite',
-  'gemini-3.1-flash-lite',
-  'gemini-3.8-flash',
-  'gemini-flash-latest',
-].filter((m): m is string => Boolean(m));
+const CANDIDATE_MODELS = GEMINI_CANDIDATE_MODELS;
 
 // Common Indian shopping spelling & Hinglish corrections lookup
 const SPELLING_AND_HINGLISH_MAP: Record<string, string> = {

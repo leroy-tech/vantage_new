@@ -4218,12 +4218,12 @@ export default function App() {
                 3. 100% Free-Tier Architecture
               </h4>
               <p className="text-xs text-[#4C1D95] leading-relaxed font-medium">
-                Runs on Google Gemini 2.5 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
+                Runs on Google Gemini 3.8 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
               </p>
             </div>
             <div className="mt-5 pt-3 border-t border-violet-100 flex items-center gap-1.5 text-[10px] font-bold text-emerald-700">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>Google Gemini 2.5 Flash Free Quota Engine</span>
+              <span>Google Gemini 3.8 Flash Free Quota Engine</span>
             </div>
           </div>
         </div>
