@@ -10,6 +10,7 @@ import {
   Sparkles,
   ChevronDown,
   ChevronRight,
+  ChevronUp,
   TrendingDown,
   ShoppingBag,
   ShoppingCart,
@@ -75,6 +76,9 @@ export interface GroundedProduct {
   offers: PlatformOffer[];
   missingPlatforms: string[];
   reviewSummary?: ReviewSummary;
+  buy_url?: string;
+  platform?: string;
+  source_domain?: string;
 }
 
 export interface SearchSummary {
@@ -270,6 +274,16 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
       setToastMessage((current) => (current === msg ? null : current));
     }, 3200);
   };
+
+  // Back to Top button visibility on scroll
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 350);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Recent searches (last 5)
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
@@ -1678,6 +1692,31 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
               )}
             </>
           )}
+
+          {/* Footer with Price Disclaimer & Trust Badges */}
+          <footer className="mt-16 pt-8 border-t border-violet-100 dark:border-white/10 text-center space-y-4 pb-12">
+            <div className="flex flex-wrap items-center justify-center gap-3 text-[11px] font-semibold text-violet-700 dark:text-violet-300">
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 dark:bg-white/5 border border-violet-200 dark:border-white/10">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                100% Grounded Live Search
+              </span>
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 dark:bg-white/5 border border-violet-200 dark:border-white/10">
+                <Check className="w-3.5 h-3.5 text-[#7C3AED]" />
+                Strict Verified PDP Direct Links
+              </span>
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 dark:bg-white/5 border border-violet-200 dark:border-white/10">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                Zero Fabricated Data or Spec Hallucinations
+              </span>
+            </div>
+
+            <p className="text-[11px] text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed px-4">
+              <strong>Price Disclaimer:</strong> Live prices, offers, and inventory availability are verified in real-time from official retailer listings across Amazon India, Flipkart, Croma, Reliance Digital, and Tata CLiQ. Prices are subject to change by respective platforms. Vantage AI is an independent shopping research tool and does not process payments or sell products directly. Always review the final checkout price and merchant warranty on the retailer's official product page.
+            </p>
+            <div className="text-[10px] text-gray-400 dark:text-gray-600">
+              © {new Date().getFullYear()} Vantage AI · Real-Time Indian E-Commerce Intelligence
+            </div>
+          </footer>
         </main>
       </div>
 
@@ -1861,6 +1900,19 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
             )}
           </div>
         </div>
+      )}
+
+      {/* Floating Back to Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 right-6 z-40 p-3 rounded-2xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-xl shadow-violet-500/30 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-violet-400"
+          title="Scroll back to top"
+          aria-label="Back to top"
+        >
+          <ChevronUp className="w-4 h-4" />
+          <span className="hidden sm:inline">Top</span>
+        </button>
       )}
 
       {/* Inline non-blocking toast notification */}

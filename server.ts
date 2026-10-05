@@ -16,7 +16,7 @@ import {
   cleanProductUrl,
   verifyProductLive
 } from './server/productVerifier';
-import { searchAllIndianPlatforms } from './server/multiPlatformSearch';
+import { searchAllIndianPlatforms, getSearchSuggestions } from './server/multiPlatformSearch';
 
 dotenv.config();
 
@@ -79,9 +79,10 @@ app.get('/api/search/vantage', async (req, res) => {
   const q = String(req.query.q || '').trim() || 'best phone under 20000';
   const page = parseInt(String(req.query.page || '1'), 10) || 1;
   const limit = parseInt(String(req.query.limit || '12'), 10) || 12;
+  const sort = String(req.query.sort || 'relevance') as 'relevance' | 'price_asc' | 'price_desc' | 'rating' | 'newest';
 
   try {
-    const result = await searchAllIndianPlatforms(q, page, limit);
+    const result = await searchAllIndianPlatforms(q, page, limit, sort);
     res.json(result);
   } catch (err: any) {
     console.error('[server] search/vantage error:', err);
@@ -103,6 +104,13 @@ app.get('/api/search/vantage', async (req, res) => {
       priceRange: { min: 0, max: 0 }
     });
   }
+});
+
+// Autocomplete suggestions and trending searches
+app.get('/api/search/suggestions', (req, res) => {
+  const q = String(req.query.q || '');
+  const data = getSearchSuggestions(q);
+  res.json(data);
 });
 
 // Verified Products Catalog Endpoint
