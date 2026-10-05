@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { FloatingProduct } from '../App';
 import { handleImageError } from '../utils/image-validator';
+import { motion } from 'framer-motion';
 
 interface LandingPageProps {
   isWhite: boolean;
@@ -38,6 +39,7 @@ interface LandingPageProps {
   floatingProducts: FloatingProduct[];
   userId: string;
   onOpenProductModal?: (product: any) => void;
+  onOpenInfoPage?: (page: 'privacy' | 'terms' | 'about' | 'contact') => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
@@ -45,7 +47,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLaunchApp,
   floatingProducts,
   userId,
-  onOpenProductModal
+  onOpenProductModal,
+  onOpenInfoPage,
 }) => {
   // Demo Instant Search State
   const [demoQuery, setDemoQuery] = useState('');
@@ -252,10 +255,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {floatingProducts.slice(0, 8).map((fp) => (
-                <div
+              {floatingProducts.slice(0, 8).map((fp, idx) => (
+                <motion.div
                   key={fp.id}
-                  className="glass-panel-white group relative rounded-2xl p-4 border border-violet-200/70 transition-all duration-300 hover:-translate-y-2 hover:border-violet-400"
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-20px' }}
+                  transition={{
+                    duration: 0.45,
+                    delay: idx * 0.06,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  whileHover={{
+                    y: -6,
+                    transition: { duration: 0.25, ease: 'easeOut' },
+                  }}
+                  className="glass-panel-white group relative rounded-2xl p-4 border border-violet-200/70 transition-colors duration-300 hover:border-violet-400 shadow-sm hover:shadow-md"
                 >
                   {/* Top Tag & Store */}
                   <div className="flex items-center justify-between gap-2 mb-3">
@@ -326,7 +341,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 
@@ -1387,7 +1402,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="flex items-center gap-3">
                 <span className="inline-flex items-center gap-1.5 text-[11px] text-emerald-600 font-semibold">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  Gemini 2.5 Flash: Operational
+                  Gemini 3.8 Flash: Operational
                 </span>
                 <span className="text-violet-300">·</span>
                 <span className="inline-flex items-center gap-1.5 text-[11px] text-[#7C3AED] font-semibold">
@@ -1402,17 +1417,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
               <ul className="space-y-2">
                 <li>
-                  <button onClick={() => onLaunchApp({ tab: 'arena' })} className="hover:text-[#7C3AED] transition-colors">
+                  <button onClick={() => onLaunchApp({ tab: 'arena' })} className="hover:text-[#7C3AED] transition-colors cursor-pointer">
                     Floating Product Arena
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onLaunchApp({ tab: 'chat' })} className="hover:text-[#7C3AED] transition-colors">
+                  <button onClick={() => onLaunchApp({ tab: 'chat' })} className="hover:text-[#7C3AED] transition-colors cursor-pointer">
                     AI Research Chat
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onLaunchApp({ tab: 'multi' })} className="hover:text-[#7C3AED] transition-colors">
+                  <button onClick={() => onLaunchApp({ tab: 'multi' })} className="hover:text-[#7C3AED] transition-colors cursor-pointer">
                     Multi-Source Synthesis
                   </button>
                 </li>
@@ -1420,6 +1435,46 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <a href="#interactive-radar" className="hover:text-[#7C3AED] transition-colors">
                     Instant Sourcing Radar
                   </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-bold uppercase tracking-wider text-[#2E1065] text-xs mb-3 font-heading">
+                Legal & Company
+              </div>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <button
+                    onClick={() => onOpenInfoPage?.('about')}
+                    className="hover:text-[#7C3AED] transition-colors text-left cursor-pointer"
+                  >
+                    About Vantage AI
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => onOpenInfoPage?.('privacy')}
+                    className="hover:text-[#7C3AED] transition-colors text-left cursor-pointer"
+                  >
+                    Privacy Policy
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => onOpenInfoPage?.('terms')}
+                    className="hover:text-[#7C3AED] transition-colors text-left cursor-pointer"
+                  >
+                    Terms of Use
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => onOpenInfoPage?.('contact')}
+                    className="hover:text-[#7C3AED] transition-colors text-left cursor-pointer"
+                  >
+                    Contact Support
+                  </button>
                 </li>
               </ul>
             </div>
@@ -1440,16 +1495,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </a>
                 </li>
                 <li>
-                  <span className="text-[#7C6898]">Free-Tier Sovereignty (Zero Cost)</span>
+                  <span className="text-[#7C6898]">Free-Tier Sovereignty</span>
                 </li>
                 <li>
-                  <span className="text-[#7C6898]">SQLite Local Persistence</span>
+                  <span className="text-[#7C6898]">SQLite Local Storage</span>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-violet-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Mandatory Public Launch Disclaimer */}
+          <div className="p-3.5 rounded-2xl bg-violet-50/80 border border-violet-100 text-[11px] sm:text-xs text-[#5B21B6] leading-relaxed mb-6">
+            <strong>Disclaimer:</strong> Prices and availability may change. Check the store before buying. Vantage AI may earn a commission from some links.
+          </div>
+
+          <div className="pt-6 border-t border-violet-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-[11px] text-[#7C6898]">
               © {new Date().getFullYear()} Vantage AI Shopping Assistant. All product names, trademarks, and registered trademarks are property of their respective owners.
             </p>
