@@ -2911,111 +2911,112 @@ export default function App() {
         <div className="flex-1 flex overflow-x-hidden overflow-y-hidden relative z-10 w-full">
           {/* Main Content Area */}
           <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden relative z-10 transition-[width,flex] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none">
-            {/* Top Navbar */}
-        <header className={`px-4 sm:px-6 py-4 ${isWhite ? 'bg-white/85 border-b border-violet-100 shadow-sm' : 'glass-panel border-b border-white/10'} flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-md transition-colors`}>
-          <div className="flex items-center gap-3.5">
-            <button
-              onClick={() => setSidebarOpen(s => !s)}
-              className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-2 ${
-                sidebarOpen
-                  ? 'bg-violet-100 text-[#7C3AED] border-violet-200 hover:bg-violet-200'
-                  : 'bg-violet-50 border-violet-100 text-[#3B1E7A] hover:bg-violet-100 hover:text-slate-950'
-              }`}
-              title={sidebarOpen ? "Close AI Assistant Sidebar (Esc or ⌘K)" : "Open AI Assistant Sidebar (⌘K)"}
-              aria-label={sidebarOpen ? "Close AI Assistant" : "Open AI Assistant"}
-            >
-              <Sparkles className="w-4 h-4 text-[#7C3AED]" />
-              <span className="text-xs font-bold hidden sm:inline">
-                {sidebarOpen ? 'Close Assistant' : 'AI Assistant'}
-              </span>
-            </button>
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] beacon-glow flex items-center justify-center shrink-0 text-white font-heading font-black text-xl">
-              ₹
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="font-heading font-extrabold text-2xl tracking-tight text-[#2E1065]">
-                  Vantage
-                </h1>
-                <span className="bg-violet-100 text-[#6D28D9] border border-violet-200 text-[10px] font-extrabold tracking-wider px-2 py-0.5 rounded-full uppercase">
-                  India Edition (₹)
-                </span>
+            {/* Top Navbar - Compact Single Line */}
+            <header className={`px-3 sm:px-4 py-1.5 sm:py-2 ${isWhite ? 'bg-white/95 border-b border-violet-100 shadow-xs' : 'glass-panel border-b border-white/10'} flex items-center justify-between gap-3 backdrop-blur-md transition-colors overflow-x-auto whitespace-nowrap scrollbar-none`}>
+              <div className="flex items-center gap-2.5 shrink-0">
+                <button
+                  onClick={() => setSidebarOpen(s => !s)}
+                  className={`px-2.5 py-1 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                    sidebarOpen
+                      ? 'bg-violet-100 text-[#7C3AED] border-violet-200 hover:bg-violet-200'
+                      : 'bg-violet-50 border-violet-100 text-[#3B1E7A] hover:bg-violet-100 hover:text-slate-950'
+                  }`}
+                  title={sidebarOpen ? "Close AI Assistant Sidebar (Esc or ⌘K)" : "Open AI Assistant Sidebar (⌘K)"}
+                  aria-label={sidebarOpen ? "Close AI Assistant" : "Open AI Assistant"}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-[#7C3AED]" />
+                  <span className="text-xs font-bold hidden sm:inline">
+                    {sidebarOpen ? 'Close Assistant' : 'AI Assistant'}
+                  </span>
+                </button>
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] beacon-glow flex items-center justify-center shrink-0 text-white font-heading font-black text-xs sm:text-sm">
+                  ₹
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <h1 className="font-heading font-extrabold text-sm sm:text-base tracking-tight text-[#2E1065]">
+                    Vantage
+                  </h1>
+                  <span className="bg-violet-100 text-[#6D28D9] border border-violet-200 text-[10px] font-extrabold tracking-wider px-2 py-0.5 rounded-full uppercase shrink-0">
+                    India Edition (₹)
+                  </span>
+                  <span
+                    className={`text-[11px] ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} hidden 2xl:inline max-w-[320px] truncate border-l border-violet-200/80 pl-2 shrink-0`}
+                    title="The full view before you buy in India — retail deals, community verdict, and expert tests in Indian Rupees (₹)."
+                  >
+                    The full view before you buy in India — retail deals, community verdict, and expert tests in Indian Rupees (₹).
+                  </span>
+                </div>
               </div>
-              <p className={`text-xs ${isWhite ? 'text-[#7C6898]' : 'text-[#8B96AC]'} hidden sm:block`}>
-                The full view before you buy in India — retail deals, community verdict, and expert tests in Indian Rupees (₹).
-              </p>
-            </div>
-          </div>
 
-          {/* Tab selector & Theme toggle in header */}
-          <div className="flex items-center gap-2.5 flex-wrap">
-            {/* Quick Button to Brand Guide & Tour */}
-            <button
-              onClick={() => setMainView('landing')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all bg-violet-50 hover:bg-violet-100 border-violet-200 text-[#6D28D9] shadow-sm"
-              title="Return to Landing Page & Brand Guide"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#7C3AED]" />
-              <span className="hidden sm:inline">Brand Guide</span>
-            </button>
+              {/* Tab selector & Theme toggle in header */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                {/* Quick Button to Brand Guide & Tour */}
+                <button
+                  onClick={() => setMainView('landing')}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all bg-violet-50 hover:bg-violet-100 border-violet-200 text-[#6D28D9] shadow-xs shrink-0"
+                  title="Return to Landing Page & Brand Guide"
+                >
+                  <Sparkles className="w-3 h-3 text-[#7C3AED]" />
+                  <span>Brand Guide</span>
+                </button>
 
-            <div className="flex items-center bg-violet-50/90 border border-violet-200 p-1 rounded-2xl backdrop-blur-md">
-              <button
-                onClick={() => setActiveTab('shopping')}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                  activeTab === 'shopping'
-                    ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-md font-bold'
-                    : 'text-[#6D28D9] hover:text-[#2E1065]'
-                }`}
-              >
-                <Sparkles className="w-3.5 h-3.5 text-current" />
-                <span>🛍️ AI Shopping & Compare</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('arena')}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                  activeTab === 'arena'
-                    ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-md font-bold'
-                    : 'text-[#6D28D9] hover:text-[#2E1065]'
-                }`}
-              >
-                <Radio className="w-3.5 h-3.5 text-current animate-pulse" />
-                <span>🪐 Objects in Air</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('chat')}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                  activeTab === 'chat'
-                    ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-md font-bold'
-                    : 'text-[#6D28D9] hover:text-[#2E1065]'
-                }`}
-              >
-                <MessageSquare className="w-3.5 h-3.5" />
-                <span>💬 Chat in ₹</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('multi')}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                  activeTab === 'multi'
-                    ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-md font-bold'
-                    : 'text-[#6D28D9] hover:text-[#2E1065]'
-                }`}
-              >
-                <Search className="w-3.5 h-3.5" />
-                <span>🔍 Deep Synthesis</span>
-              </button>
-            </div>
+                <div className="flex items-center bg-violet-50/90 border border-violet-200 p-0.5 rounded-xl backdrop-blur-md shrink-0 gap-0.5">
+                  <button
+                    onClick={() => setActiveTab('shopping')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+                      activeTab === 'shopping'
+                        ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-xs font-bold'
+                        : 'text-[#6D28D9] hover:text-[#2E1065]'
+                    }`}
+                  >
+                    <Sparkles className="w-3 h-3 text-current" />
+                    <span>🛍️ AI Shopping & Compare</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('arena')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+                      activeTab === 'arena'
+                        ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-xs font-bold'
+                        : 'text-[#6D28D9] hover:text-[#2E1065]'
+                    }`}
+                  >
+                    <Radio className="w-3 h-3 text-current animate-pulse" />
+                    <span>🪐 Objects in Air</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('chat')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+                      activeTab === 'chat'
+                        ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-xs font-bold'
+                        : 'text-[#6D28D9] hover:text-[#2E1065]'
+                    }`}
+                  >
+                    <MessageSquare className="w-3 h-3" />
+                    <span>💬 Chat in ₹</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('multi')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+                      activeTab === 'multi'
+                        ? 'bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] text-white shadow-xs font-bold'
+                        : 'text-[#6D28D9] hover:text-[#2E1065]'
+                    }`}
+                  >
+                    <Search className="w-3 h-3" />
+                    <span>🔍 Deep Synthesis</span>
+                  </button>
+                </div>
 
-            {/* Theme Badge: Pure White & Violet */}
-            <div
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold bg-violet-100 text-[#6D28D9] border border-violet-200 shadow-sm"
-              title="White & Violet Palette"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#7C3AED]" />
-              <span>White & Violet</span>
-            </div>
-          </div>
-        </header>
+                {/* Theme Badge: Pure White & Violet */}
+                <div
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-violet-100 text-[#6D28D9] border border-violet-200 shadow-xs shrink-0"
+                  title="White & Violet Palette"
+                >
+                  <Sparkles className="w-3 h-3 text-[#7C3AED]" />
+                  <span>White & Violet</span>
+                </div>
+              </div>
+            </header>
 
         {/* Floating Notification Toast */}
         {toastMessage && (
