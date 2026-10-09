@@ -18,6 +18,9 @@ import {
   verifyProductLive
 } from './server/productVerifier';
 import { searchAllIndianPlatforms, getSearchSuggestions } from './server/multiPlatformSearch';
+import { getMarketplaceHomeFeed, getCategoryListing } from './server/marketplaceService';
+import { CATEGORIES_TREE, BRANDS_DIRECTORY, searchCategoryTree, getCategoryById } from './server/categoryTree';
+import { productManager } from './server/providers/ProductManager';
 
 dotenv.config();
 
@@ -568,47 +571,49 @@ app.get('/api/stats', (req, res) => {
 
 // Preferences
 app.get('/api/preferences', (req, res) => {
-  const userId = (req.query.user_id as string) || 'default';
+  const userId = (req.query.user_id as string) || (req.query.userId as string) || 'default';
   const prefs = db.getPreferences(userId);
   res.json(prefs);
 });
 
 app.post('/api/preferences', (req, res) => {
-  const { user_id, key, value } = req.body;
-  if (!user_id || !key) {
+  const userId = req.body.user_id || req.body.userId;
+  const { key, value } = req.body;
+  if (!userId || !key) {
     return res.status(400).json({ error: 'user_id and key are required' });
   }
-  db.setPreference(user_id, key, value || '');
-  res.json({ success: true, preferences: db.getPreferences(user_id) });
+  db.setPreference(userId, key, value || '');
+  res.json({ success: true, preferences: db.getPreferences(userId) });
 });
 
 app.delete('/api/preferences', (req, res) => {
-  const { user_id, key } = req.body;
-  if (!user_id || !key) {
+  const userId = req.body.user_id || req.body.userId;
+  const { key } = req.body;
+  if (!userId || !key) {
     return res.status(400).json({ error: 'user_id and key are required' });
   }
-  db.deletePreference(user_id, key);
-  res.json({ success: true, preferences: db.getPreferences(user_id) });
+  db.deletePreference(userId, key);
+  res.json({ success: true, preferences: db.getPreferences(userId) });
 });
 
 // Notification settings & test
 app.post('/api/notifications/settings', (req, res) => {
-  const { user_id, email, telegram_chat_id } = req.body;
-  if (!user_id) {
+  const userId = req.body.user_id || req.body.userId;
+  const { email, telegram_chat_id } = req.body;
+  if (!userId) {
     return res.status(400).json({ error: 'user_id is required' });
   }
   if (email !== undefined) {
-    db.setPreference(user_id, 'notify_email', email);
+    db.setPreference(userId, 'notify_email', email);
   }
   if (telegram_chat_id !== undefined) {
-    db.setPreference(user_id, 'notify_telegram_chat_id', telegram_chat_id);
+    db.setPreference(userId, 'notify_telegram_chat_id', telegram_chat_id);
   }
-  res.json({ success: true, preferences: db.getPreferences(user_id) });
+  res.json({ success: true, preferences: db.getPreferences(userId) });
 });
 
 app.post('/api/notifications/test', async (req, res) => {
-  const { user_id } = req.body;
-  const userId = user_id || 'default';
+  const userId = req.body.user_id || req.body.userId || 'default';
   const results = await notifications.notifyPriceAlert(
     userId,
     'Test Alert — Vantage Shopping Assistant',
@@ -619,7 +624,7 @@ app.post('/api/notifications/test', async (req, res) => {
 
 // Tracked Products
 app.get('/api/products', (req, res) => {
-  const userId = (req.query.user_id as string) || 'default';
+  const userId = (req.query.user_id as string) || (req.query.userId as string) || 'default';
   const products = db.listTrackedProducts(userId);
   const enriched = products.map(p => {
     const history = db.getPriceHistory(p.id);
@@ -637,12 +642,13 @@ app.get('/api/products', (req, res) => {
 });
 
 app.post('/api/products', (req, res) => {
-  const { user_id, name, search_query, target_price } = req.body;
-  if (!user_id || !name || !search_query) {
+  const userId = req.body.user_id || req.body.userId || 'default';
+  const { name, search_query, target_price } = req.body;
+  if (!userId || !name || !search_query) {
     return res.status(400).json({ error: 'user_id, name, and search_query are required' });
   }
   const parsedTarget = target_price ? parseFloat(target_price) : null;
-  const prod = db.addTrackedProduct(user_id, name, search_query, parsedTarget);
+  const prod = db.addTrackedProduct(userId, name, search_query, parsedTarget);
   res.json({ success: true, product: prod });
 });
 
@@ -753,6 +759,138 @@ app.post('/api/research/multi', async (req, res) => {
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Research failed' });
   }
+});
+
+// ==========================================
+// Marketplace Home, Categories & Brands API
+// ==========================================
+
+// Marketplace Home Feed (with 30-min in-memory cache)
+app.get('/api/marketplace/home', async (_req, res) => {
+  try {
+    const feed = await getMarketplaceHomeFeed();
+    res.json(feed);
+  } catch (err: any) {
+    console.error('[server] marketplace/home error:', err);
+    res.status(500).json({
+      error: err?.message || 'Failed to load marketplace home feed',
+      featuredCategories: CATEGORIES_TREE,
+      bannerSlides: [],
+      rows: []
+    });
+  }
+});
+
+// Category & Subcategory Product Listing with Multi-filters
+app.get('/api/marketplace/category/:categoryId', async (req, res) => {
+  const { categoryId } = req.params;
+  const sub = req.query.sub ? String(req.query.sub) : undefined;
+  const page = parseInt(String(req.query.page || '1'), 10) || 1;
+  const limit = parseInt(String(req.query.limit || '12'), 10) || 12;
+  const brand = req.query.brand ? String(req.query.brand) : undefined;
+  const platform = req.query.platform ? String(req.query.platform) : undefined;
+  const minPrice = req.query.minPrice ? parseFloat(String(req.query.minPrice)) : undefined;
+  const maxPrice = req.query.maxPrice ? parseFloat(String(req.query.maxPrice)) : undefined;
+  const minRating = req.query.minRating ? parseFloat(String(req.query.minRating)) : undefined;
+  const sortBy = req.query.sortBy as any;
+
+  try {
+    const listing = await getCategoryListing(categoryId, sub, {
+      page,
+      limit,
+      brand,
+      platform,
+      minPrice,
+      maxPrice,
+      minRating,
+      sortBy
+    });
+    res.json(listing);
+  } catch (err: any) {
+    console.error(`[server] marketplace/category/${categoryId} error:`, err);
+    res.status(500).json({
+      error: err?.message || 'Failed to load category products',
+      category: null,
+      subcategory: null,
+      totalProducts: 0,
+      page,
+      hasMore: false,
+      products: [],
+      availableBrands: [],
+      availablePlatforms: [],
+      priceRange: { min: 0, max: 0 }
+    });
+  }
+});
+
+// All Categories Tree & Search
+app.get('/api/marketplace/categories', (req, res) => {
+  const q = String(req.query.q || '').trim();
+  if (q) {
+    res.json({ results: searchCategoryTree(q) });
+  } else {
+    res.json({ categories: CATEGORIES_TREE });
+  }
+});
+
+// All Brands Directory (A to Z Index)
+app.get('/api/marketplace/brands', (req, res) => {
+  const q = String(req.query.q || '').toLowerCase().trim();
+  if (q) {
+    const filtered = BRANDS_DIRECTORY.filter(
+      b => b.name.toLowerCase().includes(q) || b.tagline.toLowerCase().includes(q)
+    );
+    res.json({ brands: filtered });
+  } else {
+    res.json({ brands: BRANDS_DIRECTORY });
+  }
+});
+
+// Autocomplete suggestions for Categories and Brands
+app.get('/api/marketplace/autocomplete', (req, res) => {
+  const q = String(req.query.q || '').toLowerCase().trim();
+  if (!q || q.length < 2) {
+    return res.json({ matchingCategories: [], matchingBrands: [] });
+  }
+
+  const matchingCategories: Array<{ id: string; name: string; slug: string; sub?: string }> = [];
+  for (const cat of CATEGORIES_TREE) {
+    if (cat.name.toLowerCase().includes(q)) {
+      matchingCategories.push({ id: cat.id, name: cat.name, slug: cat.slug });
+    }
+    for (const sub of cat.subcategories) {
+      if (sub.name.toLowerCase().includes(q)) {
+        matchingCategories.push({ id: cat.id, name: `${cat.name} > ${sub.name}`, slug: cat.slug, sub: sub.slug });
+      }
+    }
+  }
+
+  const matchingBrands = BRANDS_DIRECTORY.filter(
+    b => b.name.toLowerCase().includes(q)
+  ).slice(0, 6);
+
+  res.json({
+    matchingCategories: matchingCategories.slice(0, 6),
+    matchingBrands
+  });
+});
+
+// Providers Status & Diagnostics
+app.get('/api/marketplace/providers', (_req, res) => {
+  res.json({
+    providers: productManager.getProvidersStatus()
+  });
+});
+
+// User Report / Link Issue Dispatch Endpoint
+app.post('/api/reports', (req, res) => {
+  const report = req.body;
+  console.log('[server] User Issue Report Received:', report);
+  res.json({
+    success: true,
+    message: 'Report logged successfully. Our audit team will review the link.',
+    receivedAt: new Date().toISOString()
+  });
 });
 
 // ---------- Vite / Static Setup ----------

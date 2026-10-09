@@ -45,8 +45,15 @@ export const VerifiedBuyCardActions: React.FC<VerifiedBuyCardActionsProps> = ({
 }) => {
   const [isReportOpen, setIsReportOpen] = useState(false);
 
-  // Derive canonical domain if missing
-  const cleanDomain = sourceDomain || (buyUrl ? new URL(buyUrl).hostname.replace(/^www\./, '') : '');
+  // Derive canonical domain safely if missing
+  let cleanDomain = sourceDomain;
+  if (!cleanDomain && buyUrl) {
+    try {
+      cleanDomain = new URL(buyUrl).hostname.replace(/^www\./, '');
+    } catch {
+      cleanDomain = '';
+    }
+  }
   const hasValidBuyUrl = Boolean(buyUrl && buyUrl.startsWith('http') && !buyUrl.includes('search') && !buyUrl.includes('example.com'));
 
   const handleOpenReport = (e: React.MouseEvent) => {

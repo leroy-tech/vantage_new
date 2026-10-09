@@ -37,11 +37,14 @@ import {
   Trash2,
   Clock,
   Zap,
-  Filter
+  Filter,
+  CreditCard
 } from 'lucide-react';
 import FocusCardsDemo from './focus-cards-demo';
 import MarketplaceHome from './MarketplaceHome';
 import { handleImageError, VERIFIED_FALLBACK_PLACEHOLDER } from '../utils/image-validator';
+import { BankOffersCalculator } from './BankOffersCalculator';
+import { PriceHistoryModal } from './PriceHistoryModal';
 
 export interface PlatformOffer {
   platform: string;
@@ -76,6 +79,9 @@ export interface GroundedProduct {
   offers: PlatformOffer[];
   missingPlatforms: string[];
   reviewSummary?: ReviewSummary;
+  buy_url?: string;
+  platform?: string;
+  source_domain?: string;
 }
 
 export interface SearchSummary {
@@ -794,6 +800,12 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
       return [];
     }
   });
+
+  // Bank & Card Offers expandable drawer per product ID
+  const [expandedBankOfferId, setExpandedBankOfferId] = useState<string | null>(null);
+
+  // Price history & Deal intelligence modal state
+  const [priceHistoryProduct, setPriceHistoryProduct] = useState<GroundedProduct | null>(null);
 
   // Save wishlist changes to localStorage
   useEffect(() => {
@@ -2379,6 +2391,48 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                                   </div>
                                 </div>
                               )}
+
+                              {/* Interactive Card Utility Actions: Bank Offers & Price History */}
+                              <div className="pt-2 flex items-center gap-2">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setExpandedBankOfferId(prev => prev === product.id ? null : product.id);
+                                  }}
+                                  className={`flex-1 py-1.5 px-2.5 rounded-xl text-[11px] font-bold border transition-all flex items-center justify-center gap-1.5 ${
+                                    expandedBankOfferId === product.id
+                                      ? 'bg-violet-600 text-white border-violet-600 shadow-sm'
+                                      : 'bg-violet-50/70 dark:bg-white/5 border-violet-200 dark:border-white/10 text-[#7C3AED] dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-white/10'
+                                  }`}
+                                  title="Check HDFC, ICICI, SBI card discounts & No-Cost EMI"
+                                >
+                                  <CreditCard className="w-3.5 h-3.5" />
+                                  <span>{expandedBankOfferId === product.id ? 'Hide Bank Deals' : 'Bank Offers'}</span>
+                                </button>
+
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setPriceHistoryProduct(product);
+                                  }}
+                                  className="py-1.5 px-2.5 rounded-xl text-[11px] font-bold border bg-emerald-50/70 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition-all flex items-center justify-center gap-1.5"
+                                  title="Inspect 30/90/180-day price trends and set drop alerts"
+                                >
+                                  <TrendingDown className="w-3.5 h-3.5" />
+                                  <span>Price Trends</span>
+                                </button>
+                              </div>
+
+                              {/* Inline Expandable Bank & EMI Offers Calculator */}
+                              {expandedBankOfferId === product.id && (
+                                <div className="pt-3 animate-fadeIn">
+                                  <BankOffersCalculator
+                                    price={product.price}
+                                    priceFormatted={product.priceFormatted}
+                                    isWhite={!darkMode}
+                                  />
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -2589,14 +2643,14 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                         </div>
 
                         {/* Direct Buy CTA */}
-                        {prod.cheapestOffer?.buyUrl && (
+                        {(prod.cheapestOffer?.buyUrl || prod.buy_url || prod.offers?.[0]?.buyUrl) && (
                           <a
-                            href={prod.cheapestOffer.buyUrl}
+                            href={prod.cheapestOffer?.buyUrl || prod.buy_url || prod.offers?.[0]?.buyUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-full py-2.5 rounded-xl text-xs font-bold primary-action flex items-center justify-center gap-1.5 shadow-md mt-2"
                           >
-                            <span>Buy on {prod.cheapestOffer.platform}</span>
+                            <span>Buy on {prod.cheapestOffer?.platform || prod.platform || prod.offers?.[0]?.platform || 'Store'}</span>
                             <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                         )}
@@ -2608,6 +2662,18 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
             )}
           </div>
         </div>
+      )}
+      {/* Interactive Price History & Deal Intelligence Modal */}
+      {priceHistoryProduct && (
+        <PriceHistoryModal
+          isOpen={Boolean(priceHistoryProduct)}
+          onClose={() => setPriceHistoryProduct(null)}
+          productName={priceHistoryProduct.name}
+          currentPrice={priceHistoryProduct.price}
+          currentPriceFormatted={priceHistoryProduct.priceFormatted}
+          mrpFormatted={priceHistoryProduct.mrpFormatted}
+          category={priceHistoryProduct.category}
+        />
       )}
     </div>
   );

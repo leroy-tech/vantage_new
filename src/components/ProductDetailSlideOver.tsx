@@ -22,11 +22,13 @@ import {
   HelpCircle,
   Share2,
   Plus,
-  Check
+  Check,
+  CreditCard
 } from 'lucide-react';
 import { FloatingProduct } from '../App';
 import { handleImageError } from '../utils/image-validator';
 import { POPULAR_STORE_PRODUCTS } from './ShoppingAssistantSidebar';
+import { BankOffersCalculator } from './BankOffersCalculator';
 
 export interface ProductSpecification {
   category: string;
@@ -1242,9 +1244,13 @@ export function ProductDetailSlideOver({
   onTrackPrice,
   isWhite = true
 }: ProductDetailSlideOverProps) {
-  const [activeTab, setActiveTab] = useState<'specs' | 'prices' | 'reviews' | 'ai'>('specs');
+  const [activeTab, setActiveTab] = useState<'specs' | 'prices' | 'bank-offers' | 'reviews' | 'ai'>('specs');
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  const parsedProductPrice = typeof product?.price === 'number'
+    ? product.price
+    : parseFloat(String(product?.price || '').replace(/[^0-9.]/g, '')) || 19999;
 
   useEffect(() => {
     setSelectedImageIndex(0);
@@ -1465,10 +1471,11 @@ export function ProductDetailSlideOver({
           </div>
 
           {/* Navigation Tabs Bar inside Slide-Over */}
-          <div className={`flex items-center gap-1 border-b pb-2 ${isWhite ? 'border-violet-100' : 'border-white/10'}`}>
+          <div className={`flex items-center gap-1 border-b pb-2 overflow-x-auto ${isWhite ? 'border-violet-100' : 'border-white/10'}`}>
             {[
               { id: 'specs', label: 'Full Specs', icon: Cpu },
               { id: 'prices', label: 'Price Comparison', icon: Tag },
+              { id: 'bank-offers', label: 'Bank & EMI Deals', icon: CreditCard },
               { id: 'reviews', label: 'User Reviews', icon: Star },
               { id: 'ai', label: 'AI Verdict', icon: Sparkles }
             ].map(tab => {
@@ -1478,7 +1485,7 @@ export function ProductDetailSlideOver({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
                     isActive
                       ? 'bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-slate-950 shadow-md'
                       : isWhite
@@ -1631,6 +1638,26 @@ export function ProductDetailSlideOver({
               <p className="text-[10px] text-slate-400 px-1 pt-2 italic">
                 Price and availability may change, check the store before buying.
               </p>
+
+              {/* Instant Bank & Card Offers Breakdown */}
+              <div className="pt-2">
+                <BankOffersCalculator
+                  price={parsedProductPrice}
+                  priceFormatted={product.price}
+                  isWhite={isWhite}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* TAB: DEDICATED BANK & EMI OFFERS */}
+          {activeTab === 'bank-offers' && (
+            <div className="space-y-4 animate-fadeIn">
+              <BankOffersCalculator
+                price={parsedProductPrice}
+                priceFormatted={product.price}
+                isWhite={isWhite}
+              />
             </div>
           )}
 
