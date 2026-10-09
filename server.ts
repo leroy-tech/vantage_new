@@ -742,7 +742,16 @@ app.post('/api/chat', async (req, res) => {
     const reply = await agent.askAssistant(userId, message, history || []);
     res.json({ reply });
   } catch (err: any) {
-    res.status(500).json({ error: err.message || 'Chat generation failed' });
+    console.error('Chat error:', err);
+    if (agent.isQuotaExceededError(err)) {
+      return res.json({
+        reply: '⚠️ Quota exceeded, please try again in a moment. You can still browse and compare verified Indian store prices below.',
+        isQuotaExceeded: true,
+      });
+    }
+    res.json({
+      reply: '⚠️ The assistant is temporarily busy, please try asking again in a moment.',
+    });
   }
 });
 
@@ -757,7 +766,17 @@ app.post('/api/research/multi', async (req, res) => {
     const result = await agent.multiSourceResearch(userId, goal);
     res.json(result);
   } catch (err: any) {
-    res.status(500).json({ error: err.message || 'Research failed' });
+    console.error('Research error:', err);
+    const isQuota = agent.isQuotaExceededError(err);
+    res.json({
+      summary: isQuota
+        ? '⚠️ Quota exceeded, please try again in a moment.'
+        : 'Service temporarily busy, please try again in a moment.',
+      recommendations: [],
+      error: isQuota
+        ? 'Quota exceeded, please try again in a moment.'
+        : String(err?.message || 'Temporary service issue'),
+    });
   }
 });
 

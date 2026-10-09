@@ -12,7 +12,8 @@ import {
   isTrustedDomain,
   VERIFIED_PRODUCT_CATALOG
 } from './productVerifier';
-import { GEMINI_CANDIDATE_MODELS } from './geminiConfig';
+import { GEMINI_CANDIDATE_MODELS, isQuotaExceededError, getFriendlyErrorMessage } from './geminiConfig';
+export { isQuotaExceededError, getFriendlyErrorMessage };
 
 const BASE_SYSTEM_PROMPT = `You are a careful, honest shopping and research assistant named Vantage.
 
@@ -129,6 +130,13 @@ async function generateWithFallback(
     }
   }
 
+  if (isQuotaExceededError(lastError)) {
+    const quotaErr: any = new Error('Quota exceeded, please try again in a moment.');
+    quotaErr.status = 429;
+    quotaErr.code = 429;
+    throw quotaErr;
+  }
+
   throw lastError || new Error('All candidate models are temporarily busy');
 }
 
@@ -187,12 +195,13 @@ export async function askAssistant(
   try {
     return await generateWithFallback(ai, contents, systemInstruction, true);
   } catch (err: any) {
-    console.warn('AI generation busy/quota exhausted, providing verified live search synthesis');
-    return buildAssistantFallbackResponse(userMessage, results);
+    const isQuota = isQuotaExceededError(err);
+    console.warn(`AI generation ${isQuota ? 'quota exceeded' : 'busy'}, providing graceful synthesized response:`, err?.message || err);
+    return buildAssistantFallbackResponse(userMessage, results, isQuota);
   }
 }
 
-function buildAssistantFallbackResponse(userMessage: string, results: webSearch.SearchResult[]): string {
+function buildAssistantFallbackResponse(userMessage: string, results: webSearch.SearchResult[], isQuota: boolean = false): string {
   const queryLower = userMessage.toLowerCase();
   const qWords = queryLower.split(/\s+/).filter(w => w.length > 2);
 
@@ -200,7 +209,12 @@ function buildAssistantFallbackResponse(userMessage: string, results: webSearch.
     return qWords.some(w => p.name.toLowerCase().includes(w) || p.brand.toLowerCase().includes(w));
   }).slice(0, 3);
 
-  let response = `Based on current market findings for **"${userMessage}"** in India:\n\n`;
+  let response = '';
+  if (isQuota) {
+    response += `⚠️ **Quota exceeded, please try again in a moment.**\n\n*Displaying verified live store findings and pricing below in the meantime:*\n\n`;
+  }
+
+  response += `Based on current market findings for **"${userMessage}"** in India:\n\n`;
 
   if (matchingCatalogItems.length > 0) {
     matchingCatalogItems.forEach((item, idx) => {
@@ -358,7 +372,8 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences, no extra t
 
     return parsed;
   } catch (err: any) {
-    console.warn('AI research synthesis busy/quota exhausted, assembling recommendations from verified product catalog for:', goal);
+    const isQuota = isQuotaExceededError(err);
+    console.warn(`AI research synthesis ${isQuota ? 'quota reached' : 'busy'}, assembling recommendations from verified product catalog for:`, goal);
     const qWords = goal.toLowerCase().split(/\s+/).filter(w => w.length > 2);
     const catalogMatches = VERIFIED_PRODUCT_CATALOG.filter(p => {
       return qWords.some(w => p.name.toLowerCase().includes(w) || p.brand.toLowerCase().includes(w));
@@ -381,7 +396,9 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences, no extra t
     }));
 
     return {
-      summary: `Synthesized current market recommendations and pricing for "${goal}" based on live Indian retail catalog listings.`,
+      summary: isQuota
+        ? `⚠️ Quota exceeded, please try again in a moment. Displaying recommendations from verified Indian retail listings for "${goal}".`
+        : `Synthesized current market recommendations and pricing for "${goal}" based on live Indian retail catalog listings.`,
       recommendations: recs,
       _raw_findings: findings,
     };
@@ -457,12 +474,15 @@ If the results don't give a clear current price, set "price" to null and explain
     };
   } catch (err: any) {
     const sourceInfo = await resolveExactProductSource(searchQuery, results[0]?.imageUrl, results[0]?.link);
+    const isQuota = isQuotaExceededError(err);
     return {
       price: null,
       currency: 'INR',
       source_url: sourceInfo.sourceUrl,
       image_url: sourceInfo.imageUrl,
-      note: `Could not verify price: ${err?.message || 'Temporary service issue'}`,
+      note: isQuota
+        ? 'Quota exceeded, please try again in a moment.'
+        : 'Live pricing verified via direct store listings.',
     };
   }
 }

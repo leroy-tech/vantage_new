@@ -2345,15 +2345,27 @@ export default function App() {
           setHasUnreadReply(true);
         }
       } else {
+        let errorMsg = '⚠️ Quota exceeded, please try again in a moment.';
+        try {
+          const errData = await res.json();
+          if (errData && errData.error) {
+            if (/429|resource_exhausted|quota/i.test(JSON.stringify(errData))) {
+              errorMsg = '⚠️ Quota exceeded, please try again in a moment.';
+            } else {
+              errorMsg = `⚠️ ${errData.error}`;
+            }
+          }
+        } catch {}
         setMessages(prev => [
           ...prev,
-          { role: 'assistant', content: '⚠️ Error reaching assistant server.' },
+          { role: 'assistant', content: errorMsg },
         ]);
       }
     } catch (err: any) {
+      const isQuota = /429|resource_exhausted|quota/i.test(String(err?.message || ''));
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: `⚠️ Connection error: ${err.message}` },
+        { role: 'assistant', content: isQuota ? '⚠️ Quota exceeded, please try again in a moment.' : `⚠️ Connection error: ${err.message}` },
       ]);
     } finally {
       setIsChatLoading(false);
@@ -2753,7 +2765,7 @@ export default function App() {
           ? 'bg-white/95 border-violet-100 shadow-sm backdrop-blur-md'
           : 'bg-[#120726]/95 border-violet-900/60 shadow-md backdrop-blur-md'
       }`}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+        <div className="max-w-7xl lg:max-w-[95%] mx-auto flex items-center justify-between gap-3">
           {/* Logo & Name */}
           <div
             className="flex items-center gap-2.5 cursor-pointer select-none"
@@ -3014,7 +3026,7 @@ export default function App() {
         )}
 
         {/* Scrollable View Area */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 max-w-5xl w-full mx-auto">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 max-w-5xl lg:max-w-[95%] w-full mx-auto">
           {/* Onboarding Banner */}
           {showOnboarding && (
             <div className={`${isWhite ? 'glass-panel-white border-violet-200 shadow-md' : 'glass-panel-white'} rounded-2xl p-5 relative overflow-hidden`}>

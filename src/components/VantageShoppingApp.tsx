@@ -995,8 +995,15 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
           setError(null);
         } else {
           const rawMsg = String(err?.message || '');
+          const isQuota = /429|quota|resource_exhausted/i.test(rawMsg);
           const isTechnicalError = /unexpected token|<!doctype|is not valid json/i.test(rawMsg);
-          setError(isTechnicalError ? 'Search service is reconnecting. Please tap Retry.' : rawMsg || 'Failed to search across platforms.');
+          setError(
+            isQuota
+              ? 'Quota exceeded, please try again in a moment.'
+              : isTechnicalError
+              ? 'Search service is reconnecting. Please tap Retry.'
+              : rawMsg || 'Failed to search across platforms.'
+          );
         }
       }
     } finally {
@@ -1199,7 +1206,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
     <div className={`min-h-screen transition-colors duration-300 ${oceanBg ? 'ocean-vantage-bg' : 'aesthetic-bg'} text-[#2E1065] dark:text-[#E9EDF5]`}>
       {/* Sticky Top Header */}
       <header className="sticky top-0 z-40 glass-panel border-b border-violet-200/50 dark:border-white/10 px-4 py-3 shadow-sm backdrop-blur-xl transition-all">
-        <div className="max-w-7xl xl:max-w-[1536px] 2xl:max-w-[1600px] mx-auto flex items-center justify-between gap-3">
+        <div className="w-full max-w-7xl lg:max-w-[95%] xl:max-w-[95%] 2xl:max-w-[95%] mx-auto flex items-center justify-between gap-3">
           {/* Logo & Sidebar Toggle */}
           <div className="flex items-center gap-3">
             <button
@@ -1484,7 +1491,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
 
       {/* Main Container with Fluid CSS Grid Sidebar Transition */}
       <div
-        className={`w-full max-w-7xl xl:max-w-[1536px] 2xl:max-w-[1600px] mx-auto relative md:grid transition-all duration-300 ease-in-out ${
+        className={`w-full max-w-7xl lg:max-w-[95%] xl:max-w-[95%] 2xl:max-w-[95%] mx-auto relative md:grid transition-all duration-300 ease-in-out ${
           sidebarOpen && activeView !== 'marketplace'
             ? 'md:grid-cols-[18rem_minmax(0,1fr)]'
             : 'md:grid-cols-[0rem_minmax(0,1fr)]'
@@ -2130,8 +2137,8 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
 
           {/* Loading Skeletons */}
           {loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                 <div key={i} className="rounded-3xl p-5 border border-violet-100 dark:border-white/10 bg-white/60 dark:bg-white/5 animate-pulse space-y-4">
                   <div className="w-full h-44 bg-violet-200/50 dark:bg-white/10 rounded-2xl"></div>
                   <div className="h-4 bg-violet-200/50 dark:bg-white/10 rounded w-3/4"></div>
@@ -2187,7 +2194,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                   )}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300 ease-in-out">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6 transition-all duration-300 ease-in-out">
                   {displayProducts.map((product) => {
                     const isComparing = compareItems.some((item) => item.id === product.id || item.name === product.name);
                     const isWishlisted = isProductWishlisted(product);

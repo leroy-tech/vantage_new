@@ -38,12 +38,12 @@ export const FriendlyErrorScreen: React.FC<FriendlyErrorScreenProps> = ({
         {/* Title & Message */}
         <div className="space-y-2">
           <h1 className="font-heading font-black text-xl sm:text-2xl text-[#2E1065] tracking-tight">
-            {isBusy ? 'Service Busy' : 'Something Went Wrong'}
+            {isBusy ? 'Quota Exceeded' : 'Something Went Wrong'}
           </h1>
           <p className="text-xs sm:text-sm text-[#5B21B6] leading-relaxed">
             {customMessage ||
               (isBusy
-                ? 'Service busy, please try again shortly. Our live store research engine is receiving high traffic right now.'
+                ? 'Quota exceeded, please try again in a moment. Live store research is temporarily receiving high traffic.'
                 : 'An unexpected glitch occurred while loading shopping recommendations. Your saved preferences and wishlist remain safe.')}
           </p>
         </div>
@@ -115,7 +115,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           errorType={isQuotaOrRateLimit ? 'quota' : 'general'}
           customMessage={
             isQuotaOrRateLimit
-              ? 'Service busy, please try again shortly. Live AI queries are momentarily queued.'
+              ? 'Quota exceeded, please try again in a moment.'
               : undefined
           }
           onRetry={() => this.setState({ hasError: false })}

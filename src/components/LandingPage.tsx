@@ -219,7 +219,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Key Value Pill Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto mb-16">
             {[
-              { label: 'Gemini 2.5 Flash', desc: 'Free-Tier Reasoning Engine', icon: Brain, color: 'text-[#7C3AED]' },
+              { label: 'Gemini 3.8 Flash', desc: 'Free-Tier Reasoning Engine', icon: Brain, color: 'text-[#7C3AED]' },
               { label: '3-Way Search Grounding', desc: 'Retail + Reddit + Tech Labs', icon: Search, color: 'text-[#6D28D9]' },
               { label: 'Strict Verified CDNs', desc: 'Zero Fake Stock Photos', icon: Eye, color: 'text-[#10B981]' },
               { label: 'Autonomous Alerts', desc: 'Real SMTP & Telegram Bot', icon: Bell, color: 'text-[#8B5CF6]' }
@@ -552,8 +552,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               },
               {
                 step: '02',
-                title: 'Gemini 2.5 Synthesis',
-                desc: 'Gemini 2.5 Flash digests real owner sentiment, uncovers unadvertised thermal throttling, battery degradation warnings, and synthesizes an objective pros & cons matrix.',
+                title: 'Gemini 3.8 Synthesis',
+                desc: 'Gemini 3.8 Flash digests real owner sentiment, uncovers unadvertised thermal throttling, battery degradation warnings, and synthesizes an objective pros & cons matrix.',
                 icon: Brain,
                 badge: 'Zero Bias AI',
                 color: 'text-[#8B5CF6]'
@@ -900,13 +900,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   3. 100% Free-Tier Architecture
                 </h3>
                 <p className="text-xs leading-relaxed text-[#4C1D95] font-medium">
-                  Runs on Google Gemini 2.5 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
+                  Runs on Google Gemini 3.8 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
                 </p>
               </div>
 
               <div className="mt-6 pt-4 border-t border-violet-100 flex items-center gap-2 text-[11px] font-bold text-emerald-700">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Google Gemini 2.5 Flash Free Quota Engine</span>
+                <span>Google Gemini 3.8 Flash Free Quota Engine</span>
               </div>
             </div>
           </div>
@@ -1200,13 +1200,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       3. 100% Free-Tier Architecture
                     </h3>
                     <p className="text-xs leading-relaxed text-[#4C1D95] font-medium">
-                      Runs on Google Gemini 2.5 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
+                      Runs on Google Gemini 3.8 Flash free quota, Google Programmable Search, and local SQLite persistence. Zero mandatory monthly subscriptions, zero paywalls for basic price tracking.
                     </p>
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-violet-100 flex items-center gap-2 text-[11px] font-bold text-emerald-700">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>Google Gemini 2.5 Flash Free Quota Engine</span>
+                    <span>Google Gemini 3.8 Flash Free Quota Engine</span>
                   </div>
                 </div>
               </div>
@@ -1306,7 +1306,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {[
               {
                 q: 'How does Vantage operate at zero cost without subscriptions?',
-                a: 'Vantage is architected exclusively on generous free-tier APIs: Google Gemini 2.5 Flash for reasoning, Google Programmable Search (100 free queries/day) for live web search grounding, and client-side SQLite/JSON for zero-cost persistence. No credit card is ever required.'
+                a: 'Vantage is architected exclusively on generous free-tier APIs: Google Gemini 3.8 Flash for reasoning, Google Programmable Search (100 free queries/day) for live web search grounding, and client-side SQLite/JSON for zero-cost persistence. No credit card is ever required.'
               },
               {
                 q: 'Where do the product photos and links come from?',
@@ -1318,7 +1318,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               },
               {
                 q: 'What is Multi-Source Deep Synthesis?',
-                a: 'Instead of doing one generic query, Vantage fires three targeted queries: (1) Retail store price listings, (2) Community forums and Reddit user discussions, and (3) Expert benchmark lab reviews. Gemini 2.5 Flash synthesizes these three distinct perspectives into an unbiased recommendation card.'
+                a: 'Instead of doing one generic query, Vantage fires three targeted queries: (1) Retail store price listings, (2) Community forums and Reddit user discussions, and (3) Expert benchmark lab reviews. Gemini 3.8 Flash synthesizes these three distinct perspectives into an unbiased recommendation card.'
               },
               {
                 q: 'Can I use Vantage with multiple family members or profiles?',

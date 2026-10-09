@@ -24,9 +24,30 @@ export const GEMINI_CANDIDATE_MODELS: string[] = [
   'gemini-3.1-flash-lite',
 ];
 
+export function isQuotaExceededError(err: any): boolean {
+  if (!err) return false;
+  const status = err.status || err.code || err.statusCode || (err.error && (err.error.code || err.error.status));
+  if (status === 429 || status === 'RESOURCE_EXHAUSTED' || status === '429') return true;
+  const str = typeof err === 'string'
+    ? err
+    : `${err.message || ''} ${err.statusText || ''} ${typeof err.error === 'string' ? err.error : JSON.stringify(err.error || '')}`;
+  return /429|resource_exhausted|quota exceeded|exceeded your current quota|rate limit/i.test(str);
+}
+
+export function getFriendlyErrorMessage(err: any): string {
+  if (isQuotaExceededError(err)) {
+    return 'Quota exceeded, please try again in a moment.';
+  }
+  const str = String(err?.message || err || '');
+  if (str.includes('404') || str.includes('NOT_FOUND') || str.includes('no longer available')) {
+    return 'The AI service is updating models, please try again in a moment.';
+  }
+  return 'The AI service is temporarily busy, please try again in a moment.';
+}
+
 export function getSanitizedGeminiModel(): string {
   const current = process.env.GEMINI_MODEL;
-  if (!current || current.includes('2.5') || current.includes('2.0') || current.includes('1.5')) {
+  if (!current || current.includes('2.5') || current.includes('2.0') || current.includes('1.5') || current.includes('pro')) {
     return 'gemini-3.8-flash';
   }
   return current;
