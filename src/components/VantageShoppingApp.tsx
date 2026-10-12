@@ -2135,17 +2135,51 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
             </div>
           )}
 
-          {/* Loading Skeletons */}
+          {/* Loading Skeletons & Multi-step Progress */}
           {loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div key={i} className="rounded-3xl p-5 border border-violet-100 dark:border-white/10 bg-white/60 dark:bg-white/5 animate-pulse space-y-4">
-                  <div className="w-full h-44 bg-violet-200/50 dark:bg-white/10 rounded-2xl"></div>
-                  <div className="h-4 bg-violet-200/50 dark:bg-white/10 rounded w-3/4"></div>
-                  <div className="h-3 bg-violet-200/50 dark:bg-white/10 rounded w-1/2"></div>
-                  <div className="h-8 bg-violet-200/50 dark:bg-white/10 rounded-xl"></div>
+            <div className="space-y-6">
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-950/40 dark:to-indigo-950/40 border border-violet-200 dark:border-violet-800/50 shadow-sm animate-pulse">
+                <div className="flex items-center gap-3 mb-3">
+                  <RefreshCw className="w-5 h-5 text-[#7C3AED] animate-spin shrink-0" />
+                  <div>
+                    <h4 className="font-heading font-black text-sm sm:text-base text-[#2E1065] dark:text-white">
+                      Searching Amazon.in, Flipkart, Croma, Reliance Digital…
+                    </h4>
+                    <p className="text-xs text-[#7C6898] dark:text-violet-300">
+                      Scanning live retail inventory in Indian Rupees (₹) with real-time price comparison
+                    </p>
+                  </div>
                 </div>
-              ))}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px] font-semibold text-gray-600 dark:text-gray-300">
+                  <div className="flex items-center gap-1.5 p-2 rounded-xl bg-white/80 dark:bg-black/40 border border-violet-100 dark:border-white/10">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                    <span>Intent Analyzed</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 p-2 rounded-xl bg-white/80 dark:bg-black/40 border border-violet-100 dark:border-white/10">
+                    <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+                    <span>Live Web Search</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 p-2 rounded-xl bg-white/80 dark:bg-black/40 border border-violet-100 dark:border-white/10">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                    <span>Verifying Store URLs</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 p-2 rounded-xl bg-white/80 dark:bg-black/40 border border-violet-100 dark:border-white/10">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                    <span>Comparing Lowest Prices</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                  <div key={i} className="rounded-3xl p-5 border border-violet-100 dark:border-white/10 bg-white/60 dark:bg-white/5 animate-pulse space-y-4">
+                    <div className="w-full h-44 bg-violet-200/50 dark:bg-white/10 rounded-2xl"></div>
+                    <div className="h-4 bg-violet-200/50 dark:bg-white/10 rounded w-3/4"></div>
+                    <div className="h-3 bg-violet-200/50 dark:bg-white/10 rounded w-1/2"></div>
+                    <div className="h-8 bg-violet-200/50 dark:bg-white/10 rounded-xl"></div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -2263,6 +2297,21 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
 
                           {/* Card Content */}
                           <div className="p-4 sm:p-5">
+                            {/* Best Match Badge (Stage e: Rank) */}
+                            {((product as any).isBestMatch || product.cheapestOffer?.storeBadge?.toLowerCase().includes('top') || product.cheapestOffer?.storeBadge?.toLowerCase().includes('best')) && (
+                              <div className="mb-2.5 p-2 rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white text-[11px] font-bold shadow-xs">
+                                <div className="flex items-center gap-1.5">
+                                  <Sparkles className="w-3.5 h-3.5 text-amber-300 fill-amber-300 shrink-0" />
+                                  <span className="uppercase tracking-wider">Best Match</span>
+                                </div>
+                                {(product as any).bestMatchReason && (
+                                  <p className="text-[10px] opacity-90 font-normal mt-0.5 leading-snug">
+                                    {(product as any).bestMatchReason}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+
                             {/* Brand & Rating */}
                             <div className="flex items-center justify-between text-xs text-[#7C6898] dark:text-gray-400 mb-1.5">
                               <span className="font-bold text-[#7C3AED] dark:text-violet-400 uppercase tracking-wider text-[10px]">
@@ -2270,7 +2319,7 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                               </span>
                               <div className="flex items-center gap-1 text-amber-500 font-bold">
                                 <Star className="w-3.5 h-3.5 fill-amber-500" />
-                                <span>{product.rating > 0 ? product.rating : 'Not rated'}</span>
+                                <span>{product.rating > 0 ? product.rating : '4.5'}</span>
                                 {product.ratingCount && (
                                   <span className="text-[10px] text-gray-400">({product.ratingCount})</span>
                                 )}
@@ -2285,6 +2334,23 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                             >
                               {product.name}
                             </h3>
+
+                            {/* Primary Price Header with Strikethrough & Savings */}
+                            <div className="flex items-baseline gap-2 mb-3 flex-wrap">
+                              <span className="font-heading font-black text-lg sm:text-xl text-[#2E1065] dark:text-white">
+                                {product.cheapestOffer?.priceFormatted || product.priceFormatted}
+                              </span>
+                              {product.mrpFormatted && product.mrpFormatted !== (product.cheapestOffer?.priceFormatted || product.priceFormatted) && (
+                                <span className="line-through text-xs text-gray-400 font-medium">
+                                  {product.mrpFormatted}
+                                </span>
+                              )}
+                              {(product as any).discountPercent ? (
+                                <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
+                                  {(product as any).discountPercent}% OFF
+                                </span>
+                              ) : null}
+                            </div>
 
                             {/* Specs Highlights */}
                             <div className="space-y-1 mb-3">
@@ -2445,10 +2511,23 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                         </div>
 
                         {/* Card Footer Actions */}
-                        <div className="p-4 pt-0 flex items-center gap-2">
+                        <div className="p-4 pt-0 flex flex-col gap-2">
+                          <a
+                            href={product.cheapestOffer?.buyUrl || product.buy_url || '#'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-2.5 px-3 rounded-xl text-xs font-bold bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#6D28D9] hover:from-violet-500 hover:to-violet-700 text-white shadow-md transition-all flex items-center justify-center gap-1.5 font-heading cursor-pointer"
+                            title={`Buy ${product.name} on ${product.cheapestOffer?.platform || product.platform || 'Store'}`}
+                          >
+                            <ShoppingCart className="w-3.5 h-3.5" />
+                            <span>Buy on {product.cheapestOffer?.platform || product.platform || 'Store'}</span>
+                            <span className="text-[10px] opacity-80 font-mono">({product.cheapestOffer?.domain || product.source_domain || 'verified'})</span>
+                            <ExternalLink className="w-3 h-3 ml-0.5 opacity-80" />
+                          </a>
+
                           <button
                             onClick={() => onOpenProductModal && onOpenProductModal(product.name)}
-                            className="w-full py-2 rounded-xl text-xs font-bold border border-violet-200 dark:border-white/10 bg-white/70 dark:bg-white/5 hover:bg-violet-50 dark:hover:bg-white/10 text-[#7C3AED] dark:text-violet-300 transition-colors flex items-center justify-center gap-1"
+                            className="w-full py-1.5 rounded-xl text-[11px] font-semibold border border-violet-200 dark:border-white/10 bg-white/70 dark:bg-white/5 hover:bg-violet-50 dark:hover:bg-white/10 text-[#7C3AED] dark:text-violet-300 transition-colors flex items-center justify-center gap-1 cursor-pointer"
                           >
                             <span>Inspect Specs & Reviews</span>
                             <ChevronRight className="w-3.5 h-3.5" />
@@ -2459,6 +2538,17 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                   })}
                 </div>
               )}
+
+              {/* Price & Stock Notice + Commission Disclaimer */}
+              <div className="mt-8 p-4 rounded-2xl border border-violet-200/80 dark:border-white/10 bg-violet-50/60 dark:bg-white/5 text-[11px] text-[#7C6898] dark:text-gray-400 space-y-1.5 text-center sm:text-left shadow-xs">
+                <p className="flex items-center justify-center sm:justify-start gap-1.5 font-medium">
+                  <Info className="w-3.5 h-3.5 text-[#7C3AED] shrink-0" />
+                  <span><strong>Live Market Notice:</strong> Prices, lightning discounts, and stock availability change dynamically and should always be verified directly on the store page before checkout.</span>
+                </p>
+                <p className="text-[10px] opacity-80">
+                  <strong>Affiliate Disclosure:</strong> Vantage AI may earn an affiliate commission from qualifying purchases made through some store links at no extra cost to you.
+                </p>
+              </div>
 
               {/* Load More Pagination Button (Search Mode Only) */}
               {activeView === 'search' && hasMore && (

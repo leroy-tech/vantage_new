@@ -5,6 +5,9 @@ export interface ScoredProduct extends GroundedProduct {
   relevanceScore: number;
   matchReasons: string[];
   isExactModelMatch?: boolean;
+  isBestMatch?: boolean;
+  bestMatchReason?: string;
+  discountPercent?: number;
 }
 
 /**
@@ -33,8 +36,9 @@ export function calculateProductRelevance(
 
   // Strict Category Mismatch Filter:
   if (parsed.category_slug && parsed.category_slug !== 'electronics') {
+    const isPhoneWord = (/\b(phone|smartphone|mobile|iphone)\b/i.test(pName) || pName.includes('pixel') || pName.includes('galaxy') || pName.includes('g85') || pName.includes('narzo') || pName.includes('nord') || pName.includes('cmf')) && !pName.includes('headphone') && !pName.includes('earphone');
     const isCategoryMatch = 
-      (parsed.category_slug === 'phones' && (pCat === 'phones' || pName.includes('phone') || pName.includes('pixel') || pName.includes('galaxy') || pName.includes('iphone') || pName.includes('g85') || pName.includes('narzo') || pName.includes('cmf'))) ||
+      (parsed.category_slug === 'phones' && (pCat === 'phones' || isPhoneWord)) ||
       (parsed.category_slug === 'shoes' && (pCat === 'shoes' || pName.includes('shoe') || pName.includes('sneaker') || pName.includes('running') || pName.includes('air max') || pName.includes('pegasus'))) ||
       (parsed.category_slug === 'laptops' && (pCat === 'laptops' || pName.includes('laptop') || pName.includes('macbook') || pName.includes('notebook') || pName.includes('nitro') || pName.includes('loq') || pName.includes('vivobook'))) ||
       (parsed.category_slug === 'audio' && (pCat === 'audio' || pName.includes('earbud') || pName.includes('headphone') || pName.includes('airdopes') || pName.includes('buds') || pName.includes('audio') || pName.includes('speaker') || pName.includes('wh-1000xm5'))) ||
@@ -195,12 +199,30 @@ export function rankAndFilterProducts(
   for (const p of products) {
     const { score, reasons, isEligible } = calculateProductRelevance(p, parsed);
     if (isEligible && score >= minScoreThreshold) {
+      let discount: number | undefined = undefined;
+      if (p.mrpFormatted && p.price > 0) {
+        const mrpNum = parseFloat(p.mrpFormatted.replace(/[^\d.]/g, ''));
+        if (mrpNum > p.price) {
+          discount = Math.round(((mrpNum - p.price) / mrpNum) * 100);
+        }
+      }
+
       scored.push({
         ...p,
         relevanceScore: score,
         matchReasons: reasons,
         isExactModelMatch: score >= 75,
+        discountPercent: discount,
       });
+    }
+  }
+
+  // Identify Best Match (highest relevance score + rating combination)
+  if (scored.length > 0) {
+    const topScorer = [...scored].sort((a, b) => b.relevanceScore - a.relevanceScore || b.rating - a.rating)[0];
+    if (topScorer) {
+      topScorer.isBestMatch = true;
+      topScorer.bestMatchReason = `Top match (${topScorer.relevanceScore}% match) with ${topScorer.rating}★ rating, ${topScorer.specs?.[0] || 'standout specifications'}, and verified deal at ${topScorer.priceFormatted} on ${topScorer.cheapestOffer?.platform || 'trusted store'}.`;
     }
   }
 

@@ -79,7 +79,7 @@ app.get('/api/verify-product', async (req, res) => {
 });
 
 // Multi-platform Live Indian Search with Filtering & Strict PDP Verification
-app.get('/api/search/vantage', async (req, res) => {
+const handleSearchRequest = async (req: express.Request, res: express.Response) => {
   const q = String(req.query.q || '').trim() || 'best phone under 20000';
   const page = parseInt(String(req.query.page || '1'), 10) || 1;
   const limit = parseInt(String(req.query.limit || '12'), 10) || 12;
@@ -89,7 +89,7 @@ app.get('/api/search/vantage', async (req, res) => {
     const result = await searchAllIndianPlatforms(q, page, limit, sort);
     res.json(result);
   } catch (err: any) {
-    console.error('[server] search/vantage error:', err);
+    console.error('[server] search error:', err);
     res.status(500).json({
       error: err?.message || 'Search failed across Indian platforms',
       query: q,
@@ -108,7 +108,10 @@ app.get('/api/search/vantage', async (req, res) => {
       priceRange: { min: 0, max: 0 }
     });
   }
-});
+};
+
+app.get('/api/search/vantage', handleSearchRequest);
+app.get('/api/search', handleSearchRequest);
 
 // Autocomplete suggestions and trending searches
 app.get('/api/search/suggestions', (req, res) => {
