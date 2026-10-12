@@ -14,6 +14,7 @@
  */
 
 import { GoogleGenAI } from '@google/genai';
+import { GEMINI_CANDIDATE_MODELS, isQuotaExceededError, isHighDemandError } from './geminiConfig';
 
 export interface VerifiedProductRecord {
   name: string;
@@ -1239,13 +1240,30 @@ export async function verifyProductLive(
       const prompt = `Find the exact canonical product detail page (PDP) on trusted Indian retailers (Amazon.in, Flipkart.com, Croma.com, TataCLiQ.com, Myntra.com, RelianceDigital.in) for: "${q}".
 Provide the official product title, exact brand, current price in INR (₹), and retailer platform.`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-        config: {
-          tools: [{ googleSearch: {} }],
-        },
-      });
+      let response: any = null;
+      for (const model of GEMINI_CANDIDATE_MODELS) {
+        try {
+          response = await ai.models.generateContent({
+            model,
+            contents: prompt,
+            config: {
+              tools: [{ googleSearch: {} }],
+            },
+          });
+          if (response) break;
+        } catch (mErr: any) {
+          if (isQuotaExceededError(mErr) || isHighDemandError(mErr)) {
+            console.warn(`Verifier model ${model} busy/rate-limited, trying next candidate...`);
+            await new Promise(r => setTimeout(r, 100));
+            continue;
+          }
+          console.warn(`Verifier model ${model} error:`, mErr?.message || mErr);
+        }
+      }
+
+      if (!response) {
+        throw new Error('All candidate models busy during search grounding');
+      }
 
       // Extract candidate URLs ONLY from Google Search grounding metadata (NEVER model memory!)
       const groundingChunks =

@@ -12,8 +12,8 @@ import {
   isTrustedDomain,
   VERIFIED_PRODUCT_CATALOG
 } from './productVerifier';
-import { GEMINI_CANDIDATE_MODELS, isQuotaExceededError, getFriendlyErrorMessage } from './geminiConfig';
-export { isQuotaExceededError, getFriendlyErrorMessage };
+import { GEMINI_CANDIDATE_MODELS, isQuotaExceededError, isHighDemandError, getFriendlyErrorMessage } from './geminiConfig';
+export { isQuotaExceededError, isHighDemandError, getFriendlyErrorMessage };
 
 const BASE_SYSTEM_PROMPT = `You are a careful, honest shopping and research assistant named Vantage.
 
@@ -86,6 +86,8 @@ async function generateWithFallback(
   let lastError: any = null;
 
   for (const model of GEMINI_CANDIDATE_MODELS) {
+    let modelRejected = false;
+
     // Attempt 1: with search tool if requested
     if (enableSearchTool) {
       try {
@@ -101,31 +103,41 @@ async function generateWithFallback(
         if (text) return text;
       } catch (err: any) {
         lastError = err;
-        const msg = String(err?.message || '');
-        if (msg.includes('resource_exhausted') || msg.includes('quota') || msg.includes('429')) {
-          console.warn(`Model ${model} search grounding quota reached, attempting standard generation...`);
+        const isQuota = isQuotaExceededError(err);
+        const isDemand = isHighDemandError(err);
+        if (isQuota || isDemand) {
+          console.warn(`Model ${model} ${isDemand ? 'experiencing temporary high demand (503)' : 'quota reached (429)'}, failing over to next candidate...`);
+          modelRejected = true;
+          // Exponential micro-pause before next candidate
+          await new Promise((r) => setTimeout(r, 120));
+        } else {
+          console.warn(`Model ${model} search grounding notice: ${String(err?.message || '').slice(0, 100)}, attempting standard generation...`);
         }
       }
     }
 
-    // Attempt 2: standard generation (without search tool)
-    try {
-      const response = await ai.models.generateContent({
-        model,
-        contents,
-        config: {
-          systemInstruction,
-        },
-      });
-      const text = (response.text || '').trim();
-      if (text) return text;
-    } catch (err: any) {
-      lastError = err;
-      const msg = String(err?.message || '');
-      if (msg.includes('resource_exhausted') || msg.includes('quota') || msg.includes('429')) {
-        console.warn(`Model ${model} quota reached, failing over to next candidate...`);
-      } else {
-        console.warn(`Model ${model} generation notice: ${msg.slice(0, 100)}, trying next candidate...`);
+    // Attempt 2: standard generation (without search tool) - only if model itself wasn't congested/quota-blocked
+    if (!modelRejected) {
+      try {
+        const response = await ai.models.generateContent({
+          model,
+          contents,
+          config: {
+            systemInstruction,
+          },
+        });
+        const text = (response.text || '').trim();
+        if (text) return text;
+      } catch (err: any) {
+        lastError = err;
+        const isQuota = isQuotaExceededError(err);
+        const isDemand = isHighDemandError(err);
+        if (isQuota || isDemand) {
+          console.warn(`Model ${model} ${isDemand ? 'experiencing temporary high demand (503)' : 'quota reached (429)'}, failing over to next candidate...`);
+          await new Promise((r) => setTimeout(r, 120));
+        } else {
+          console.warn(`Model ${model} generation notice: ${String(err?.message || '').slice(0, 100)}, trying next candidate...`);
+        }
       }
     }
   }
@@ -135,6 +147,13 @@ async function generateWithFallback(
     quotaErr.status = 429;
     quotaErr.code = 429;
     throw quotaErr;
+  }
+
+  if (isHighDemandError(lastError)) {
+    const demandErr: any = new Error('The AI service is experiencing high demand, please try again in a moment.');
+    demandErr.status = 503;
+    demandErr.code = 503;
+    throw demandErr;
   }
 
   throw lastError || new Error('All candidate models are temporarily busy');
@@ -196,12 +215,18 @@ export async function askAssistant(
     return await generateWithFallback(ai, contents, systemInstruction, true);
   } catch (err: any) {
     const isQuota = isQuotaExceededError(err);
-    console.warn(`AI generation ${isQuota ? 'quota exceeded' : 'busy'}, providing graceful synthesized response:`, err?.message || err);
-    return buildAssistantFallbackResponse(userMessage, results, isQuota);
+    const isDemand = isHighDemandError(err);
+    console.warn(`AI generation ${isQuota ? 'quota reached' : isDemand ? 'high demand (503)' : 'busy'}, providing graceful synthesized response:`, err?.message || err);
+    return buildAssistantFallbackResponse(userMessage, results, isQuota, isDemand);
   }
 }
 
-function buildAssistantFallbackResponse(userMessage: string, results: webSearch.SearchResult[], isQuota: boolean = false): string {
+function buildAssistantFallbackResponse(
+  userMessage: string,
+  results: webSearch.SearchResult[],
+  isQuota: boolean = false,
+  isDemand: boolean = false
+): string {
   const queryLower = userMessage.toLowerCase();
   const qWords = queryLower.split(/\s+/).filter(w => w.length > 2);
 
@@ -212,6 +237,8 @@ function buildAssistantFallbackResponse(userMessage: string, results: webSearch.
   let response = '';
   if (isQuota) {
     response += `⚠️ **Quota exceeded, please try again in a moment.**\n\n*Displaying verified live store findings and pricing below in the meantime:*\n\n`;
+  } else if (isDemand) {
+    response += `⚠️ **The AI model service is currently experiencing temporary high demand.**\n\n*Displaying verified live store findings and pricing below in the meantime:*\n\n`;
   }
 
   response += `Based on current market findings for **"${userMessage}"** in India:\n\n`;
@@ -373,7 +400,8 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences, no extra t
     return parsed;
   } catch (err: any) {
     const isQuota = isQuotaExceededError(err);
-    console.warn(`AI research synthesis ${isQuota ? 'quota reached' : 'busy'}, assembling recommendations from verified product catalog for:`, goal);
+    const isDemand = isHighDemandError(err);
+    console.warn(`AI research synthesis ${isQuota ? 'quota reached' : isDemand ? 'high demand' : 'busy'}, assembling recommendations from verified product catalog for:`, goal);
     const qWords = goal.toLowerCase().split(/\s+/).filter(w => w.length > 2);
     const catalogMatches = VERIFIED_PRODUCT_CATALOG.filter(p => {
       return qWords.some(w => p.name.toLowerCase().includes(w) || p.brand.toLowerCase().includes(w));
@@ -398,6 +426,8 @@ Respond with ONLY valid JSON (no markdown formatting, no code fences, no extra t
     return {
       summary: isQuota
         ? `⚠️ Quota exceeded, please try again in a moment. Displaying recommendations from verified Indian retail listings for "${goal}".`
+        : isDemand
+        ? `⚠️ The AI service is experiencing temporary high demand. Displaying recommendations from verified Indian retail listings for "${goal}".`
         : `Synthesized current market recommendations and pricing for "${goal}" based on live Indian retail catalog listings.`,
       recommendations: recs,
       _raw_findings: findings,

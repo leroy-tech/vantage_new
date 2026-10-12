@@ -23,7 +23,8 @@ import {
   Share2,
   Plus,
   Check,
-  CreditCard
+  CreditCard,
+  Scale
 } from 'lucide-react';
 import { FloatingProduct } from '../App';
 import { handleImageError } from '../utils/image-validator';
@@ -1232,6 +1233,8 @@ export interface ProductDetailSlideOverProps {
   onAskAi: (productName: string) => void;
   onDeepResearch: (productName: string) => void;
   onTrackPrice: (product: any) => void;
+  onToggleCompare?: (product: any) => void;
+  isCompared?: boolean;
   isWhite?: boolean;
 }
 
@@ -1242,6 +1245,8 @@ export function ProductDetailSlideOver({
   onAskAi,
   onDeepResearch,
   onTrackPrice,
+  onToggleCompare,
+  isCompared = false,
   isWhite = true
 }: ProductDetailSlideOverProps) {
   const [activeTab, setActiveTab] = useState<'specs' | 'prices' | 'bank-offers' | 'reviews' | 'ai'>('specs');
@@ -1454,6 +1459,23 @@ export function ProductDetailSlideOver({
                   <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                   <span>Ask AI</span>
                 </button>
+
+                {onToggleCompare && (
+                  <button
+                    onClick={() => onToggleCompare(product)}
+                    className={`px-3 py-2.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      isCompared
+                        ? 'bg-[#7C3AED] text-white border-[#7C3AED] shadow-sm'
+                        : isWhite
+                        ? 'bg-violet-50 hover:bg-violet-100 text-[#6D28D9] border-violet-200'
+                        : 'bg-white/10 hover:bg-white/20 text-violet-300 border-white/15'
+                    }`}
+                    title={isCompared ? 'Remove from compare drawer' : 'Add to side-by-side compare drawer'}
+                  >
+                    <Scale className="w-3.5 h-3.5" />
+                    <span>{isCompared ? 'Compared' : 'Compare'}</span>
+                  </button>
+                )}
 
                 <button
                   onClick={() => onTrackPrice(product)}
@@ -1864,6 +1886,23 @@ export function ProductDetailSlideOver({
           </div>
 
           <div className="flex items-center gap-2">
+            {onToggleCompare && (
+              <button
+                onClick={() => onToggleCompare(product)}
+                className={`px-3.5 py-2.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isCompared
+                    ? 'bg-[#7C3AED] text-white border-[#7C3AED] shadow-sm'
+                    : isWhite
+                    ? 'bg-violet-50 hover:bg-violet-100 text-[#6D28D9] border-violet-200'
+                    : 'bg-white/10 hover:bg-white/20 text-violet-300 border-white/15'
+                }`}
+                title={isCompared ? 'Remove from compare drawer' : 'Add to side-by-side compare drawer'}
+              >
+                <Scale className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">{isCompared ? 'In Compare' : 'Compare'}</span>
+              </button>
+            )}
+
             <a
               href={product.sourceUrl || product.amazonUrl}
               target="_blank"

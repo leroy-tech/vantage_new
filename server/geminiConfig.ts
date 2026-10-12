@@ -15,13 +15,15 @@ if (
 /**
  * Valid candidate models for text & search grounding tasks in priority order.
  * - Primary: 'gemini-3.8-flash' (standard for basic & shopping search tasks)
- * - Fallback 1: 'gemini-flash-latest' (alias for newest production flash)
- * - Fallback 2: 'gemini-3.1-flash-lite' (high throughput, light resource consumption for quota relief)
+ * - Fallback 1: 'gemini-3.1-flash-lite' (high throughput, light resource pool, resilient against 503 spikes)
+ * - Fallback 2: 'gemini-flash-latest' (alias for newest production flash)
+ * - Fallback 3: 'gemini-3.1-pro-preview' (pro reasoning model, separate capacity tier)
  */
 export const GEMINI_CANDIDATE_MODELS: string[] = [
   'gemini-3.8-flash',
-  'gemini-flash-latest',
   'gemini-3.1-flash-lite',
+  'gemini-flash-latest',
+  'gemini-3.1-pro-preview',
 ];
 
 export function isQuotaExceededError(err: any): boolean {
@@ -34,9 +36,22 @@ export function isQuotaExceededError(err: any): boolean {
   return /429|resource_exhausted|quota exceeded|exceeded your current quota|rate limit/i.test(str);
 }
 
+export function isHighDemandError(err: any): boolean {
+  if (!err) return false;
+  const status = err.status || err.code || err.statusCode || (err.error && (err.error.code || err.error.status));
+  if (status === 503 || status === 'UNAVAILABLE' || status === '503') return true;
+  const str = typeof err === 'string'
+    ? err
+    : `${err.message || ''} ${err.statusText || ''} ${typeof err.error === 'string' ? err.error : JSON.stringify(err.error || '')}`;
+  return /503|unavailable|high demand|experiencing high demand|spikes in demand|overloaded/i.test(str);
+}
+
 export function getFriendlyErrorMessage(err: any): string {
   if (isQuotaExceededError(err)) {
     return 'Quota exceeded, please try again in a moment.';
+  }
+  if (isHighDemandError(err)) {
+    return 'The AI service is currently experiencing high demand. Please try again in a few moments.';
   }
   const str = String(err?.message || err || '');
   if (str.includes('404') || str.includes('NOT_FOUND') || str.includes('no longer available')) {

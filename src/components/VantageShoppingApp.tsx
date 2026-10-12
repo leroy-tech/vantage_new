@@ -45,6 +45,7 @@ import MarketplaceHome from './MarketplaceHome';
 import { handleImageError, VERIFIED_FALLBACK_PLACEHOLDER } from '../utils/image-validator';
 import { BankOffersCalculator } from './BankOffersCalculator';
 import { PriceHistoryModal } from './PriceHistoryModal';
+import { verifyLinksClient, extractProductClient, embedSearchClient } from '../api';
 
 export interface PlatformOffer {
   platform: string;
@@ -82,6 +83,10 @@ export interface GroundedProduct {
   buy_url?: string;
   platform?: string;
   source_domain?: string;
+  trustScore?: number;
+  trustBadges?: string[];
+  priceMayVary?: boolean;
+  lastChecked?: string;
 }
 
 export interface SearchSummary {
@@ -101,6 +106,18 @@ interface MultiPlatformSearchResult {
   availableBrands: string[];
   availablePlatforms: string[];
   priceRange: { min: number; max: number };
+  relaxationInfo?: {
+    wasRelaxed: boolean;
+    reason: string;
+    alternatives: string[];
+  };
+  validationSummary?: {
+    inputCount: number;
+    passedCount: number;
+    rejectedCount: number;
+    averageTrustScore: number;
+    needsQueryRelaxation: boolean;
+  };
 }
 
 interface VantageShoppingAppProps {
@@ -979,6 +996,44 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
           setProductsList(data.products);
           // Cache the result for instant recall
           saveSearchCache(q, data);
+
+          // Asynchronously call Python backend microservices (/verify-links & /extract & /embed-search)
+          // Gracefully confirms prices and images without blocking the immediate UI display
+          (async () => {
+            try {
+              const buyUrls = data.products
+                .map(p => p.buy_url || p.cheapestOffer?.buyUrl)
+                .filter(Boolean) as string[];
+
+              if (buyUrls.length > 0) {
+                // 1. Call /verify-links
+                const verifiedResults = await verifyLinksClient(buyUrls.slice(0, 8));
+
+                // 2. Call /extract for top 2 items to double-confirm price and active image
+                if (buyUrls[0]) {
+                  const extracted = await extractProductClient(buyUrls[0]);
+                  if (extracted && extracted.price > 0) {
+                    setProductsList(prev => prev.map(p => {
+                      if ((p.buy_url === extracted.url || p.cheapestOffer?.buyUrl === extracted.url) && extracted.price > 0) {
+                        return {
+                          ...p,
+                          price: extracted.price,
+                          priceFormatted: extracted.price_formatted,
+                          imageUrl: extracted.image_url || p.imageUrl,
+                          specs: extracted.specs.length > 0 ? extracted.specs : p.specs,
+                          trustBadges: [...(p.trustBadges || []), 'Python Verified PDP'],
+                        };
+                      }
+                      return p;
+                    }));
+                  }
+                }
+              }
+            } catch (backendErr) {
+              // Completely non-blocking: Gemini-only pipeline continues seamlessly
+              console.debug('[VantageBackend] Auxiliary verification fallback active:', backendErr);
+            }
+          })();
         }
       }
     } catch (err: any) {
@@ -1969,6 +2024,32 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
             </div>
           )}
 
+          {/* Relaxation / Few exact matches notice */}
+          {activeView === 'search' && searchResult?.relaxationInfo && (
+            <div className="mb-5 px-4 py-3 rounded-2xl border border-violet-300 dark:border-violet-700/60 bg-gradient-to-r from-violet-50 to-amber-50/50 dark:from-violet-950/40 dark:to-amber-950/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+              <div className="flex items-center gap-2 text-violet-900 dark:text-violet-200">
+                <ShieldCheck className="w-4 h-4 text-violet-600 shrink-0" />
+                <span>
+                  <strong>Strict Validation:</strong> {searchResult.relaxationInfo.reason}
+                </span>
+              </div>
+              {searchResult.relaxationInfo.alternatives?.length > 0 && (
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[10px] text-gray-500 uppercase font-bold">Try instead:</span>
+                  {searchResult.relaxationInfo.alternatives.slice(0, 3).map((alt) => (
+                    <button
+                      key={alt}
+                      onClick={() => executeSearch(alt, 1, false)}
+                      className="px-2 py-0.5 rounded-lg text-[11px] font-semibold bg-white dark:bg-white/10 text-[#7C3AED] dark:text-violet-300 border border-violet-200 dark:border-white/15 hover:bg-violet-50 shadow-2xs"
+                    >
+                      {alt}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Mandatory Shopping Notice */}
           <div className="mb-5 px-4 py-2.5 rounded-2xl border border-amber-300/40 dark:border-amber-700/40 bg-amber-50/80 dark:bg-amber-950/30 flex items-center gap-2 text-xs text-amber-900 dark:text-amber-200">
             <Info className="w-4 h-4 text-amber-600 shrink-0" />
@@ -2253,11 +2334,18 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
                               onError={(e) => handleImageError(e, product.category)}
                             />
 
-                            {/* Verified Photo Tag */}
-                            <span className="absolute top-3 left-3 px-2 py-0.5 rounded-lg text-[9px] font-bold bg-white/90 dark:bg-black/80 backdrop-blur-md text-[#7C3AED] dark:text-violet-300 border border-violet-200 dark:border-white/10 shadow-xs flex items-center gap-1">
-                              <ShieldCheck className="w-3 h-3 text-emerald-500" />
-                              Verified CDN
-                            </span>
+                            {/* Verified Photo Tag & Trust Badges */}
+                            <div className="absolute top-3 left-3 flex flex-col gap-1 items-start max-w-[70%] z-10 pointer-events-none">
+                              <span className="px-2 py-0.5 rounded-lg text-[9px] font-bold bg-white/95 dark:bg-black/85 backdrop-blur-md text-[#7C3AED] dark:text-violet-300 border border-violet-200 dark:border-white/10 shadow-xs flex items-center gap-1">
+                                <ShieldCheck className="w-3 h-3 text-emerald-500 shrink-0" />
+                                <span>{product.trustScore ? `Trust ${product.trustScore}%` : 'Verified link'}</span>
+                              </span>
+                              {product.priceMayVary && (
+                                <span className="px-1.5 py-0.2 rounded-md text-[8px] font-bold bg-amber-100/95 text-amber-800 border border-amber-300 shadow-xs">
+                                  Price may vary
+                                </span>
+                              )}
+                            </div>
 
                             {/* Right Top Action Buttons: Wishlist & Compare */}
                             <div className="absolute top-3 right-3 flex items-center gap-1.5">
@@ -2399,8 +2487,11 @@ export function VantageShoppingApp({ onOpenProductModal }: VantageShoppingAppPro
 
                             {/* Multi-Platform Price Comparison Section */}
                             <div className="space-y-2 pt-2 border-t border-violet-100 dark:border-white/10">
-                              <div className="text-[10px] font-extrabold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                Live Platform Pricing (Cheapest Highlighted)
+                              <div className="flex items-center justify-between text-[10px] font-extrabold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <span>Live Store Comparison</span>
+                                <span className="font-normal text-[9px] text-gray-400 font-mono lowercase">
+                                  {product.lastChecked ? `last checked: ${product.lastChecked}` : 'verified live'}
+                                </span>
                               </div>
 
                               {/* Available Store Offers */}

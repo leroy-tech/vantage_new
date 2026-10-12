@@ -17,6 +17,14 @@ import {
   cleanProductUrl,
   verifyProductLive
 } from './server/productVerifier';
+import {
+  validateProducts,
+  validateProductUrl,
+  validateImageUrl,
+  validatePrice,
+  REJECTION_AUDIT_LOG,
+  runValidationSelfTest
+} from './server/validateProducts';
 import { searchAllIndianPlatforms, getSearchSuggestions } from './server/multiPlatformSearch';
 import { getMarketplaceHomeFeed, getCategoryListing } from './server/marketplaceService';
 import { CATEGORIES_TREE, BRANDS_DIRECTORY, searchCategoryTree, getCategoryById } from './server/categoryTree';
@@ -118,6 +126,91 @@ app.get('/api/search/suggestions', (req, res) => {
   const q = String(req.query.q || '');
   const data = getSearchSuggestions(q);
   res.json(data);
+});
+
+// Server-Side Lightweight URL Probe & Verification Endpoint
+// Sends a HEAD/GET request to confirm 200 status, avoiding client CORS limitations
+app.get('/api/validate/probe-url', async (req, res) => {
+  const targetUrl = String(req.query.url || '').trim();
+  if (!targetUrl) {
+    return res.status(400).json({ error: 'url parameter is required' });
+  }
+
+  // Pre-validate URL syntax and allowlist
+  const check = validateProductUrl(targetUrl);
+  if (!check.isValid) {
+    return res.json({
+      url: targetUrl,
+      verified200: false,
+      status: 400,
+      domain: check.domain,
+      badge: 'Unverified / Disallowed URL',
+      reason: check.reason,
+    });
+  }
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3500);
+
+    let httpStatus = 0;
+    try {
+      // First attempt HEAD
+      const headRes = await fetch(check.cleanUrl, {
+        method: 'HEAD',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        },
+        signal: controller.signal,
+      });
+      httpStatus = headRes.status;
+    } catch {
+      // Fallback to GET with Range header if HEAD rejected by CDN
+      const getRes = await fetch(check.cleanUrl, {
+        method: 'GET',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+          'Range': 'bytes=0-100',
+        },
+        signal: controller.signal,
+      });
+      httpStatus = getRes.status;
+    }
+    clearTimeout(timer);
+
+    const is200 = httpStatus >= 200 && httpStatus < 400;
+    res.json({
+      url: check.cleanUrl,
+      verified200: is200,
+      status: httpStatus,
+      domain: check.domain,
+      badge: is200 ? 'Verified link' : 'Link unverified (Status ' + httpStatus + ')',
+    });
+  } catch (err: any) {
+    res.json({
+      url: check.cleanUrl,
+      verified200: false,
+      status: 0,
+      domain: check.domain,
+      badge: 'Direct link (unverified)',
+      reason: err?.message || 'Probe timeout or network error',
+    });
+  }
+});
+
+// Rejection Audit Log Endpoint (allows viewing reasons why untrusted model items were dropped)
+app.get('/api/validate/audit', (_req, res) => {
+  res.json({
+    totalRejections: REJECTION_AUDIT_LOG.length,
+    recentRejections: REJECTION_AUDIT_LOG.slice(0, 50),
+  });
+});
+
+// Unit Self-Test Endpoint for Testing Good and Bad Examples
+app.get('/api/validate/self-test', (_req, res) => {
+  const result = runValidationSelfTest();
+  res.json(result);
 });
 
 // Verified Products Catalog Endpoint
@@ -752,6 +845,12 @@ app.post('/api/chat', async (req, res) => {
         isQuotaExceeded: true,
       });
     }
+    if (agent.isHighDemandError(err)) {
+      return res.json({
+        reply: '⚠️ The AI service is currently experiencing temporary high demand (503). You can still browse and compare verified Indian store prices below.',
+        isHighDemand: true,
+      });
+    }
     res.json({
       reply: '⚠️ The assistant is temporarily busy, please try asking again in a moment.',
     });
@@ -771,13 +870,18 @@ app.post('/api/research/multi', async (req, res) => {
   } catch (err: any) {
     console.error('Research error:', err);
     const isQuota = agent.isQuotaExceededError(err);
+    const isDemand = agent.isHighDemandError(err);
     res.json({
       summary: isQuota
         ? '⚠️ Quota exceeded, please try again in a moment.'
+        : isDemand
+        ? '⚠️ The AI service is currently experiencing high demand. Please try again in a few seconds.'
         : 'Service temporarily busy, please try again in a moment.',
       recommendations: [],
       error: isQuota
         ? 'Quota exceeded, please try again in a moment.'
+        : isDemand
+        ? 'High demand spike on AI service. Please retry in a moment.'
         : String(err?.message || 'Temporary service issue'),
     });
   }

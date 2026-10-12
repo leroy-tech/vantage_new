@@ -1819,9 +1819,33 @@ export default function App() {
 
   // Persistent Side-by-side Product Comparison State (.floating-obj-card)
   const [comparedProductIds, setComparedProductIds] = useState<string[]>([]);
-  const handleToggleCompare = (productId: string) => {
+  const handleToggleCompare = (productOrId: any) => {
+    if (!productOrId) return;
+    const targetId = typeof productOrId === 'string' ? productOrId : productOrId.id || productOrId.name;
+    const prodObj = typeof productOrId === 'object' ? productOrId : null;
+
+    if (prodObj && !floatingProductsList.some(p => p.id === targetId || p.name === prodObj.name)) {
+      const newFloating: FloatingProduct = {
+        id: targetId,
+        name: prodObj.name,
+        category: prodObj.category || 'electronics',
+        price: prodObj.price || 'Check Store',
+        mrp: prodObj.mrp,
+        savings: prodObj.savings,
+        store: prodObj.store || 'Verified Store',
+        sourceUrl: prodObj.sourceUrl || prodObj.buy_url,
+        imageUrl: prodObj.imageUrl || prodObj.image_url,
+        tag: prodObj.tag || 'Compared Item',
+        animationClass: 'animate-float-1',
+        rating: typeof prodObj.rating === 'number' ? prodObj.rating : 4.5,
+        reviewsCount: prodObj.reviewsCount || 'Verified buyer reviews',
+        specs: prodObj.specs,
+      };
+      setFloatingProductsList(prev => [newFloating, ...prev]);
+    }
+
     setComparedProductIds(prev =>
-      prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]
+      prev.includes(targetId) ? prev.filter(id => id !== targetId) : [...prev, targetId]
     );
   };
   const handleRemoveFromCompare = (productId: string) => {
@@ -2345,12 +2369,15 @@ export default function App() {
           setHasUnreadReply(true);
         }
       } else {
-        let errorMsg = '⚠️ Quota exceeded, please try again in a moment.';
+        let errorMsg = '⚠️ The AI assistant is temporarily busy, please try asking again in a moment.';
         try {
           const errData = await res.json();
           if (errData && errData.error) {
-            if (/429|resource_exhausted|quota/i.test(JSON.stringify(errData))) {
+            const errStr = JSON.stringify(errData);
+            if (/429|resource_exhausted|quota/i.test(errStr)) {
               errorMsg = '⚠️ Quota exceeded, please try again in a moment.';
+            } else if (/503|high demand|unavailable/i.test(errStr)) {
+              errorMsg = '⚠️ The AI service is experiencing temporary high demand, please try again in a moment.';
             } else {
               errorMsg = `⚠️ ${errData.error}`;
             }
@@ -2362,10 +2389,17 @@ export default function App() {
         ]);
       }
     } catch (err: any) {
-      const isQuota = /429|resource_exhausted|quota/i.test(String(err?.message || ''));
+      const errStr = String(err?.message || '');
+      const isQuota = /429|resource_exhausted|quota/i.test(errStr);
+      const isDemand = /503|high demand|unavailable/i.test(errStr);
+      const fallbackMsg = isQuota
+        ? '⚠️ Quota exceeded, please try again in a moment.'
+        : isDemand
+        ? '⚠️ The AI service is experiencing temporary high demand, please try again in a moment.'
+        : `⚠️ Connection error: ${err.message}`;
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: isQuota ? '⚠️ Quota exceeded, please try again in a moment.' : `⚠️ Connection error: ${err.message}` },
+        { role: 'assistant', content: fallbackMsg },
       ]);
     } finally {
       setIsChatLoading(false);
@@ -4133,6 +4167,8 @@ export default function App() {
     onAskAi={handleAskAiAboutProduct}
     onDeepResearch={runMultiResearch}
     onTrackPrice={(prod) => handleTrackGenericProduct(prod.name, prod.name)}
+    onToggleCompare={handleToggleCompare}
+    isCompared={Boolean(selectedProductForModal && comparedProductIds.includes(selectedProductForModal.id || selectedProductForModal.name))}
     isWhite={isWhite}
   />
 
